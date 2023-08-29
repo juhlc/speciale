@@ -1,0 +1,116 @@
+@book{Gall,
+    title=       {Brownian Motion,
+Martingales, and Stochastic
+Calculus},
+    author=      {Jean-François Le Gall},
+    isbn=        {978-3-319-31088-6},
+    year=        {2016},
+    publisher=   {Springer},
+    edition=	 {1st}
+}   
+
+@book{Yury,
+    title=       {Statistical Inference for Ergodic Diffusion Processes},
+    author=      {Yury A. Kutoyants},
+    isbn=        {978-1-84996-906-2},
+    year=        {2004},
+    publisher=   {Springer},
+    edition=	 {1st}
+}   
+
+@article{CMP,
+author = {Gabriela Ciołek and Dmytro Marushkevych and Mark Podolskij},
+title = {{On Dantzig and Lasso estimators of the drift in a high dimensional Ornstein-Uhlenbeck model}},
+volume = {14},
+journal = {Electronic Journal of Statistics},
+number = {2},
+publisher = {Institute of Mathematical Statistics and Bernoulli Society},
+pages = {4395 -- 4420},
+keywords = {Dantzig estimator, high dimensional statistics, Lasso, Ornstein-Uhlenbeck process, Parametric estimation},
+year = {2020},
+doi = {10.1214/20-EJS1775},
+URL = {https://doi.org/10.1214/20-EJS1775}
+}
+@article{GM,
+title = {{Sparse inference of the drift of a high-dimensional Ornstein–Uhlenbeck process}},
+journal = {Journal of Multivariate Analysis},
+volume = {169},
+pages = {1-20},
+year = {2019},
+issn = {0047-259X},
+doi = {https://doi.org/10.1016/j.jmva.2018.08.005},
+url = {https://www.sciencedirect.com/science/article/pii/S0047259X17307455},
+author = {Stéphane Gaïffas and Gustaw Matulewicz},
+keywords = {High-dimensional statistics, Lasso, Ornstein–Uhlenbeck process, Sparse estimation},
+abstract = {Given the observation of a high-dimensional Ornstein–Uhlenbeck (OU) process in continuous time, we are interested in inference on the drift parameter under a row-sparsity assumption. Towards that aim, we consider the negative log-likelihood of the process, penalized by an ℓ1-penalization (Lasso and Adaptive Lasso). We provide both finite- and large-sample results for this procedure, by means of a sharp oracle inequality, and a limit theorem in the long-time asymptotics, including asymptotic consistency for variable selection. As a by-product, we point out the fact that for the Ornstein–Uhlenbeck process, one does not need an assumption of restricted eigenvalue type in order to derive fast rates for the Lasso, while it is well-known to be mandatory for linear regression for instance. Numerical results illustrate the benefits of this penalized procedure compared to standard maximum likelihood approaches both on simulations and real-world financial data.}
+}
+
+@article{COinR,
+ title={{Convex Optimization in R}},
+ volume={60},
+ url={https://www.jstatsoft.org/index.php/jss/article/view/v060i05},
+ doi={10.18637/jss.v060.i05},
+ abstract={Convex optimization now plays an essential role in many facets of statistics. We briefly survey some recent developments and describe some implementations of these methods in R . Applications of linear and quadratic programming are introduced including quantile regression, the Huber M-estimator and various penalized regression methods. Applications to additively separable convex problems subject to linear equality and inequality constraints such as nonparametric density estimation and maximum likelihood estimation of general nonparametric mixture models are described, as are several cone programming problems. We focus throughout primarily on implementations in the R environment that rely on solution methods linked to R, like MOSEK by the package Rmosek. Code is provided in R to illustrate several of these problems. Other applications are available in the R package REBayes, dealing with empirical Bayes estimation of nonparametric mixture models.},
+ number={5},
+ journal={Journal of Statistical Software},
+ author={Koenker, Roger and Mizera, Ivan},
+ year={2014},
+ pages={1–23}
+}
+
+@article{addm,
+url = {http://dx.doi.org/10.1561/2200000016},
+year = {2011},
+volume = {3},
+journal = {Foundations and Trends® in Machine Learning},
+title = {Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers},
+doi = {10.1561/2200000016},
+issn = {1935-8237},
+number = {1},
+pages = {1-122},
+author = {Stephen Boyd and Neal Parikh and Eric Chu and Borja Peleato and Jonathan Eckstein}
+}
+
+@Article{osqp,
+author={Stellato, Bartolomeo
+and Banjac, Goran
+and Goulart, Paul
+and Bemporad, Alberto
+and Boyd, Stephen},
+title={{OSQP}: an operator splitting solver for quadratic programs},
+journal={Mathematical Programming Computation},
+year={2020},
+month={Dec},
+day={01},
+volume={12},
+number={4},
+pages={637-672},
+abstract={We present a general-purpose solver for convex quadratic programs based on the alternating direction method of multipliers, employing a novel operator splitting technique that requires the solution of a quasi-definite linear system with the same coefficient matrix at almost every iteration. Our algorithm is very robust, placing no requirements on the problem data such as positive definiteness of the objective function or linear independence of the constraint functions. It can be configured to be division-free once an initial matrix factorization is carried out, making it suitable for real-time applications in embedded systems. In addition, our technique is the first operator splitting method for quadratic programs able to reliably detect primal and dual infeasible problems from the algorithm iterates. The method also supports factorization caching and warm starting, making it particularly efficient when solving parametrized problems arising in finance, control, and machine learning. Our open-source C implementation OSQP has a small footprint, is library-free, and has been extensively tested on many problem instances from a wide variety of application areas. It is typically ten times faster than competing interior-point methods, and sometimes much more when factorization caching or warm start is used. OSQP has already shown a large impact with tens of thousands of users both in academia and in large corporations.},
+issn={1867-2957},
+doi={10.1007/s12532-020-00179-2},
+url={https://doi.org/10.1007/s12532-020-00179-2}
+}
+@article{quantreg,
+ ISSN = {09727671},
+ URL = {http://www.jstor.org/stable/25053440},
+ abstract = {An algorithm for computing parametric linear quantile regression estimates subject to linear inequality constraints is described. The algorithm is a variant of the interior point algorithm described in Koenker and Portnoy (1997) for unconstrained quantile regression and is consequently quite efficient even for large problems, particularly when the inherent sparsity of the resulting linear algebra is exploited. Applications to qualitatively constrained nonparametric regression are described in the penultimate sections. Implementations of the algorithm are available in MATLAB and R.},
+ author = {Roger Koenker and Pin Ng},
+ journal = {Sankhyā: The Indian Journal of Statistics (2003-2007)},
+ number = {2},
+ pages = {418--440},
+ publisher = {Springer},
+ title = {Inequality Constrained Quantile Regression},
+ urldate = {2022-06-16},
+ volume = {67},
+ year = {2005}
+}
+
+
+@misc {hjemmseide1,
+    title = {titel},
+    author = {forfatter},
+    year = {årstal}, 
+    month = {måned},
+    howpublished = {navn på hjemmside},
+    note = {url},
+}
