@@ -1,0 +1,68 @@
+\documentclass[11pt, a4paper]{memoir}
+\usepackage[english, science, dropcaps, hyperref, submissionstatement]{ku-frontpage}
+\usepackage{amsmath,amssymb,amsfonts,mathrsfs,latexsym,mathtools}
+\usepackage[utf8]{inputenc}
+
+\setlength\arraycolsep{2 pt}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{0}
+
+\assignment{Master's thesis}
+\author{Alex Author}
+
+% The following are only needed if the \author, \title, \subtitle, and \date
+% commands are not patchable. See the readme for more information.
+% \frontpageauthor{Alex Author}
+% \frontpagetitle{A concise but nevertheless\\precise and interesting title}
+% \frontpagesubtitle{An intruiging subtitle}
+% \frontpagedate{Submitted: \today}
+
+\frontpagetitle{Causal Inference in Dynamic Systems}
+\subtitle{Convergent Cross Mapping and Alternative Approaches}
+\frontpageauthor{Rasmus Juhl Christensen}
+\frontpagedate{Submitted: \today}
+\advisor{Advisor: Niels Richard Hansen}
+\frontpageimage{example.png}
+
+\kupdfsetup{A concise but nevertheless precise and interesting title - An intruiging subtitle}{}{Alex Author}
+
+\begin{document}
+\begingroup
+  \fontencoding{T1}\fontfamily{LinuxLibertineT-OsF}\selectfont
+  \maketitle
+\endgroup
+
+\tableofcontents
+
+\section{Causal inference}
+This thesis will tackle the conceptually challenging topic of causal inference. In traditional statistics, we distinguish between correlation and causation: Correlation is a feature of covariation between variables of interest, whereby one observes a linear relationship between changes in two variables and having observed a deviation in one variable makes a deviation more likely in the other. As such, this can be leveraged for prediction - you can use the one variable to better predict the other. If one has control of the one variable, say the treatment of a patient, one can randomize the treatment to ensure that if patients under treatment fare better than patients without treatment, then this can only be explained by the treatment. This allows us to infer causation, which is the feature of covariation between variables that allows one to assert that one variable causes another, which means that if you force a change in the distribution of the causing variable, you will also enforce a change in the effect variable. This is straightforward with randomization, but if you can not control your variable and only observe, then an interpretation of causation may be more tricky to defend. We will explore a framework that can allow us to infer causal relationships in dynamic systems.
+
+\subsection{Dynamic systems}
+A dynamic system is a system 
+
+\subsection{Lnear and nonlinear systems}
+
+
+\chapter{Convergent Cross Mapping}
+This chapter consists of a pedagogical example, that serves to illustrate the type of problems and questions that we wish to have a framework to tackle and answer. Afterwards, mathematical definitions of the models that the framework encapture, a theoretical account of the statistical method, a reference model for testing, testing of the statistical methods and finally we return to the pedagogical example.
+\section{Pedagogical example}
+
+\section{Definitions}
+We will start off with some technical assumptions to make the theory work, which is not in any way empirically motivated nor entirely interpretable, but fare under what we usually consider regularity assumptions - a sweep-it-under-the-rug-interpretation would be that we just assume the data to be reasonably well-behaved. So the models that we will now consider are vector fields on compact manifolds. Consider now 
+\section{Theoretical details}
+Taken's theorem states the following:\\
+\textit{Let M be a compact manifold of dimension $m$. If $\varphi\in \text{Diff}^2(M), y\in C^2(M,\mathbb{R})$, then the map $\Phi:M\to \mathbb{R}^{2m+1}$, defined by
+$$\Phi(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x)))$$
+is an embedding. \\\\}
+Let us then consider a dynamic system as a non-linear vector field $\varphi$ on a compact manifold $M$. We then consider observation functions $x,y: M\to \mathbb{R}$. Taken's theorem implies that you can reconstruct the manifold by the map
+$t\mapsto (y(t),y(t-\tau),...,y(t-L\tau))$
+Using practical  
+\section{Reference model}
+We will use the following model built on a multivariate Ornstein-Uhlenbeck process as a reference. More specifically, we will consider the following setup. Let the $d$-dimensional stochastic process $X_t$, $t\geq 0$, be given by the following stochastic differential equation
+$$dX_t=M X_t\ dt+\rho I_d\ dW_t$$
+with $W_t$ a $d$-dimensional  Brownian motion, $M$ a $d\times d$ drift matrix, and $\rho\in \mathbb{R}$ a scalar. We will then consider observations at time points $0\leq t_1<t_2<\cdots <t_n$, $n\in \mathbb{N}$, with some observation noise
+$$Y_{t_i}=X_{t_i}+\xi_i,\quad i=1,...,n$$
+where $\xi_i$ is iid with $\mathbb{E} \xi_i=0$ and $V(\xi_i)=\sigma^2$ for some variance parameter $\sigma^2\in \mathbb{R}_{\geq 0}$. Interesting variations of this model, is $\sigma^2=0$, implying no observation noise, and $\rho=0$, which removes stochasticity of the process.
+\section{Simulations}
+  
+\end{document}
