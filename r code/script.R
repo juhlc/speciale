@@ -47,17 +47,24 @@ simOU <- function(dim, rho, driftMat, time, length, X0){
   }
   return(df)
 }
+simLog2 <- function(xtoy, ytox, rx, ry, length, X0){
+  df <- t(matrix(rep(X0,length), ncol=2,nrow=length))
+  for(i in 1:(length-1)){
+    df[,i+1] <- (df[,i])*(c(rx,ry)*(1-df[,i])-c(ytox,xtoy)*rev(df[,i]))
+  }
+  return(df)
+}
 
-M <- matrix(c(1,0,0,0.2,0.4,0,0.3,0,0.2),ncol=3,byrow=T)
-M
-X <- simOU(dim=3, rho=0.1, driftMat = M,
+M <- matrix(c(1,0,0,1,1,0,1,0,1),ncol=3,byrow=T)
+X <- simOU(dim=3, rho=0.05, driftMat = M,
            time = 100, length = 1e5, X0 = rep(0,3))
+J <- simLog2(xtoy=0,ytox=0.05,rx=3.65,ry=3.77,length=1e5, X0=rnorm(2))
 
 plotBM(X, T = 100, type="OU")
 
-df <- data.frame(Var1 = X[1,100*(10:1000)],
-                 Var2 = X[2,100*(10:1000)],
-                 Var3 = X[3,100*(10:1000)])
+df <- data.frame(Var1 = X[1,3000:4000],
+                 Var2 = X[2,3000:4000],
+                 Var3 = X[3,3000:4000])
 
 simplex_output <- simplex(df, c(1,500),c(701,900))
 par(mar = c(4, 4, 1, 1), mgp = c(2.5, 1, 0))  # set margins for plotting
@@ -65,15 +72,16 @@ plot(simplex_output$E, simplex_output$rho, type = "l", xlab = "Embedding Dimensi
      ylab = "Forecast Skill (rho)")
 
 
-var1_xmap <- ccm(df, E=3, lib_column = "Var1",
-                 target_column = "Var2", lib_sizes = seq(10, 80, by = 10), num_samples = 100, 
+var1_xmap <- ccm(df, E=1, lib_column = "Var1",
+                 target_column = "Var2", lib_sizes = seq(10, 140, by = 10), num_samples = 100, 
                  random_libs = TRUE, replace = TRUE, silent = TRUE)
-var2_xmap <- ccm(df, E=2, lib_column = "Var2",
-                 target_column = "Var1", lib_sizes = seq(10, 80, by = 10), num_samples = 100, 
+var2_xmap <- ccm(df, E=1, lib_column = "Var2",
+                 target_column = "Var1", lib_sizes = seq(10, 140, by = 10), num_samples = 100, 
                  random_libs = TRUE, replace = TRUE, silent = TRUE)
 
 plot(var1_xmap$LibSize, var1_xmap$`Var1:Var2`, type = "l", col = "red", 
-     xlab = "Library Size", ylab = "Cross Map Skill (rho)", ylim = c(0, 0.25))
+     xlab = "Library Size", ylab = "Cross Map Skill (rho)", ylim = c(0,0.6))
 lines(var1_xmap$LibSize, var1_xmap$`Var2:Var1`, col = "blue")
 legend(x = "topleft", legend = c("var1 xmap", "var2 xmap"), col = c("red", 
                                                                                   "blue"), lwd = 1, bty = "n", inset = 0.02, cex = 0.8)
+

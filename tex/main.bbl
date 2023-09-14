@@ -1,8 +1,24 @@
 \begin{thebibliography}{}
 
-\bibitem[Kutoyants, 2004]{Yury}
-Kutoyants, Y.~A. (2004).
-\newblock {\em Statistical Inference for Ergodic Diffusion Processes}.
-\newblock Springer, 1st edition.
+\bibitem[Cummins et~al., 2015]{mathFound}
+Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
+\newblock On the efficacy of state space reconstruction methods in determining
+  causality.
+\newblock {\em SIAM Journal on Applied Dynamical Systems}, 14(1), 335--381.
+
+\bibitem[Huke \& Broomhead, 2007]{Huke}
+Huke, J.~P. \& Broomhead, D.~S. (2007).
+\newblock Embedding theorems for non-uniformly sampled dynamical systems.
+\newblock {\em Nonlinearity}, 20(9), 2205.
+
+\bibitem[Sauer et~al., 1991]{Sauer1991}
+Sauer, T., Yorke, J.~A., \& Casdagli, M. (1991).
+\newblock Embedology.
+\newblock {\em Journal of Statistical Physics}, 65(3), 579--616.
+
+\bibitem[Takens, 1981]{Takens}
+Takens, F. (1981).
+\newblock {\em Detecting Strange Attractors in Turbulence. Lecture Notes in
+  Mathematics}, volume 898, (pp.\ 366--381).
 
 \end{thebibliography}
