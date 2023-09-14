@@ -6,6 +6,18 @@ Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
   causality.
 \newblock {\em SIAM Journal on Applied Dynamical Systems}, 14(1), 335--381.
 
+\bibitem[Hirsch, 1976]{hirsch}
+Hirsch, M. (1976).
+\newblock {\em Differential Topology}.
+\newblock Graduate Texts in Mathematics. Springer New York.
+
+\bibitem[Huke, 2006]{Huke2}
+Huke, J.~P. (2006).
+\newblock {Embedding Nonlinear Dynamical Systems: A Guide to Takens’
+  Theorem}.
+\newblock MIMS EPrint: Available at
+  \url{http://eprints.maths.manchester.ac.uk/} (\today).
+
 \bibitem[Huke \& Broomhead, 2007]{Huke}
 Huke, J.~P. \& Broomhead, D.~S. (2007).
 \newblock Embedding theorems for non-uniformly sampled dynamical systems.
