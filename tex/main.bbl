@@ -23,6 +23,11 @@ Huke, J.~P. \& Broomhead, D.~S. (2007).
 \newblock Embedding theorems for non-uniformly sampled dynamical systems.
 \newblock {\em Nonlinearity}, 20(9), 2205.
 
+\bibitem[Peters et~al., 2017]{Peters}
+Peters, J., Janzing, D., \& Schölkopf, B. (2017).
+\newblock {\em Elements of Causal Learning}.
+\newblock MIT Press, 1st edition.
+
 \bibitem[Sauer et~al., 1991]{Sauer1991}
 Sauer, T., Yorke, J.~A., \& Casdagli, M. (1991).
 \newblock Embedology.
