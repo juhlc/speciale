@@ -33,6 +33,11 @@ Sauer, T., Yorke, J.~A., \& Casdagli, M. (1991).
 \newblock Embedology.
 \newblock {\em Journal of Statistical Physics}, 65(3), 579--616.
 
+\bibitem[Sokol \& Hansen, 2014]{sokol2014}
+Sokol, A. \& Hansen, N.~R. (2014).
+\newblock Causal interpretation of stochastic differential equations.
+\newblock {\em Electron. J. Probab.}, 19(100), 1--24.
+
 \bibitem[Takens, 1981]{Takens}
 Takens, F. (1981).
 \newblock {\em Detecting Strange Attractors in Turbulence. Lecture Notes in
