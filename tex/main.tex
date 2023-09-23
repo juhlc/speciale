@@ -13,7 +13,8 @@
 
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}
-
+\newtheorem{prop}{Proposition}
+\newtheorem{cor}{Corollary}
 
 \newcommand{\mN}{\mathbb{N}}
 \newcommand{\mZ}{\mathbb{Z}}
@@ -233,8 +234,66 @@ We see that we can think of the set of upper sets as a lattice when equipping it
 \begin{defn}[Filtration]
 Let $I$ be a partially ordered set, and let $(X_i)_{i\in I}$ be a collection of topological spaces and let further $(\iota_{ij})_{j\leq i}$ be a family of continuous maps $\iota_{ij}: X_i\to X_j$ satisfying the consistency constraint
 $$\iota_{ik}=\iota_{ij}\circ \iota_{jk}$$
-Then $(X_i,\iota_{ij})_I$ is an \emph{inverse system}, and we will also refer to it as a \emph{filtration}. An inverse system indexed by $I'$ obtained by reversing all relations will be called a \emph{descending filtration} on $(X_i)_I$.
+Then $(X_i,\iota_{ij})_I$ is an \emph{inverse system}, and we will also refer to it as a \emph{filtration}. An inverse system indexed by $I'$ obtained from $I$ by reversing all relations will be called a \emph{descending filtration} on $(X_i)_I$.
 \end{defn}
+This allows us to consider the causal structure as an object, and we can now use this object to create the correspondence discussed above. We will now define a descending filtration on the phase space. For this, we shall utilize that we can think of any compact finite dimensional manifold as a subspace of $\mR^n$ for suitable $n$, in fact this very fact is implied by Takens' theorem, and we shall think of the observed values as the coordinates of $\mR^n$. This reduces the generality of the approach somewhat, but it lends itself to interpretability and the modelling framework introduced in the beginning of this chapter. This leads us to the definition of a descending filtration of the phase space:
+\begin{defn}[Upper set filtration]
+Let $UL_\varphi$ be the lattice imposed by considering the upper sets of the component graph of a dynamical system $\varphi$. For $U\in UL_\varphi$, we define $|U|$ as the set of all variables contained the upper set $U$ and we will call it \textit{variable set} of $U$. Further, we let $\mR_U$ be the space spanned by $|U|$ of dimension $\#|U|$ and we call this the \textit{phase space} of $U$. We see now that for $U,V\in UL_\varphi$, we have $U\leq V$ if and only if $|U|\subset |V|$, which in turn is equivalent with $\mR_U\subset \mR_V$. We thus get a natural projection $\pi_{VU}:\mR_V\to\mR_U$. We further define $\pi_U$ as the natural projection $\mR^n\to \mR_U$. We see that this defines a descending filtration, and we call $(\mR_U,\pi_{UV})_{UL_\varphi}$ the \emph{upper set filtration of the phase space}.
+\end{defn} 
+\begin{prop}
+Given a causal (\textit{definition!!}) dynamical system $\varphi$, and upper sets $U,V\in UL_\varphi$ with $U\leq V$, the family of maps $\{\varphi^t_W\}_{W\in UL_\varphi}$, where $\varphi_U^t$ is defined on $\mR_U$ and given by the equation
+$$\varphi^t_U\circ\pi_U(x)=\pi_U\circ \varphi^t(x)$$
+for all $x\in \mR$, is well-defined, and the the collection $(\mR_U,\pi_{UV})_{UL_\varphi}$ of dynamical systems is consistent, meaning that they satisfy
+$$\pi_{VU}\circ \varphi_V^t(x)=\varphi_U^t(x)\circ\pi_{VU}(x)$$
+for all $x\in \mR_V$.
+\end{prop}
+\begin{proof}
+Suppose $\pi_U(x)=\pi_U(y)$ for $x,y\in \mR^n$. Hence $x,y$ differ in the variables $|\mathcal{V}_\varphi|\setminus |U|$, and since $U$ is an upper set, it follows that $\pi_U(\phi^t(x))=\pi_U(\phi^t(y))$, since the values of $\varphi^t$ on the variable set $|U|$ does not depend on the variables  among $|\mathcal{V}_\varphi|\setminus |U|$.\\
+Observe that since each $x\in \mR_V$ can be written as $\pi_V(x')$ for some $x'\in \mR$, and since we can rewrite
+\begin{align*}
+\pi_U\circ\varphi^t(x')
+&=\varphi_U^t(x)\circ\pi_U(x')=
+\varphi_U^t\circ\pi_{VU}\circ\pi_V(x')=\varphi_U^t\circ\pi_VU(x),\quad\quad \text{and}\\
+\pi_U\circ\varphi^t(x')&=\pi_{VU}\circ \pi_V\circ\varphi^t(x')=\pi_{VU}\circ \varphi_V^t\circ \pi_V(x')=\pi_VU\circ\varphi_V^t(x)
+\end{align*}
+by consistency of the upper set filtration, we get consistency of the collection as desired.
+\end{proof}
+This allows us to introduce a filtration of the manifolds on which our models live:
+\begin{defn}
+Let $\varphi$ be a dynamical system restricted to a compact invariant manifold. Then we will call the descending filtration $\{M_U\}_{U\in UL_\varphi}$, with $M_U$ defined by $M_U\coloneqq \pi_U(M)$, equipped with the family of maps $\pi_{UV}$, for the \emph{invariant set filtration} $\mathbb{M}$.
+\end{defn}
+We notice immediately that for any $U\in UL_\varphi$, then $M_U$ is a compact invariant set for the dynamical system $\varphi^t_U$. We can now decompose our dynamical systems into smaller dynamical systems based on the causal structure, and we now give a similar decomposition of the observation functions:
+\begin{defn}[Filtration of observation functions]
+KK
+\end{defn}
+The final step towards our destination is to ensure that it remains a generic property that our observation functions will satisfy that the delay embedding from Takens' theorem is indeed an embedding.
+\begin{prop}
+The set of generic functions is open and dense bla bla
+\end{prop}
+We are approaching the full-fleshed formulation of our theorem now. We can now state the assumptions in full detail and the statement that allows us to identify causal statements
+\begin{thm}[Identifiability in dynamic systems]
+We assume the following of our dynamic system
+\begin{enumerate}[label=\arabic*)]
+	\item The elements $M_W$ of the invariant set filtration $\mathbb{M}$ are compact, invariant \emph{smooth} manifolds.
+	\item Given comparable $U,V$ in the lattice $UL_\varphi$ with $U<V$, the corresponding projection $\pi_{VU}:M_V\to M_U$ is non-injective.
+	\item Given non-comparable $U,V$ in the lattice $UL_\varphi$, there exist no continuous surjections $f:M_U\to M_V$ or $g:M_V\to M_U$.
+	\item We assume that $\varphi^T$ be generic for fixed $T$, and that $s$
+\end{enumerate}
+Let now $U,V$ be upper sets, let $\varphi_1,\varphi_2$ be corresponding observation functions and let $M_i=\Phi_{\varphi^T,y_i,k_i}(M)$ be the reconstructions, where $k_1\geq 2n_U$ and $k_2\geq 2n_V$. It then holds that:
+\begin{enumerate}[label=\roman*.]
+	\item $U=V$ if and only if there exists a homeomorphism
+	$$\Psi_{1,2}:M_1\to M_2$$
+	\item $U<V$ if and only if there exists a continuous surjective, noninjective map
+	$$\Pi_{1,2}:M_2\to M_1$$ 
+\end{enumerate}
+\end{thm}
+
+\begin{cor}
+Insofar as it possible to determine the existence of the maps in theorem above, we can recover the component graph with edges added to any descendants of a component.
+\end{cor}
+
+We have now proven that under conditions 1)-4), it is actually possible to determine the causal flow in a dynamic system. The first condition is a regularity assumption that things are sufficiently well-behaved. We will give an alternative statement, where this condition is replaced, but in spirit this type of assumption is needed for any reconstruction to take place. It is the author's view that this is a reasonable assumption in most settings: although it might never actually be true that an observed system is restricted to a compact smooth manifold, we can think as we do in any kind of modelling as the imagined dynamic being a simplified representation of the system, and as far as the observed system behaves somewhat controlled locally, such a representation will probably be useful in capturing information about the system.\\\\ The second and third conditions are somewhat less reasonable in appearance; we are assuming the non-existence of mappings that if they existed would undermine the theoretical foundation of the theorem. This is undesirable. As is done in \cite{mathFound}, this is referred to the \textit{manifold being fully resolved}. An implied interpretation hereof is that it is simply matter of observing sufficient amounts of a data to separate different parts of the system - more on this later. This assumption is quite a standard one, and it is something that will appear in practical considerations nonetheless. A further comment on this, is that it corresponds somewhat to the faithfulness assumption often made when working with structural causal models.\\\\ The final assumption is entirely impossible to test as well, but we will interpret genericity in the same way as \textit{almost everywhere}, and assume that it is unlikely that we would ever get non-generic functions by accident. The almost everywhere interpretation is often a probabilistic one whereas this one is not, but as so often the difference is philosophical.
+
 
 
 \section{Applications}
