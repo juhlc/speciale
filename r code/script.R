@@ -85,3 +85,10 @@ lines(var1_xmap$LibSize, var1_xmap$`Var2:Var1`, col = "blue")
 legend(x = "topleft", legend = c("var1 xmap", "var2 xmap"), col = c("red", 
                                                                                   "blue"), lwd = 1, bty = "n", inset = 0.02, cex = 0.8)
 
+
+
+
+## Sardine data
+library(rerddapXtracto)
+info <- info('erdCAMarCatSM')
+data <- rxtracto(info, parameter = "fish", x)

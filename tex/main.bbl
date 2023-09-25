@@ -23,6 +23,12 @@ Huke, J.~P. \& Broomhead, D.~S. (2007).
 \newblock Embedding theorems for non-uniformly sampled dynamical systems.
 \newblock {\em Nonlinearity}, 20(9), 2205.
 
+\bibitem[Leng et~al., 2020]{Leng2020}
+Leng, S., Ma, H., Kurths, J., Lai, Y.-C., Lin, W., Aihara, K., \& Chen, L.
+  (2020).
+\newblock Partial cross mapping eliminates indirect causal influences.
+\newblock {\em Nature Communications}, 11(1), 2632.
+
 \bibitem[Peters et~al., 2017]{Peters}
 Peters, J., Janzing, D., \& Schölkopf, B. (2017).
 \newblock {\em Elements of Causal Learning}.
@@ -38,9 +44,21 @@ Sokol, A. \& Hansen, N.~R. (2014).
 \newblock Causal interpretation of stochastic differential equations.
 \newblock {\em Electron. J. Probab.}, 19(100), 1--24.
 
+\bibitem[Sugihara et~al., 2012]{Sugihara}
+Sugihara, G., May, R., Ye, H., hao Hsieh, C., Deyle, E., Fogarty, M., \& Munch,
+  S. (2012).
+\newblock Detecting causality in complex ecosystems.
+\newblock {\em Science}, 338(6106), 496--500.
+
 \bibitem[Takens, 1981]{Takens}
 Takens, F. (1981).
 \newblock {\em Detecting Strange Attractors in Turbulence. Lecture Notes in
   Mathematics}, volume 898, (pp.\ 366--381).
+
+\bibitem[Ye et~al., 2015]{Ye2015}
+Ye, H., Deyle, E.~R., Gilarranz, L.~J., \& Sugihara, G. (2015).
+\newblock Distinguishing time-delayed causal interactions using convergent
+  cross mapping.
+\newblock {\em Scientific Reports}, 5(1), 14750.
 
 \end{thebibliography}
