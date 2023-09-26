@@ -10,11 +10,12 @@
 \usepackage{amsthm}
 \theoremstyle{plain}
 \newtheorem{thm}{Theorem}
+\newtheorem{prop}{Proposition}
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
 
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}
-\newtheorem{prop}{Proposition}
-\newtheorem{cor}{Corollary}
 
 \newcommand{\mN}{\mathbb{N}}
 \newcommand{\mZ}{\mathbb{Z}}
@@ -32,6 +33,8 @@
 \setlength\arraycolsep{2 pt}
 \setcounter{tocdepth}{2}
 \setcounter{secnumdepth}{0}
+
+\DeclareRobustCommand{\firstsecond}[2]{#2}
 
 \assignment{Master's thesis}
 
@@ -70,6 +73,10 @@ Reference 2: Distinguishing time-delayed causal interactions using convergent cr
 
 \tableofcontents
 
+
+\vfill
+\noindent All code and data used in this project is available at \url{github.com/juhlc/speciale}.
+
 \normalem
 
 \newpage
@@ -101,7 +108,11 @@ We then turn to a more stringent introduction to the theory of embeddings allowi
 We end this chapter with a detailed account of the concrete approach suggested by \cite{Sugihara}, and we then discuss alternatives and extensions hereof. Notably, we will discuss the extensions of the approach suggested by \cite{Ye2015} to try to resolve the problem of distinguishing bidirectional causality and unidirectional causality in systems with some degree of synchronicity; and the extension suggested by \cite{Leng2020} to try to identify the causal chain in a system where we know the causal direction between causally related variables. These problems cannot be resolved by the approach of \cite{Sugihara} as we shall see shortly. We will then return to our motivational example from the beginning and provide an analysis hereof using the theory developed. This is all done with the caveat that the theory developed in this setting applies only to purely deterministic systems and a more appropriate analysis of the example and in reality any complex ecosystem or more generally an observed dynamical system would include some deterministic dynamic structure and some stochastic structure. We return to this problem in later chapters: we will try to extend our considerations here to stochastic dynamic systems in chapter ? replacing systems of differential equations with systems of stochastic differential equations, and we will do a simulation based analysis of the effect of measurement noise or of stochastic influences on the effectiveness of our approach in chapter ?.
 
 \section{Sardines and Anchovies in the California Current System}
-In this section, we will briefly explore the relationship between Pacific sardine (\textit{Sardinops sagax}) landings, Northern anchovy (\textit{Engraulis mordax}) landings, and sea-surface temperature (SST) measured at Scripps Pier and Newport Pier. All code and data will be available at \url{github.com}. We will use the same data as used by \cite{Sugihara}, and so we obtain the SST estimates from the \textit{Library Digital Connections} from the University of California San Diego (available at \url{https://library.ucsd.edu/dc/}), we obtain older fishing data from ERDDAP at \url{http://coastwatch.pfeg.noaa.gov/erddap} and newer data from \url{https://wildlife.ca.gov/Conservation/Marine/Data-Management-Research/MFDE}.
+In this section, we will briefly explore the relationship between Pacific sardine (\textit{Sardinops sagax}) landings in pounds, Northern anchovy (\textit{Engraulis mordax}) landings in pounds, and sea-surface temperature (SST) measured at Scripps Pier as collected by \cite{Scripps} and at Newport Pier as collected by \cite{Newport} all recorded every month. We will use the same data as \cite{Sugihara}, and we obtain the SST estimates from the University of California San Diego, we obtain older fishing data from \textit{ERDDAP} at \cite{oldData} and newer data directly from \cite{newData}. Following the analysis of ?, we first difference all data, so we only consider the increases and decreases of the data as compared to considering the data series itself. We will also use running three-year averages to combat arbitrary fluctuations in data.
+
+Confidential Data
+Pursuant to California Fish and Game Code Section 8022, commercial landings data is considered confidential. Landings data in the MFDE, is therefore summarized and presented so as not to disclose data from an individual or business. Landings data marked as “Confidential” in the MFDE indicates there was insufficient data to summarize and maintain confidentiality.
+https://wildlife.ca.gov/Conservation/Marine/Data-Management-Research/MFDE/User-Guide
 \section{Causal Framework}
 We will first give an introduction to our causal modelling in the terminology of the structural causal model (SCM), sometimes also referred to as a structural equation model (SEM),  which allows us to model time series in a discrete framework. We shall then discuss the extension to continuous time series and the link to the discrete time series framework. Our causal framework does come with some caveats, but we will try our best to discuss them along the way. We will present the SCMs as done in \cite{Peters}, and we will freely use standard terminology from graph theory. We start with the central object of study.
 \begin{defn}[Discrete time series]
@@ -285,7 +296,7 @@ We are approaching the full-fleshed formulation of our theorem now. We can now s
 \begin{thm}[Identifiability in dynamic systems]
 We assume the following of our dynamic system
 \begin{enumerate}[label=(I\arabic*)]
-	\item The elements $M_W$ of the invariant set filtration $\mathbb{M}$ are compact, invariant \emph{smooth} manifolds.
+	\item The elements $M_W$ of the invariant set filtration $\mathbb{M}$ are compact, invariant \emph{smooth} manifolds. 
 	\item Given comparable $U,V$ in the lattice $UL_\varphi$ with $U<V$, the corresponding projection $\pi_{VU}:M_V\to M_U$ is non-injective.
 	\item Given non-comparable $U,V$ in the lattice $UL_\varphi$, there exist no continuous surjections $f:M_U\to M_V$ or $g:M_V\to M_U$.
 	\item We assume that $\varphi^T$ be generic for fixed $T$, and that $s$
@@ -305,7 +316,7 @@ Let $\varphi$ be a causal dynamical system, and let $UL_\varphi$ be the correspo
 \begin{enumerate}[label=\roman*.]
 	\item Let the set of variables be the set of vertices in a graph we will call \emph{RG}.
 	\item For every variable $x$, build the reconstructed manifold $M_x\coloneqq \Phi	_{(\varphi^T,x,k)(M)}$.
-	\item 
+	\item For every pair $x$ and $y$, draw an edge $x\to y$ if there exists a continuous surjection $f:M_x\to M_y$ and draw an edge $y\to x$ if $g:M_y\to M_x$.
 \end{enumerate}
 \end{cor}
 

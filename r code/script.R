@@ -89,6 +89,31 @@ legend(x = "topleft", legend = c("var1 xmap", "var2 xmap"), col = c("red",
 
 
 ## Sardine data
-library(rerddapXtracto)
-info <- info('erdCAMarCatSM')
-data <- rxtracto(info, parameter = "fish", x)
+library(readr)
+NewPortTemp <- read_csv("data/Newport Pier/NewportBeach_TEMP_1924-202303.csv", 
+                        col_types = cols(...8 = col_skip(), ...9 = col_skip(), 
+                                         ...10 = col_skip(), ...11 = col_skip(), 
+                                         TIME_PST = col_skip(), TIME_FLAG = col_skip(), 
+                                         TEMP_FLAG = col_skip()), skip = 44)
+View(NewPortTemp)
+
+ScrippsTemp <- read_csv("data/Scripps Pier/LaJolla_TEMP_1916-202303.csv", 
+                        col_types = cols(...10 = col_skip(), 
+                                         ...11 = col_skip(), ...12 = col_skip(), 
+                                         ...13 = col_skip(), ...14 = col_skip(), 
+                                         TIME_PST = col_skip(), TIME_FLAG = col_skip(), 
+                                         BOT_TEMP_C = col_skip(), BOT_FLAG = col_skip()), 
+                        skip = 45)
+View(ScrippsTemp)
+
+anchovies <- read_csv("data/anchovies.csv")
+anchovies <- anchovies[2:nrow(anchovies),]
+View(anchovies)
+
+sardines <- read_csv("data/sardines.csv")
+sardines <- sardines[2:nrow(sardines),]
+View(sardines)
+
+library(readxl)
+NewFish <- read_excel("data/Marine Fisheries Data Explorer Extract - 2023-09-25 11.10.49.xlsx")
+View(NewFish)

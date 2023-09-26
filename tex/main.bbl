@@ -1,5 +1,38 @@
 \begin{thebibliography}{}
 
+\bibitem[{Calif. Dept. of Fish and Game}, 2023]{oldData}
+{Calif. Dept. of Fish and Game} (2023).
+\newblock Erddap: California fish market catch landings, long list, 1928-2002,
+  monthly.
+\newblock Data retrieved from ERDDAP, the National Oceanic and Atmospheric
+  Administration at the U.S. Department of Commerce, accessed 2023-09-24 at
+  \url{https://coastwatch.pfeg.noaa.gov/erddap/tabledap/erdCAMarCatLM.html}.
+
+\bibitem[{Calif. Dept. of Fish and Wildlife}, 2023]{newData}
+{Calif. Dept. of Fish and Wildlife} (2023).
+\newblock Monthly landings in pounds into california 1980-2022.
+\newblock Data retrieved from Marine Fisheries Data Explorer, the California
+  Department of Fish and Wildlife, accessed 2023-09-26 at
+  \url{https://wildlife.ca.gov/Conservation/Marine/Data-Management-Research/MFDE}.
+
+\bibitem[Carter et~al., 2023a]{Scripps}
+Carter, M.~L., Flick, R.~E., Terrill, E., Beckhaus, E.~C., Martin, K., Fey,
+  C.~L., Walker, P.~W., Largier, J.~L., \& McGowan, J.~A. (2023a).
+\newblock {Shore Stations Program, La Jolla, Scripps Pier Shore Station (La
+  Jolla Archive, 2023-06-30).}
+\newblock In Shore Stations Program Data Archive: Current and Historical
+  Coastal Ocean Temperature and Salinity Measurements from California Stations.
+  \url{https://doi.org/10.6075/J06T0K0M}.
+
+\bibitem[Carter et~al., 2023b]{Newport}
+Carter, M.~L., Flick, R.~E., Terrill, E., Beckhaus, E.~C., Martin, K., Fey,
+  C.~L., Walker, P.~W., Largier, J.~L., \& McGowan, J.~A. (2023b).
+\newblock {Shore Stations Program, Newport Beach - Balboa Pier Shore Station
+  (Newport Beach Archive, 2023-06-30).}
+\newblock In Shore Stations Program Data Archive: Current and Historical
+  Coastal Ocean Temperature and Salinity Measurements from California Stations.
+  \url{https://doi.org/10.6075/J0GX4BCP}.
+
 \bibitem[Cummins et~al., 2015]{mathFound}
 Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
 \newblock On the efficacy of state space reconstruction methods in determining
@@ -54,6 +87,7 @@ Sugihara, G., May, R., Ye, H., hao Hsieh, C., Deyle, E., Fogarty, M., \& Munch,
 Takens, F. (1981).
 \newblock {\em Detecting Strange Attractors in Turbulence. Lecture Notes in
   Mathematics}, volume 898, (pp.\ 366--381).
+\newblock Springer New York.
 
 \bibitem[Ye et~al., 2015]{Ye2015}
 Ye, H., Deyle, E.~R., Gilarranz, L.~J., \& Sugihara, G. (2015).
