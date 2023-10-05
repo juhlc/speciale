@@ -89,6 +89,8 @@ legend(x = "topleft", legend = c("var1 xmap", "var2 xmap"), col = c("red",
 
 
 
+
+
 ## Sardine data
 library(readr)
 NewPortTemp <- read_csv("data/Newport Pier/NewportBeach_TEMP_1924-202303.csv", 
