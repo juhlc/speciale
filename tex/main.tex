@@ -321,8 +321,8 @@ Let $\varphi$ be a causal dynamical system, and let $UL_\varphi$ be the correspo
 	\item For every pair $x$ and $y$, draw an edge $x\to y$ if there exists a continuous surjection $f:M_x\to M_y$ and draw an edge $y\to x$ if $g:M_y\to M_x$.
 \end{enumerate}
 \end{cor}
-
-
+We remark the inherent simplicity of this approach as compared with Granger causality: in Granger causality, we have to account for all relevant information in order to allow for causal reasoning; here we need only consider the prints of the time series themselves. Of course, some potential problems may hide in our rather abstract set of assumptions I1)-I4). For instance, we cannot rule out a causal mirage due to synchronization: imagine a common causal confounder between two systems resulting in two heavily synchronized, but essentially 'independent' dynamic systems. This would result in erroneous causal interpretations, and so the problem of hidden confounders presents itself in this world as well. However, we would expect these mirages to occur only in the presence of heavy synchronization, so this potential undermining of causal inference may be less severe than in similar problems.\\\\ 
+We used the term independent before, which of course is not to be interpreted in the probabilistic sense, as this is entirely meaningless in our setup; all our objects are deterministic, and they are all trivially independent in a probabilistic model. It is not quite true in a literal way either, since we assume that they are linked by a common cause; so all  that is meant that any further dynamic not imposed by the cause must be inherent to the subsystem and thus 'independent' of other subsystems.
 
 \section{Convergent Cross Mapping and Extensions}
 
