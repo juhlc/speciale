@@ -386,6 +386,7 @@ q <- ggplot(data=diff_plot_data, aes(x=year)) +
 
 q
 
+
 ggsave(
   "diff.png",
   q,
