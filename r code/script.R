@@ -140,8 +140,12 @@ df <- data.frame(
   year = c(anchovies$year, comb$Year[comb$Year>2002]),
   month = c(anchovies$month, comb$Month[comb$Year>2002]),
   anchovies = c(anchovies$landings, comb$Pounds.y[comb$Year > 2002]),
-  sardines = c(sardines$landings, comb$Pounds.x[comb$Year > 2002])
+  sardines = c(sardines$landings,comb$Pounds.x[comb$Year > 2002])
 )
+df2 <- df
+df2$anchovies <- as.numeric(ifelse(df$anchovies == "Confidential", 0, df$anchovies))
+df2$sardines <- as.numeric(ifelse(df$sardines == "Confidential", 0, df$sardines))
+quickplot(df2$year[1:1131]+df2$month[1:1131]/12, df2$sardines, geom="line") + geom_line(aes(y=df2$anchovies), color="blue")
 df <- as_tibble(df)
 
 ## Missing values imputed by 0 - hopefully only producing a small bias
@@ -152,6 +156,8 @@ roll_anchovies <- rollmean(anchovies_by_year$result, k=lag, fill=NA)
 roll_sardines <- rollmean(sardines_by_year$result, k=lag, fill=NA)
 
 ## Temperature data
+comb_temp <- merge(ScrippsTemp[,1:4],NewPortTemp[,1:4], by=c("YEAR", "MONTH", "DAY"),all.x=TRUE, all.y=TRUE)
+
 NewPortTemp <- NewPortTemp[NewPortTemp$YEAR >= 1928 & NewPortTemp$YEAR <=2022,]
 ScrippsTemp <- ScrippsTemp[ScrippsTemp$YEAR >= 1928 & ScrippsTemp$YEAR <=2022,]
 mean(ScrippsTemp[,1:3] == NewPortTemp[,1:3])
@@ -208,12 +214,46 @@ for(i in 2:nrow(AvTemp2)){
 AvTemp2[is.na(AvTemp2$avg_temp),]
 AvTemp2 <- as_tibble(AvTemp2)
 AvTemp2 <- group_by(AvTemp2,  year, month)
-
-## Remaining missing values imputed by the average temperature of that month
 AvTemp2 <- summarise(AvTemp2, result=mean(temp))
+df2$temp <- AvTemp2$result[1:1131]
 temp_by_year2 <- summarise(AvTemp2, result=mean(result))
 roll_temp2 <- rollmean(AvTemp2$result, k=lag*12, fill=NA)
 roll_temp_year2 <- rollmean(temp_by_year2$result, k=lag, fill=NA)
+
+## Sophisticated imputation with full data
+AvTemp3 <- cbind(comb_temp[,1:3], 
+                rowMeans(
+                  comb_temp[,4:5],
+                  na.rm = FALSE)
+)
+colnames(AvTemp3) <- c("year", "month", "day", "temp")
+AvTemp3[1,4] <- comb_temp[1,4]
+checkFun <- function(x) is.na(x) | x == "NaN"
+for(i in 2:nrow(AvTemp3)){
+  if(checkFun(AvTemp3$temp[i])){
+    list <- rev(1:i)
+    counter <- 0
+    check <- FALSE
+    while(check == FALSE){
+      counter <- counter + 1
+      while(checkFun(AvTemp3[list[counter],4])){
+        counter = counter + 1
+      }
+      check <- (!checkFun(comb_temp[i,4]) & !checkFun(comb_temp[list[counter],4])) |
+        (!checkFun(comb_temp[i,5]) & !checkFun(comb_temp[list[counter],5])) |
+        (checkFun(comb_temp[i,5]) & checkFun(comb_temp[i,4]))
+    }
+    AvTemp3$temp[i] <- as.numeric(AvTemp3[list[counter], 4]) + 
+      as.numeric(ifelse(checkFun(comb_temp[i,5]), 0, - comb_temp[list[counter], 5] + comb_temp[i,5])) +
+      as.numeric(ifelse(checkFun(comb_temp[i,4]), 0, - comb_temp[list[counter], 4] + comb_temp[i,4]))
+  }
+}
+AvTemp3 <- as_tibble(AvTemp3)
+AvTemp3 <- group_by(AvTemp3,  year, month)
+AvTemp3 <- summarise(AvTemp3, result=mean(temp))
+temp_by_year3 <- summarise(AvTemp3, result=mean(result))
+roll_temp3 <- rollmean(AvTemp3$result, k=lag*12, fill=NA)
+roll_temp_year3 <- rollmean(temp_by_year3$result, k=lag, fill=NA)
 
 # cor(AvTemp$result,AvTemp2$result)
 # cor(temp_by_year$result, temp_by_year2$result)
@@ -242,7 +282,7 @@ temp_data <- data.frame(
 )
 temp_data <- as_tibble(temp_data)
 
-rm(list=setdiff(ls(), c("temp_data", "plot_data", "lag")))
+rm(list=setdiff(ls(), c("temp_data", "plot_data", "lag","roll_temp_year3")))
 }
 
 ## Creating basic plot of sardines and anchovies
@@ -271,7 +311,7 @@ p <- ggplot(data=plot_data, aes(x=year)) +
   geom_bar(aes(y=sardines/5e6), stat="identity", fill="#3fc1c9", alpha=0.2, linetype=0)  +
   geom_line(aes(y=roll_anchovies/1e6),color="#ed713a") +
   geom_bar(aes(y=anchovies/1e6), stat="identity", fill="#ed713a", alpha=0.2, linetype=0) +
-  geom_line(aes(y=plot_data$roll_temp*60-600), color="#77AB43") +
+  geom_line(aes(y=roll_temp*60-600), color="#77AB43") +
   geom_hline(yintercept = min(na.omit(plot_data$roll_temp))*60-600, linetype=2, color ="#77AB43", alpha=0.5) +
   geom_hline(yintercept = max(na.omit(plot_data$roll_temp))*60-600, linetype=2, color ="#77AB43", alpha=0.5) +
   # geom_line(data=temp_data, aes(x=year, y=temp*60-600), color="#77AB43") +
@@ -309,15 +349,15 @@ p
 
 ## First difference approach
 {
-corr_lag <- 30
+corr_lag <- 25
 diff_plot_data <- data.frame(
   year = 1929:2022,
-  roll_anchovies = diff(plot_data$roll_anchovies),
-  roll_sardines = diff(plot_data$roll_sardines),
+  roll_anchovies = rollmean(diff(plot_data$anchovies)/plot_data$anchovies[1:94], k=3,na.pad=TRUE),
+  roll_sardines = rollmean(diff(plot_data$sardines)/plot_data$sardines[1:94], k=3, na.pad=TRUE),
   roll_temp = diff(plot_data$roll_temp),
   roll_temp_undiff = plot_data$roll_temp[2:nrow(plot_data)],
-  anchovies = diff(plot_data$anchovies),
-  sardines = diff(plot_data$sardines),
+  anchovies = diff(plot_data$anchovies)/plot_data$anchovies[1:94],
+  sardines = diff(plot_data$sardines)/plot_data$sardines[1:94],
   roll_corr_a_s = rollapply(plot_data,
                              fill=NA, width=corr_lag,
                              FUN=function(df) cor(df[,"roll_anchovies"],
@@ -336,56 +376,59 @@ diff_plot_data <- data.frame(
 )
 }
 
+
+
 ## Expanded plot
 {
-q <- ggplot(data=diff_plot_data, aes(x=year)) +
+colfunc <- colorRampPalette(c("#7FD8BE","#FCAB64"))
+
+lag <- 10
+roll2 <- na.omit(rollmean(roll_temp_year3, k=lag, align="right"))
+ava_years_alt <- data.frame(xstart = 2021-1:length(roll2), xend = 2022-1:length(roll2)+0.1)
+filter_alt <- diff_plot_data$year < max(ava_years_alt$xend) & diff_plot_data$year > min(ava_years_alt$xstart) 
+fill <- rev(colfunc(length(roll2))[order(roll2)])
+
+q <- ggplot(data=diff_plot_data[filter_alt,], aes(x=year)) +
   theme(
     text = element_text(family = "IBM Plex Sans Condensed", size = 10),
     axis.title = element_text(),
     plot.subtitle = element_markdown(),
-    axis.title.y = element_markdown(),
+    axis.title.x = element_markdown(),
+    axis.title.x.top = element_markdown(),
     axis.title.y.right = element_markdown(),
+    axis.title.y.left = element_markdown(),
     panel.background = element_rect(fill = "#FFFFFF", color = NA),
     plot.background = element_rect(fill = "#FFFFFF", color = NA),
     legend.position = "none") +
   scale_y_continuous(
     # Features of the first axis
-    name = "Net difference in landings of <span style = 'color: #ed713a;'>anchovy</span> (million pounds)",
-    
-    # Add a second axis and specify its features
-    sec.axis = sec_axis( trans=~.*5, name="Net difference in landings of <span style = 'color: #3fc1c9;'>sardine</span> (million pounds)")
+    name = "Log-returns of landings",
+    breaks = seq(-2, 4,by=1),
+    limits = c(-2.8,6),
+    expand = c(0,0)
   ) +
-  geom_line(aes(y=roll_sardines/5e6), color = "#3fc1c9") +
-  geom_bar(aes(y=sardines/5e6), stat="identity", fill="#3fc1c9", alpha=0.2, linetype=0)  +
-  geom_line(aes(y=roll_anchovies/1e6),color="#ed713a") +
-  geom_bar(aes(y=anchovies/1e6), stat="identity", fill="#ed713a", alpha=0.2, linetype=0) +
-  geom_line(aes(y=roll_corr_s_t*100),color="#77AB43") +
-  #geom_line(aes(y=plot_data$roll_temp*60-600), color="#77AB43") +
-  #geom_hline(yintercept = min(na.omit(plot_data$roll_temp))*60-600, linetype=2, color ="#77AB43", alpha=0.5) +
-  #geom_hline(yintercept = max(na.omit(plot_data$roll_temp))*60-600, linetype=2, color ="#77AB43", alpha=0.5) +
-  # geom_line(data=temp_data, aes(x=year, y=temp*60-600), color="#77AB43") +
-  # geom_hline(yintercept = min(na.omit(roll_temp2))*60-600, linetype=2, color ="#77AB43", alpha=0.5) +
-  # geom_hline(yintercept = max(na.omit(roll_temp2))*60-600, linetype=2, color ="#77AB43", alpha=0.5) +
-  #annotate("richtext", x=2015, y=325, 
-   #        label="<span style = 'color: #77AB43;'>15.88 °C</span>",  
-    #       fill = NA, label.color = NA,size=3.4, 
-     #      family="IBM Plex Sans Condensed") +
-  #annotate("richtext", x=1935, y=510, 
-   #        label="<span style = 'color: #77AB43;'>18.85 °C</span>",  
-    #       fill = NA, label.color = NA,size=3.4, 
-     #      family="IBM Plex Sans Condensed") +
+  scale_x_continuous(
+    "Year",
+    sec.axis = sec_axis( ~.,name="Average of the sea surface temperature the previous 10 years from <span style = 'color: #7FD8BE;'>cold (16.11 °C)</span> to <span style = 'color: #FCAB64;'>warm (18.09 °C)</span>",
+                         breaks= NULL
+    )
+  ) +
+  geom_line(aes(y=log(1+roll_sardines)), color = "#3fc1c9") +
+  geom_bar(aes(y=log(1+sardines)), stat="identity", fill="#3fc1c9", alpha=0.2, linetype=0)  +
+  geom_line(aes(y=log(1+roll_anchovies)),color="#ed713a") +
+  geom_bar(aes(y=log(1+anchovies)), stat="identity", fill="#ed713a", alpha=0.2, linetype=0) +
+  geom_rect(aes(xmin=-Inf, xmax = Inf, ymin = 4.3, ymax = 6), fill="white") +
+  geom_rect(data=ava_years_alt, aes(x=NULL,ymin=5, ymax=5.8, xmin=xstart,
+           xmax=xend), alpha =1, fill=fill) +
   labs(
     title="Sardine and Anchovy Landings",
-    subtitle="The yearly and 3-year averages of landings of 
+    subtitle="Relative difference in landings of 
       <span style = 'color: #3fc1c9;'>sardine</span> and
-      <span style = 'color: #ed713a;'>anchovy</span> compared with 3-year
-    <br> averages of <span style = 'color: #77AB43;'>sea surface temperature</span> from 1928-2022 in the California Current System.",
-    caption="Source: Calif. Dept. of Wildlife and Game",
-    x="Year"
+      <span style = 'color: #ed713a;'>anchovy</span> from year to year compared with 10-year <br> sea surface temperature trends from 1928-2008 in the California Current System.",
+    caption="Source: Calif. Dept. of Wildlife and Game"
   )
 
 q
-
 
 ggsave(
   "diff.png",
@@ -395,7 +438,108 @@ ggsave(
 )
 }
 
+q2 <- ggplot(data=diff_plot_data, aes(x=roll_temp_year3[13:106])) + 
+  geom_point(aes(y=log(1+roll_sardines)), color="#3fc1c9") +
+  geom_smooth(aes(y=log(1+roll_sardines)),fill="#3fc1c9", color="#3fc1c9", linewidth=0.5, alpha=0.2) +
+  geom_point(aes(y=log(1+roll_anchovies)), color="#ed713a") +
+  geom_smooth(aes(y=log(1+roll_anchovies)), color="#ed713a", fill="#ed713a", linewidth=0.5, alpha=0.2) 
 
+q2
+
+q3 <- ggplot(data=diff_plot_data[!is.na(diff_plot_data$roll_corr_a_s),], aes(x=year+corr_lag)) + 
+  geom_line(aes(y=roll_corr_a_s), color="#dea060") + 
+  geom_line(aes(y=roll_corr_a_t), color="#ed713a") +
+  geom_line(aes(y=roll_corr_s_t), color="#3fc1c9")+
+  theme(
+    text = element_text(family = "IBM Plex Sans Condensed", size = 10),
+    axis.title = element_text(),
+    plot.subtitle = element_markdown(),
+    axis.title.x = element_markdown(),
+    panel.background = element_rect(fill = "#FFFFFF", color = NA),
+    plot.background = element_rect(fill = "#FFFFFF", color = NA),
+    legend.position = "none") +
+    labs(
+    title="Sardine and Anchovy Landings",
+    subtitle="Relative difference in landings of 
+      <span style = 'color: #3fc1c9;'>sardine</span> and
+      <span style = 'color: #ed713a;'>anchovy</span> from year to year compared with 10-year <br> sea surface temperature trends from 1928-2008 in the California Current System.",
+    caption="Source: Calif. Dept. of Wildlife and Game",
+    x = "Year",
+    y="25-year correlation"
+  )
+q3
+
+
+## CCM http://127.0.0.1:31077/graphics/b8e9e2fa-4df1-44cb-a06b-c6a746c3e749.png
+simplex_output <- simplex(df, c(1,500),c(701,900))
+par(mar = c(4, 4, 1, 1), mgp = c(2.5, 1, 0))  # set margins for plotting
+plot(simplex_output$E, simplex_output$rho, type = "l", xlab = "Embedding Dimension (E)", 
+     ylab = "Forecast Skill (rho)")
+
+var1_xmap <- ccm(df, E=1, lib_column = "Var1",
+                 target_column = "Var2", lib_sizes = seq(10, 140, by = 10), 
+                 num_samples = 100, random_libs = TRUE, replace = TRUE, silent = TRUE)
+var2_xmap <- ccm(df, E=1, lib_column = "Var2",
+                 target_column = "Var1", lib_sizes = seq(10, 140, by = 10), 
+                 num_samples = 100, random_libs = TRUE, replace = TRUE, silent = TRUE)
+
+plot(var1_xmap$LibSize, var1_xmap$`Var1:Var2`, type = "l", col = "red", 
+     xlab = "Library Size", ylab = "Cross Map Skill (rho)", ylim = c(0,0.6))
+lines(var1_xmap$LibSize, var1_xmap$`Var2:Var1`, col = "blue")
+legend(x = "topleft", legend = c("var1 xmap", "var2 xmap"), 
+       col = c("red","blue"), lwd = 1, bty = "n", 
+       inset = 0.02, cex = 0.8)
+
+
+library(lmtest)
+granger <- lm(roll_anchovies ~ roll_temp + roll_sardines, )
+result_temp_anchovies <- grangertest(roll_anchovies ~ roll_temp, data = plot_data[!is.na(plot_data$roll_temp),], order = 1)
+print(result_temp_anchovies)
+result_anchovies_temp <- grangertest(roll_temp ~ roll_anchovies, data = plot_data[!is.na(plot_data$roll_temp),], order = 1)
+print(result_anchovies_temp)
+result_temp_sardines <- grangertest(roll_sardines ~ roll_temp, data = plot_data[!is.na(plot_data$roll_temp),], order = 1)
+print(result_temp_sardines)
+result_sardines_temp <- grangertest(roll_temp ~ roll_sardines, data = plot_data[!is.na(plot_data$roll_temp),], order = 1)
+print(result_sardines_temp)
+result_sardines_anchovies <- grangertest(roll_sardines ~ roll_anchovies, data = plot_data[!is.na(plot_data$roll_temp),], order = 1)
+print(result_sardines_anchovies)
+result_anchovies_sardines <- grangertest(roll_anchovies ~ roll_sardines, data = plot_data[!is.na(plot_data$roll_temp),], order = 1)
+print(result_anchovies_sardines)
+
+
+result_temp_anchovies <- grangertest(roll_anchovies ~ roll_temp_undiff, data = diff_plot_data[!is.na(diff_plot_data$roll_temp_undiff),], order = 1)
+print(result_temp_anchovies)
+result_anchovies_temp <- grangertest(roll_temp_undiff ~ roll_anchovies, data = diff_plot_data[!is.na(diff_plot_data$roll_temp_undiff),], order = 1)
+print(result_anchovies_temp)
+result_temp_sardines <- grangertest(roll_sardines ~ roll_temp_undiff, data = diff_plot_data[!is.na(diff_plot_data$roll_temp_undiff),], order = 1)
+print(result_temp_sardines)
+result_sardines_temp <- grangertest(roll_temp_undiff ~ roll_sardines, data = diff_plot_data[!is.na(diff_plot_data$roll_temp_undiff),], order = 1)
+print(result_sardines_temp)
+result_sardines_anchovies <- grangertest(roll_sardines ~ roll_anchovies, data = diff_plot_data[!is.na(diff_plot_data$roll_temp_undiff),], order = 1)
+print(result_sardines_anchovies)
+result_anchovies_sardines <- grangertest(roll_anchovies ~ roll_sardines, data = diff_plot_data[!is.na(diff_plot_data$roll_temp_undiff),], order = 1)
+print(result_anchovies_sardines)
+
+result_temp_anchovies <- grangertest(anchovies ~ temp, data = df2, order = 1)
+print(result_temp_anchovies)
+result_anchovies_temp <- grangertest(temp ~ anchovies, data = df2, order = 1)
+print(result_anchovies_temp)
+result_temp_sardines <- grangertest(sardines ~ temp, data = df2, order = 1)
+print(result_temp_sardines)
+result_sardines_temp <- grangertest(temp ~ sardines, data = df2, order = 1)
+print(result_sardines_temp)
+result_sardines_anchovies <- grangertest(sardines ~ anchovies, data = df2, order = 1)
+print(result_sardines_anchovies)
+result_anchovies_sardines <- grangertest(anchovies ~ sardines, data = df2, order = 1)
+print(result_anchovies_sardines)
+
+
+
+library("vars")
+data_ts <- ts(na.omit(diff_plot_data[,c(1,2,3,5)]))
+var_model <- VAR(data_ts, lag.max = 1, type = "const")
+granger_result <- causality(var_model, cause = "roll_sardines")
+print(granger_result)
 #### ChatGPT Style Guide
 {
 # Sample data

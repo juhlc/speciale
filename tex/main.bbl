@@ -1,5 +1,13 @@
 \begin{thebibliography}{}
 
+\bibitem[Butterworth, 1983]{Compete}
+Butterworth, D.~S. (1983).
+\newblock {Assessment and Management of Pelagic Stocks in the Southern Benguela
+  Region}.
+\newblock {\em Proceedings of the Expert Consultation to Examine Changes in
+  Abundance and Species Composition of Neritic Fish Resources, San José, Costa
+  Rica, April 1983}, 291(2), 329--405.
+
 \bibitem[{Calif. Dept. of Fish and Game}, 2023]{oldData}
 {Calif. Dept. of Fish and Game} (2023).
 \newblock Erddap: California fish market catch landings, long list, 1928-2002,
@@ -39,6 +47,12 @@ Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
   causality.
 \newblock {\em SIAM Journal on Applied Dynamical Systems}, 14(1), 335--381.
 
+\bibitem[Granger, 1969]{Granger}
+Granger, C. W.~J. (1969).
+\newblock Investigating causal relations by econometric models and
+  cross-spectral methods.
+\newblock {\em Econometrica}, 37(3), 424--438.
+
 \bibitem[Hirsch, 1976]{hirsch}
 Hirsch, M. (1976).
 \newblock {\em Differential Topology}.
@@ -71,6 +85,16 @@ Peters, J., Janzing, D., \& Schölkopf, B. (2017).
 Sauer, T., Yorke, J.~A., \& Casdagli, M. (1991).
 \newblock Embedology.
 \newblock {\em Journal of Statistical Physics}, 65(3), 579--616.
+
+\bibitem[Schwartzlose et~al., 1999]{Sardine}
+Schwartzlose, R.~A., Alheit, J., Bakun, A., Baumgartner, T.~R., Cloete, R.,
+  Crawford, R. J.~M., Fletcher, W.~J., Green-Ruiz, Y., Hagen, E., Kawasaki, T.,
+  Lluch-Belda, D., Lluch-Cota, S.~E., MacCall, A.~D., Matsuura, Y.,
+  Nevárez-Martínez, M.~O., Parrish, R.~H., Roy, C., Serra, R., Shust, K.~V.,
+  Ward, M.~N., \& Zuzunaga, J.~Z. (1999).
+\newblock Worldwide large-scale fluctuations of sardine and anchovy
+  populations.
+\newblock {\em South African Journal of Marine Science}, 21(1), 289--347.
 
 \bibitem[Sokol \& Hansen, 2014]{sokol2014}
 Sokol, A. \& Hansen, N.~R. (2014).
