@@ -5,44 +5,46 @@ Reallocating 'name_of_file' (item size: 1) to 9 items.
 The style file: apalike2.bst
 Reallocating 'name_of_file' (item size: 1) to 7 items.
 Database file #1: kilder.bib
-You've used 18 entries,
+Warning--empty publisher in Spirtes
+You've used 21 entries,
             2229 wiz_defined-function locations,
-            643 strings with 8132 characters,
-and the built_in function-call counts, 7594 in all, are:
-= -- 703
-> -- 432
-< -- 11
-+ -- 155
-- -- 154
-* -- 691
-:= -- 1380
-add.period$ -- 55
-call.type$ -- 18
-change.case$ -- 165
-chr.to.int$ -- 17
-cite$ -- 18
-duplicate$ -- 242
-empty$ -- 450
-format.name$ -- 176
-if$ -- 1438
+            661 strings with 8360 characters,
+and the built_in function-call counts, 8475 in all, are:
+= -- 783
+> -- 459
+< -- 15
++ -- 163
+- -- 162
+* -- 756
+:= -- 1539
+add.period$ -- 63
+call.type$ -- 21
+change.case$ -- 182
+chr.to.int$ -- 20
+cite$ -- 22
+duplicate$ -- 284
+empty$ -- 519
+format.name$ -- 189
+if$ -- 1610
 int.to.chr$ -- 2
 int.to.str$ -- 0
-missing$ -- 16
-newline$ -- 93
-num.names$ -- 54
-pop$ -- 135
+missing$ -- 22
+newline$ -- 107
+num.names$ -- 63
+pop$ -- 159
 preamble$ -- 1
-purify$ -- 167
+purify$ -- 186
 quote$ -- 0
-skip$ -- 188
+skip$ -- 219
 stack$ -- 0
-substring$ -- 425
-swap$ -- 23
-text.length$ -- 2
+substring$ -- 461
+swap$ -- 27
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 102
-warning$ -- 0
-while$ -- 49
+type$ -- 114
+warning$ -- 1
+while$ -- 55
 width$ -- 0
-write$ -- 232
+write$ -- 268
+(There was 1 warning)

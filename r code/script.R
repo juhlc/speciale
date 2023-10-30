@@ -148,6 +148,14 @@ df2$sardines <- as.numeric(ifelse(df$sardines == "Confidential", 0, df$sardines)
 quickplot(df2$year[1:1131]+df2$month[1:1131]/12, df2$sardines, geom="line") + geom_line(aes(y=df2$anchovies), color="blue")
 df <- as_tibble(df)
 
+#Simone
+library(forecast)
+model<-auto.arima(df2$anchovies)
+
+model2<-arima(df2$anchovies, order = c(2,1,5), seasonal = list(order=c(2,1,2), period=12), include.mean = F)
+
+
+
 ## Missing values imputed by 0 - hopefully only producing a small bias
 anchovies_by_year <- summarise(df,.by=year, result=sum(na.omit(as.numeric(anchovies))))
 sardines_by_year <- summarise(df,.by=year, result=sum(na.omit(as.numeric(sardines))))
@@ -581,3 +589,5 @@ p <- ggplot(data, aes(x = Category, y = Value)) +
 # Display the plot
 print(p)
 }
+
+summary(restrict(VAR(cbind(diff_plot_data$anchovies, diff_plot_data$sardines, diff(roll2)[3:96]),p=1, type="none"), method="manual", resmat = t(matrix(c(0,0,1,0,0,1,0,0,1), ncol=3))))
