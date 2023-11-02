@@ -58,6 +58,13 @@ Hirsch, M. (1976).
 \newblock {\em Differential Topology}.
 \newblock Graduate Texts in Mathematics. Springer New York.
 
+\bibitem[Hoyer et~al., 2008]{ANM1}
+Hoyer, P., Janzing, D., Mooij, J.~M., Peters, J., \& Sch\"{o}lkopf, B. (2008).
+\newblock Nonlinear causal discovery with additive noise models.
+\newblock In D. Koller, D. Schuurmans, Y. Bengio, \& L. Bottou (Eds.), {\em
+  Advances in Neural Information Processing Systems}, volume~21: Curran
+  Associates, Inc.
+
 \bibitem[Huke, 2006]{Huke2}
 Huke, J.~P. (2006).
 \newblock {Embedding Nonlinear Dynamical Systems: A Guide to Takens’
@@ -75,6 +82,12 @@ Lauritzen, S.~L. (1996).
 \newblock {\em Graphical Models}.
 \newblock Oxford University Press.
 
+\bibitem[Lauritzen \& Richardson, 2002]{ChainGraph}
+Lauritzen, S.~L. \& Richardson, T.~S. (2002).
+\newblock {Chain Graph Models and their Causal Interpretations}.
+\newblock {\em Journal of the Royal Statistical Society Series B: Statistical
+  Methodology}, 64(3), 321--348.
+
 \bibitem[Leng et~al., 2020]{Leng2020}
 Leng, S., Ma, H., Kurths, J., Lai, Y.-C., Lin, W., Aihara, K., \& Chen, L.
   (2020).
@@ -85,6 +98,12 @@ Leng, S., Ma, H., Kurths, J., Lai, Y.-C., Lin, W., Aihara, K., \& Chen, L.
 Pearl, J. (2009).
 \newblock {\em Causality}.
 \newblock Cambridge University Press, 2 edition.
+
+\bibitem[Peters et~al., 2011]{ANM2}
+Peters, J., Janzing, D., \& Sch{\"o}lkopf, B. (2011).
+\newblock Causal inference on discrete data using additive noise models.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  33, 2436--2450.
 
 \bibitem[Peters et~al., 2017]{Peters}
 Peters, J., Janzing, D., \& Schölkopf, B. (2017).
@@ -113,7 +132,9 @@ Sokol, A. \& Hansen, N.~R. (2014).
 
 \bibitem[Spirtes \& Scheines, 1993]{Spirtes}
 Spirtes, P. \& Scheines, R. (1993).
-\newblock {\em Causation, Prediction, and Search}, volume~81.
+\newblock {\em Lecture Notes in Statistics: Causation, Prediction, and Search},
+  volume~81.
+\newblock Springer-Verlag New York.
 
 \bibitem[Sugihara et~al., 2012]{Sugihara}
 Sugihara, G., May, R., Ye, H., hao Hsieh, C., Deyle, E., Fogarty, M., \& Munch,

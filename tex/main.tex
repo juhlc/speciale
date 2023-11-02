@@ -1,13 +1,22 @@
 \documentclass[11pt, a4paper]{memoir}
-\usepackage[english, science, dropcaps, hyperref, submissionstatement]{ku-frontpage}
-\usepackage{amsmath,amssymb,amsfonts,mathrsfs,latexsym,mathtools}
 \usepackage[utf8]{inputenc}
+\usepackage[english, science, dropcaps, hyperref, submissionstatement]{ku-frontpage}
+
+% Math-related packages
+\usepackage{amsmath, amssymb, amsfonts, mathrsfs, latexsym, mathtools}
+\usepackage{ntheorem}
+\usepackage{centernot}
+
+% Miscellaneous packages
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 \usepackage{ulem}
-\usepackage{centernot}
 \usepackage{microtype}
+\usepackage{setspace}
 \usepackage{graphicx, caption}
+\usepackage{cleveref}
+\usepackage{chngcntr}
+
 \DeclareCaptionStyle{mystyle}{%
   font=it, % Italif font
   labelsep=space, % Use space instead of colon
@@ -15,19 +24,37 @@
 }
 \captionsetup{style=mystyle}
 \captionsetup{belowskip=-15pt}
-\usepackage{cleveref}
-\crefformat{footnote}{#2\footnotemark[#1]#3}
 
-\usepackage{chngcntr}
+\crefformat{footnote}{#2\footnotemark[#1]#3}
 \counterwithout{figure}{chapter}
-\usepackage{amsthm}
-\theoremstyle{plain}
+
+% Theorem-like environments with italicized text
+\theoremstyle{break}
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\itshape} % Italicized text
+\theoremseparator{.}
+
 \newtheorem{thm}{Theorem}
 \newtheorem{prop}{Proposition}
 \newtheorem{cor}{Corollary}
 \newtheorem{lem}{Lemma}
-\theoremstyle{definition}
-\newtheorem{defn}{Definition}
+
+% Definition environment with non-italicized text
+\theoremstyle{break}
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\normalfont} % Non-italicized text
+\theoremseparator{.}
+\newtheorem{innerdefn}{Definition}
+
+\newenvironment{defn}
+  {\begin{innerdefn}}
+  {\ensuremath{\circ}\end{innerdefn}}
+
+\theoremstyle{nonumberplain}
+\theoremsymbol{\ensuremath{\square}} 
+\newtheorem{proof}{Proof}
+
+% Custom commands and math operators
 \newcommand{\mN}{\mathbb{N}}
 \newcommand{\mZ}{\mathbb{Z}}
 \newcommand{\mQ}{\mathbb{Q}}
@@ -41,13 +68,16 @@
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\indep}{\perp \!\!\! \perp}
 
+\DeclareMathOperator{\pa}{pa}
+\DeclareMathOperator{\nei}{ne}
+\DeclareMathOperator{\bd}{bd}
+\DeclareRobustCommand{\firstsecond}[2]{#2}
+
+% Other settings
 \setlength\arraycolsep{2 pt}
 \setcounter{tocdepth}{2}
-\setcounter{secnumdepth}{0}
-
-
-
-\DeclareRobustCommand{\firstsecond}[2]{#2}
+\setcounter{secnumdepth}{1}
+\setlength{\jot}{8pt}
 
 \assignment{Master's thesis}
 
@@ -73,9 +103,9 @@
   \maketitle
 \endgroup
 
-\section{Abstract}
+\section*{Abstract}
 
-\subsubsection{Description from contract}
+\subsubsection*{Description from contract}
 The main goal of the project is to investigate dynamic systems for time series and the effectiveness of convergent cross mapping (CCM) to detect causality in this framework compared to other approaches on the basis of a reference model. Drawing on the paper "Detecting Causality in Complex Ecosystems" (2012) and "Distinguishing time-delayed causal interactions using convergent cross mapping", the project will explore the theoretical foundations, practical applications and potential shortfalls of CCM and its link to more classical methods in causality.\\\\
 Reference 1: Detecting Causality in Complex Ecosystems. George Sugihara, Robert May, Hao Ye, Chih-hao Hsieh, Ethan Deyle, Michael Fogarty and Stephan Munch. Science , 26 October 2012, New Series, Vol. 338, No. 6106 (26 October 2012), pp. 496-500.
 Reference 2: Distinguishing time-delayed causal interactions using convergent cross mapping. Hao Ye, Ethan R. Deyle, Luis J. Gilarranz \& George Sugihara. Scientific Reports volume 5, Article number 14750, 2015.\\\\
@@ -92,7 +122,7 @@ Reference 2: Distinguishing time-delayed causal interactions using convergent cr
 
 \newpage
 
-\section{Introduction}
+\section*{Introduction}
 Causality is a cornerstone of understanding in various scientific domains, setting the stage for profound realizations. At its core, causal inference addresses the intricate dance between correlation and causation. While correlation hints at a mutual relationship between two variables, causation pushes us into the territory of assertion — \textit{does one variable truly influence the other?} Traditional statistics employs randomization as a useful tool. Imagine a medical scenario where you can control who receives a treatment: If you can ensure that it is perfectly random who receives the treatment and patients receiving the treatment consistently show improvement compared to those who don't, we can attribute that difference to the treatment. However, when variables are merely observed without that level of control, establishing causation becomes more complex. Causal statistics thus requires another level of statistical modelling, because we want to reason about what happens when intervening in the process.\\\\
 This thesis delves into the vibrant world of causal relationships in dynamic systems. Granger causality, a seminal and widely used concept in causal analysis of time series, yields one approach to causal inference in time-dependent data. It is based on the thoughts of \cite{Granger}, and it posits that if the past of a variable $C$ contains unique information about another variable $E$, the variable $C$ is said to 'Granger-cause' the other variable $E$. This approach to causal inference is based on prediction and at its core, it operates on the principle that cause precedes effect, and therefore, knowledge of the cause can enhance the predictability of the effect. However, while Granger causality offers a framework for assessing causality in probabilistic settings, it encounters challenges in deterministic systems. Dynamic systems, by their nature, have variables that are interconnected and governed by underlying structures. This interconnectedness means that information about one variable can often be extracted from another due to the system's inherent dynamics, rather than any direct causal link.\\\\
 A case in point is the result from Takens (1981), which suggests that observing a single variable from a dynamic system might be sufficient to capture the entire system's dynamics. This interconnectedness can lead Granger causality to mistakenly identify causal links where none exist. Enter now the deterministic systems' viewpoint: Instead of relying on simple prediction improvement as a marker of causality, we focus on the inherent information within variables. If variable 
@@ -120,7 +150,7 @@ Commercial landings data is considered confidential and therefore some landings 
 We will use the landings data as a proxy for the population size of sardines and anchovies. This of course does entail some problems, since we have no measurements of the populations themselves and will result in some uncertainty, but we will disregard this discussion since it is not of inherent interest to the topic. To visualize the data, we plot the annual landings of sardine and anchovy alongside trend lines computed as the 3-year averages and we plot the 3-year averages of the SST:
 \begin{center}
 	\begin{figure}[!ht]
-		\includegraphics[scale=0.79]{{"../r code/sardine"}.png}
+		\includegraphics[width=\textwidth]{{"../r code/sardine"}.png}
 		\caption{}
 	\end{figure}
 \end{center}
@@ -129,11 +159,11 @@ $$(X_t)_{t\in T} \mapsto \left(\log\left(1+\frac{X_t-X_{t-1}}{X_{t-1}}\right)\ri
 The approximation on the right is valid when $(X_t-X_{t-1})X_{t-1}^{-1}$ is small, and thus the log-returns indicate the relative difference from year to year while shrinking very large positive values, which appear often in our data set. Below we plot the log-returns alongside 3-year averages and a scale of the 10 year average SST based on the previous 10 years for every year:
 \begin{center}
 	\begin{figure}[!ht]
-		\includegraphics[scale=0.79]{{"../r code/diff"}.png}
+		\includegraphics[width=\textwidth]{{"../r code/diff"}.png}
 		\caption{}
 	\end{figure}
 \end{center}
-The patterns in previous figure are significantly less obvious now. A negative correlation between sardine and anchovy populations is indeed less pronounced now, although we do see some spikes in opposite directions around 1970 and 1980. More pronounced is that the averages of the SST in the 1960's are quite low and that the return of the sardine population and decline of the anchovy population coincide with the return of higher average SST's. The climate and ecological changes connected with the development in sea surface temperatures are also deemed to be driving the population changes in the analysis done by \cite{Sardine}. We observe also a potential causal relationship between temperature and sardine and anchovy landings is \textit{regime dependent} or \textit{state dependent} thus revealing another feature of dynamic systems. In the recent warmer years, the previous dynamic between temperature and population sizes seems to disappear. This resembles the phenomenon of mirage correlation. In fact, the State of California introduced legislation in the 1990's aimed at protecting the sardine population, which implemented restrictions based on temperature. This was suspended in 2010 due to rising sea surface temperatures.\\\\
+The apparent patterns in the previous figure are significantly less obvious now. A negative correlation between sardine and anchovy populations is indeed less pronounced now, although we do see some spikes in opposite directions around 1970 and 1980. More pronounced is that the averages of the SST in the 1960's are quite low and that the return of the sardine population and decline of the anchovy population coincide with the return of higher average SST's. The climate and ecological changes connected with the development in sea surface temperatures are also deemed to be driving the population changes in the analysis done by \cite{Sardine}. We observe also a potential causal relationship between temperature and sardine and anchovy landings is \textit{regime dependent} or \textit{state dependent} thus revealing another feature of dynamic systems. In the recent warmer years, the previous dynamic between temperature and population sizes seems to disappear. This resembles the phenomenon of mirage correlation. In fact, the State of California introduced legislation in the 1990's aimed at protecting the sardine population, which implemented restrictions based on temperature. This was suspended in 2010 due to rising sea surface temperatures.\\\\
 We see that the log-returns look fairly stationary over time and one approach would be to analyze this data with standard techniques for Granger causality in time series data. Let $X_t\in \mR^3$ denote the values of the log-return of sardine, the log-return of anchovy and the average of sea surface temperature at time point $t$. We then introduce the VAR($p$)-model for this system:
 $$X_t=A_1 X_{t-1}+A_2 X_{t-2}+\cdots + A_p X_{t-p}+u_t$$
 where $A_1,\ldots, A_p\in \mR^{3\times 3}$ coefficient matrices and $u_t$ is a noise term. The coefficient matrices can be estimated with OLS (which is also the maximum likelihood estimator when assuming that $u_t$ is normally distributed and mean-zero), and we can get standard confidence intervals based on an assumption of asymptotic normality. We see that the matrices models the influence of past values of other variables on the present values as well as the past values of the variable in question. For now, we will cautiously endow this influence with a causal interpretation, although the nuances of this interpretation is yet to be made explicit. At the very least, we will take it as an indication of a possible causal link.\\\\ 
@@ -141,7 +171,9 @@ We have to choose the parameter $p$ specifying the number of lags in the model, 
 These results do not, however, exploit some of the properties of dynamic systems that we observed at discussed above, and the present approach does require some data manipulation in order to use standard econometric methods. Notice for instance, that a VAR($p$)-model under standard assumptions entail a stationary time series, and so we have to look for transformations of our time-series yielding this property or at least something that can reasonably me modelled with a stationary time series. Here this is achieved by the standard transformation, but it is a model assumption that needs addressing. This is the inspiration for the work that we will now undertake.
 
 \section{Causal Framework}
-In this section, we will introduce approaches to causal modelling and compare corresponding definitions of causation. In the process we will try to illuminate the underlying motivations. We rely on the fundamental understanding of causality as the characterization of the effect of interventions in a system of variables, and we shall build our models on the back of graphical models. In doing this, we follow the conventions of causal graphical  models as pioneered by \cite{Spirtes} and \cite{Pearl}, and of course inspired by the work of \cite{Steffen}. In that vein, one such approach to formalization is that of the \textit{Structural Causal Model (SCM)}, inspired by the terminology \cite{Peters}, which in its most simple form can be formulated for two variables as
+In this section, we will introduce approaches to causal modelling and compare corresponding definitions of causation. In the process we will try to illuminate the underlying motivations. We rely on the fundamental understanding of causality as the characterization of the effect of interventions in a system of variables, and we shall build our models on the back of graphical models. In doing this, we follow the conventions of causal graphical  models as pioneered by \cite{Spirtes} and \cite{Pearl}, and of course inspired by the work of \cite{Steffen}.
+\subsection{Simple Causal Model}
+In that vein, one such approach to formalization is that of the \textit{Structural Causal Model (SCM)}, inspired by the terminology \cite{Peters}, which in its most simple form can be formulated for two variables as
 \begin{align*}
 C&\coloneqq N_C\\
 E&\coloneqq f(C,N_E)
@@ -158,22 +190,67 @@ For every joint distribution\footnote{The simple proof requires the existence of
 $$Y=f_Y(X,N_Y),\quad X\indep N_Y$$
 where $f_Y$ is a measurable function and $N_Y$ a real-valued noise variable.
 \end{thm}
-In fact, the construction is fairly simple: If we consider the conditional cumulative distribution function $F_{Y|x}(y)\coloneqq \mP(Y\leq y\mid X=x)$ and define
-$$f_Y(x,n_Y)\coloneqq F^{-1}_{Y|x}(n_Y)=\inf\{y\in \mR: F_{Y|x}(y)\geq n_Y\}$$
+In fact, the construction is fairly simple: If we consider the conditional cumulative distribution function $F_{Y|x}(y)\coloneqq \mP(Y\leqslant y\mid X=x)$ and define
+$$f_Y(x,n_Y)\coloneqq F^{-1}_{Y|x}(n_Y)=\inf\{y\in \mR: F_{Y|x}(y)\geqslant n_Y\}$$
 then we need only let $N_Y$ be uniformly distributed on $[0,1]$ and independent of $X$ for the above SCM to entail the distribution $\mP_{(X,Y)}$. In light of this, one might feel quite pessimistic about the prospect of causal inference, but once again one has to impose the right structure on the model. If we assume that the noise or randomness is additive, then the solution  to assume sufficient 'irregularity':
-\begin{thm}[Identifiability in bivariate systems]
+\begin{thm}[Identifiability in bivariate systems with additive noise]
 Assume that $(X,Y)$ has the joint distribution $\mP_{(X,Y)}$.
 \begin{enumerate}[label=(\roman*)]
-	\item If $\mP_{(X,Y)}$ admits the linear model
+	\item Assume $\mP_{(X,Y)}$ admits the linear model
 	$$Y=\alpha X+N_Y,\quad N_Y\indep X,$$
-	with continuous random variables $X$, $N_Y$ and $Y$. Then there exists $\beta\in \mR$ and a random variable $N_X$ such that $$Y=\beta X+N_X,\quad N_X\indep Y$$
-	if and only if $N_Y$ and $X$ are Gaussian.
-	\item 
+	with continuous random variables $X$, $N_Y$ and $Y$. Then there exists $\beta\in \mR$ and a random variable $N_X$ such that $$X=\beta Y+N_X,\quad N_X\indep Y$$
+	if and only if $N_Y$ and $X$ are Gaussian. The second relies on the work of 
+	\item Assume $\mP_{(X,Y)}$ admits an additive noise model
+	$$Y=f_Y(X)+N_Y,\quad N_Y\indep X$$
+	with continuous random variables $Y$, $X$ and $N_Y$, where $N_Y$ and $X$ have strictly positive densities $p_{N_Y}$ and $p_X$, and $f_Y$, $p_{N_Y}$ and $p_X$ are three times differentiable. Then it is a generic\footnote{In this case, this can be formulated explicitly in terms of the condition
+	$$(\log p_{N_Y})''(y-f_Y(x))f_Y'(x)\neq 0$$
+	for all but countably many $x$, and that we possibly discount some 3-dimensional affine subspace of log densities. In all essence, this is meant to be an indication that without any concrete evidence to the contrary, we can safely assume to be in the generic case. Later on, we will meet another case of a generic property.} property that there does not exist a measurable $f_X$ and a continuous random variable $N_X$ with strictly positive density $p_{N_X}$, such that
+	$$X=f_X(Y)+N_X,\quad N_X\indep Y$$
+	with $f_X$ and $p_{N_X}$ three times differentiable.
+	\item Assume $\mP_{(X,Y)}$ admits an additive noise model
+	$$Y=f_Y(X)+N_Y,\quad N_Y\indep X$$
+	with measurable $f_Y$ and noise variable $N_Y$ and that either $X$ or $Y$ has finite support. Then there exist measurable $f_X$ and noise variable $N_X$ such that
+	$$X=f_X(Y)+N_X,\quad N_X\indep Y$$
+	if and only if there exists $\ell\in \mN$ and disjoint sets $C_0,\ldots, C_\ell$ satisfying
+	\begin{itemize}
+		\item $\bigcup_{i=0}^{\ell}C_i=\text{supp } X$
+		\item $\forall i\exists d_i\geqslant 0: C_i=C_0+d_i\wedge \mP(X=x)=\mP(X=x-d_i)\cdot \frac{\mP(X\in C_i)}{\mP(X\in C_0)}$
+		\item $\forall i\exists c_i: f|_{C_i}\equiv c_i\wedge \{c_i+\text{supp } N_Y\}_{i\in \{0,\ldots,\ell\}}$ is a family of disjoint sets
+	\end{itemize}
+	These conditions are satisfied if $X$ is uniformly distributed on $\{1,...,m\}$ for some $m\in \mN$.
 \end{enumerate}
 \end{thm}
-The first point is a consequence of the Darmois-Skitovič theorem stating that if any two linear combinations with non-zero coefficients of a set of independent non-degenerate random variables are independent, then all the variables involved are Gaussian.
+The first point is a consequence of the Darmois-Skitovič theorem stating that if any two linear combinations with non-zero coefficients of a set of independent non-degenerate random variables are independent, then all the variables involved are Gaussian. The second point is the main result of \cite{ANM1}, and the third point the main result of \cite{ANM2}. In all three cases, we observe that except in rare or particularly simple examples, the direction of causality is identifiable in models with additive noise. This illustrates that with the right amount of structure and assumptions, we can render the causal direction perfectly identifiable and thus moves the problem of causal discovery into the realm of practical considerations. There exist a plethora of machine learning methods capable of reliably estimating very complex functions, as thus the question becomes one of checking an additive noise assumption, making sure that the random variables are not governed by a law exceptional to the result above and dealing with the uncertainty inherited from finite sample sizes. We refrain from entering into the practitioner's domain, and will instead use this result as an inspiration.
+\subsection{Graphical Models}
+We are particularly interested in modelling connected data with some sort of dependency structure, typically that of dependency of data over time. Moreover, we want to be able to include more variables in our analysis, and thus keeping track of interdependencies becomes intricate. To combat this problem, we introduce causal graphs to keep track of the causal structure of a network of variables. In this process, we will have to make some choices, that will have a significant impact on what can be expressed. We will try to address these artefacts along the way. When modelling stochastic variables with graphs, we enter the domain of graphical models, for which there exists a quite rich theory of which we will only be able to give a small taste. We refer to the thorough presentation of \cite{Steffen}, which also is the main inspiration for what is presented here. The main idea in graphical modelling is to encode (conditional) independence constraints of the system in a graph, and to use this graph as a tool for inference. This idea will be the main driver for causal inference in the purely stochastic setting as well, and therefore the models are very closely related. Emphasizing this relation serves both as a means of tracing the components of our models and as a port for importing notions from the graphical model setting where causal interpretability is more tricky. We begin with some simple graph terminology:
+\begin{defn}[Graph terminology]
+Consider a \emph{graph} $\mathcal{G}=(\mathcal{V},\mathcal{E})$ with $\mathcal{V}$ the set of \emph{vertices} and $\mathcal{E}\subset \mathcal{V}\times \mathcal{V}$ the set of \emph{edges}.\\[5pt]
+We distinguish \textit{directed} ($-$) and \textit{undirected} edges ($\to$): For $u,v\in \mathcal{V}$, we write $u-v$ if $(u,v),(v,u)\in \mathcal{E}$, and $u\to v$ if only $(u,v)\in \mathcal{E}$.\\[5pt]
+If $u\to v$, we call $u$ a \emph{parent} of $v$, and we denote by $\pa(v)$ the set of parents of $v$. If $u-v$, we call $u$ a \emph{neighbour} of $v$, and we denote by $\nei(v)$ the set of neighbours of $v$. We define the \emph{boundary} of $v$ as $\bd(v)=\pa(v)\cup \nei(v)$, and for a subset $A\subset \mathcal{V}$, we define the parents of $A$ as
+$$\pa(A)=\bigcup_{v\in A}\pa(v)\setminus A $$
+A \emph{path} in $\mathcal{G}$ is a sequence of vertices $v_1,\ldots, v_n$ ($n \geqslant 2$) satisfying that for all $j=1,\ldots,n-1$, we have $v_{j+1}\in \bd(v_j)$, and a graph is \emph{connected} if any two vertices are contained in a path. A \emph{directed path} is a path for which all edges between the vertices are directed. A \textit{partially directed cycle} in $\mathcal{G}$ is a cycle with at least one directed edge, that is a path $v_1,\ldots, v_n$ ($n \geqslant 3$) with $v_1\in \bd(v_n)$ and $v_{j+1}\to v_j$ for some $j$.\\[5pt]
+For $A\subset V$, $\mathcal{G}_A$ denotes the subgraph of $\mathcal{G}$ with $A$ as vertex set and all edges inherited from $\mathcal{G}$, and we say it is the subgraph \emph{induced} by $A$.\\[5pt]
+A \emph{chain component} is a connected  subgraph of $\mathcal{G}$ containing only undirected edges, and a \emph{minimal complex}  is an induced subgraph $\mathcal{G}_A$ with two distinguished nodes $a,b$ for which $\mathcal{G}_{A\setminus \{a,b\}}$ is a chain component and no path in $\mathcal{G}_A$ contains both $a$ and $b$. A minimal complex can be drawn as
+$$a\to v_1-\cdots-v_n\gets b$$
+We say that $\mathcal{G}$ is a \emph{chain graph} if it contains no partially directed cycles, and if further it contains no directed edges, we say $\mathcal{G}$ is a \emph{directed acyclic graph (DAG)}.
+\end{defn}
+Now we have to specify what information we want to express with a graphical representation of a set of variables. When building causal graph models, we want the graphs to encode all causal relationships between variables, while the intent behind the use of a graphical model is less ambitious from the get-go: we want 'only' to deduce conditional independences between variables from the graph. This is not to say that this is typically a weak assumption, on the contrary. Instead, it is more appropriately interpreted as a sign of just how restrictive the causal graph models are going to be of the distributions they govern. Satisfying a set of conditional independence constraints is what we shall call a Markov property of the joint distribution of a set of variables, and this is the centre of attention in graphical model theory.\\\\
+For DAGs, there is a canonical way to define the Markov property, but there are multiple non-equivalent ways of defining a Markov property for chain graphs depending on how you want to treat the chain components. The choice of Markov property propagates throughout the modelling and determines what interpretations are valid. We shall encounter the possible existence of some complexes of causally interlinked variables later, and so for our purpose, we choose to define the Markov property in a fashion that treats chain components as one indivisible unit and we thereby accept the consequences for valid interpretations as discussed by \cite{ChainGraph}. These definitions are most easily expressed when assuming that there exists a joint density of the variables of interest, in which case they take the form:
 
-We introduce the dependence upon time, that is we consider a series of connected data. First of all, the most pressing problem is that of incorporating the aspect of temporal dependence in the structual causal model. The definition of the SCM easily extends to any number of variables with the definition that $X$ causes $Y$ if $Y\coloneqq f(X,Z_1,...,Z_n,N_X)$ and for a moment disregarding that $f$ may trivially depend on any variable - say in this context that $f$ depends 'non-trivially' on $X$. We can then easily imagine a a time series in an SCM in a discrete framework by simply associating each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit the problems with causality in pathological deterministic structures, and it is not immediate that this model is appropriate for continuous time models as well.\\\\
+\begin{defn}[Markov Property]
+Let $(\Omega, \mathcal{F}, \mP)$ be a probability space. A distribution $P$ with density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the DAG} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
+$$f(x)=\prod_{v\in \mathcal{V}}f\left(x_v\mid x_{\pa(v)}\right)$$
+where $x_A$ denotes $(x_v)_{v\in A}$ for a subset of variables $A\subset V$.\\[5pt]
+A distribution $P$ with density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the chain graph} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
+\begin{align*}
+f(x)&=\prod_{\tau\in \mathscr{T}}f\left(x_\tau\mid x_{\pa(\tau)}\right),\\
+f\left(x_\tau\mid x_{\pa(\tau)}\right)&=Z^{-1}\left(x_{\pa(\tau)}\right)\prod_{A\in \mathscr{A}(\tau)}\psi_A\left(x_A\right)
+\end{align*}
+where $\mathscr{A}(\tau)$
+\end{defn}
+
+\subsection{Multivariate SCMs}
+The definition of the SCM easily extends to any number of variables with the definition that $X$ causes $Y$ if $Y\coloneqq f(X,Z_1,...,Z_n,N_X)$ and for a moment disregarding that $f$ may trivially depend on any variable - say in this context that $f$ depends 'non-trivially' on $X$. We can then easily imagine a a time series in an SCM in a discrete framework by simply associating each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit the problems with causality in pathological deterministic structures, and it is not immediate that this model is appropriate for continuous time models as well.\\\\
 We will first give an introduction to our causal modelling in the terminology of the structural causal model (SCM), sometimes also referred to as a structural equation model (SEM),  which allows us to model time series in a discrete framework. We shall then discuss the extension to continuous time series and the link to the discrete time series framework. Our causal framework does come with some caveats, but we will try our best to discuss them along the way. We will present the SCMs as done in \cite{Peters}, and we will freely use standard terminology from graph theory. We start with the central object of study.
 \begin{defn}[Discrete time series]
 We shall call $(X_t)_{t\in \mZ}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mZ}$ a \emph{$d$-dimensional discrete time series}, where $X_t^j:\Omega\to \mR$ is a random variable and the observation of the $j$th variable of $X$ at time $t$.
@@ -181,7 +258,7 @@ We shall call $(X_t)_{t\in \mZ}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mZ}$ a \emph{$d$
 \begin{defn}[Causal graph]
 Let $\mathcal{V}$ be a set consisting of vertices representing each observation of $X$, $X_t^j$, say $$\mathcal{V}=\left\{X_t^j: t\in \mZ,j\in\{1,\ldots,d\}\right\}\simeq \left\{(t,j)\mid t\in \mZ, j\in \{1,\ldots,d\}\right\}$$ and let $\mathcal{E}$ be a set of directed edges in the graph, that is 
 $$\mathcal{E}\subset \mathcal{V}\times \mathcal{V}$$
-satisfying that $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$ implies $t_1\leq t_2$, i.e. that there are no links backwards in time. If $t_1<t_2$ for all $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$, we shall say $\mathcal{E}$ contains no \emph{instantaneous effects}.\\
+satisfying that $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$ implies $t_1\leqslant t_2$, i.e. that there are no links backwards in time. If $t_1<t_2$ for all $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$, we shall say $\mathcal{E}$ contains no \emph{instantaneous effects}.\\
 We shall call $(\mathcal{V}, \mathcal{E})$ a \emph{causal graph} of the time series $(X_t)_{t\in \mZ}$. If there exists $v_1,v_2\in \mathcal{V}$, such that $(v_1,v_2)\in \mathcal{E}$, we shall say $v_1$ is a \emph{parent} of $v_2$, write $v_1\in \text{PA}_{v_2}$, and if $v_2=X_t^j$, we shall write $\text{PA}_{t}^j$ for $\text{PA}_{v_2}$. If $X_{t_1}^{j_1}$ is the parent of $X_{t_2}^{j_2}$, we shall say $X_{t_1}^{j_1}$ \emph{directly causes} $X_{t_2}^{j_2}$ and denote $X_{t_1}^{j_1}$ the \emph{direct cause} and $X_{t_2}^{j_2}$ the \emph{direct effect}.
 \end{defn}
 In much of the causality literature, we would impose that the graph be acyclic, making the causal graph a directed acyclic graph (DAG). We will however concern ourselves with bidirectional causality later on, so we will not make this assumption the standard in this thesis. Remark however, that this assumption is fulfilled under any circumstance if we do not allow for instantaneous effects. With the approach of the structural causal model, we put the causal graph front and center in this modelling of causal structures.
@@ -195,6 +272,9 @@ Mathematically, there is really nothing preventing us from defining causal graph
 \begin{defn}[Markov property and faithfulness]
 We define graph independence as following
 \end{defn}
+
+\subsection{Causal Modelling of Time Series}
+We now return to the problem of incorporating the aspect of temporal dependence in the structual causal model.
 The following idea was presented by Granger (reference?), and we may actually give explicit conditions for the efficacy of the Granger causality framework in our current model set-up.\\\\
 %%
 However, the upside of this model is that it allows for an alternative formulation of cause and effect under some admittedly rather restrictive assumptions, namely Granger causality:\\
@@ -246,46 +326,36 @@ $$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
 is an embedding. \cite{Takens}
 \end{thm}
 There are several things to unpack here. First of all, it is worth noting the differentiability constraints on our maps; both $\varphi: M\to M$ and $y:M\to\mR$ are required to be twice continuously differentiable. In the work of \cite{Sauer1991}, their setup enables this requirement to be relaxed to them only being once continuously differentiable. Our dynamical system is indeed a vector field on an invariant compact manifold being the first regularity condition, this is then the second regularity condition, that we will for the most part silently have to assume is fulfilled. Next, we will call $y$ our \textit{observation function}, and we can think of this as a series of observations made from the system. For now, $\varphi$ remains a bit more mysterious, but we shall quickly make this map must more explicit. We shall call $\Phi$ for the \textit{delay embedding}, the reasoning behind which will be revealed shortly. However, the most important caveat is perhaps that it is 'only' a generic property that the theorem yields an embedding. We will provide more rigorous definitions later, but for now we will understand embedding simply as a reconstruction of the manifold. By generic property is meant to be understood that for 'most' observation functions $y$ and most choices $\varphi$, the delay embedding is indeed an embedding. The precise meaning in an algebraic sense is that there exists an open and dense subset of the function space $C^2(M,\mR)$, respectively $\text{Diff}^2$, for which the statement is true. From this stems our second regularity assumption. For $\varphi$, we will be able to do some reasoning in practical cases, but for $y$ this will often be just another silent assumption. We shall be calling a map $y\in C^2(M,\mR)$, respectively $\varphi\in \text{Diff}^2(M)$, \textit{generic} if there exists $\varphi\in \text{Diff}^2(M)$, respectively $y\in C^2(M,\mR)$, such that the resulting delay embedding is indeed an embedding.\\\\
-We will now work towards a more explicit version of the theorem. First of all, the reasoning behind the naming of the delay embedding, comes from the following: we shall associate any given time point $t\in \mR_{\geq 0}$ with a position $x(t)\in M$ on the manifold. For a given delay length $\tau\in \mR_{>0}$, we may then define $\varphi_\tau: M\to M$ by $x(t)\mapsto x(t-\tau)$. Substituting this into Takens' theorem reduces the delay embedding to
+We will now work towards a more explicit version of the theorem. First of all, the reasoning behind the naming of the delay embedding, comes from the following: we shall associate any given time point $t\in \mR_{\geqslant 0}$ with a position $x(t)\in M$ on the manifold. For a given delay length $\tau\in \mR_{>0}$, we may then define $\varphi_\tau: M\to M$ by $x(t)\mapsto x(t-\tau)$. Substituting this into Takens' theorem reduces the delay embedding to
 $$\Phi(x(t))=(y(x(t)),y(x(t-\tau)),\ldots,y(x(t-2m\tau)))$$
 Takens' theorem thus states that the values of a single time series considered at different delays will reconstruct the manifold 'generically'. Now we will need to ensure that this choice of $\varphi$ is both twice continuously differentiable and is not of such a nature that it falls out of the set of generic functions. The differentiability constraint falls under the umbrella of regularity assumptions, while we can guarantee that $\varphi_\tau$ will be generic for some choices of $\tau$ by the power of a restatement of Takens' theorem. It was in fact proved by Takens in \cite{Takens}, but not stated. We will follow the restatement of the theorem as well as the subsequent presentation of theory and definitions presented in \cite{Huke} for the rest of this section.
 \begin{thm}[Takens, version 2]
 Let M be a compact manifold of dimension $m$. Let $\varphi\in\text{Diff}^2(M)$ satisfy
 \begin{enumerate}[label=\arabic*)]
 	\item the periodic points of $\varphi$ with periods less than or equal to $2m$ are finite in number,
-	\item if $x$ is any such periodic point with period $k\leq 2m$, then the eigenvalues of $\varphi^k$ at $x$ are all distinct.
+	\item if $x$ is any such periodic point with period $k\leqslant 2m$, then the eigenvalues of $\varphi^k$ at $x$ are all distinct.
 \end{enumerate}
  Then it is a generic property for $y\in C^2(M,\mR)$ that the map $\Phi_{(\varphi,y)}:M\to \mathbb{R}^{2m+1}$, defined by
 $$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
 is an embedding. \cite{Huke}
 \end{thm}
-By periodic with period less than or equal to $2m$, we mean that $\varphi^{k}(x)=x$ for some $k\leq 2m$. If $\tau$ is chosen such that there are no periodic points of $\varphi_\tau$, or if we assume some structure on the periodic points, then we need only worry about whether $y$ is generic. In fact, if $\varphi_\tau$ is not generic for some choice of $\tau$, it will usually be after some small perturbation in $\tau$ (\textit{is it true, reference?}). Therefore in practice multiple lags can be tested, and we should thus be able to fairly easily sidestep this problem. Before moving on to definitions and technicalities, we will at this point however notice that we have a theorem that gives an explicit construction that will fairly generally allow us to completely recover the dynamics of a system from only a single variable observed over time. In contrast to the choice of $\tau$, we will however usually have in practice that the observation functions are fixed. So even if the same technique of small perturbations of a non-generic observation function produces a generic observation, we do not have access to it. Therefore we will usually have to assume a given observation function is generic, if there is no reason to believe otherwise. However, in some cases we can actually endow genericity with causal interpretation - we return to this in the next section. For now, we expand upon Takens' theorem.  We start of with the basic definitions needed following very closely the terminology and presentation from \cite{Huke2}. 
-\begin{defn}[Basics of differential topology]
-Let $M$ be a separable Hausdorff space and let $m\in \mN$.\\
-- We call $(U,h)$ a \emph{chart} if $U\subset M$ is open and $h: U\to \mR^m$ is a homeomorphism onto its range with $U$ the \emph{chart domain} and $h$ the \emph{coordinate function}.\\
-- If for each point $x\in M$, there exists a chart $(U,h)$ on $M$ such that $x\in U$, we call $M$ a \emph{manifold of dimension $m$},\\
-- and we call a collection of charts whose chart domains cover all of $M$ for an \emph{atlas}.\\
-- The collection of all charts on $M$ is itself an atlas that we call the \emph{structure} on $M$.\\
-- On overlapping chart domains of charts $(U,h)$ and $(V,g)$, we consider the \emph{coordinate transformations}
+By periodic with period less than or equal to $2m$, we mean that $\varphi^{k}(x)=x$ for some $k\leqslant 2m$. If $\tau$ is chosen such that there are no periodic points of $\varphi_\tau$, or if we assume some structure on the periodic points, then we need only worry about whether $y$ is generic. In fact, if $\varphi_\tau$ is not generic for some choice of $\tau$, it will usually be after some small perturbation in $\tau$ (\textit{is it true, reference?}). Therefore in practice multiple lags can be tested, and we should thus be able to fairly easily sidestep this problem. Before moving on to definitions and technicalities, we will at this point however notice that we have a theorem that gives an explicit construction that will fairly generally allow us to completely recover the dynamics of a system from only a single variable observed over time. In contrast to the choice of $\tau$, we will however usually have in practice that the observation functions are fixed. So even if the same technique of small perturbations of a non-generic observation function produces a generic observation, we do not have access to it. Therefore we will usually have to assume a given observation function is generic, if there is no reason to believe otherwise. However, in some cases we can actually endow genericity with causal interpretation - we return to this in the next section. For now, we expand upon Takens' theorem.  We start of with the basic definitions needed following very closely the terminology and presentation from \cite{Huke2}. 
+\begin{defn}[Differential topology terminology]
+Let $M$ be a separable Hausdorff space and let $m\in \mN$.\\[5pt]
+We call $(U,h)$ a \emph{chart} if $U\subset M$ is open and $h: U\to \mR^m$ is a homeomorphism onto its range with $U$ the \emph{chart domain} and $h$ the \emph{coordinate function}.\\[5pt]
+If for each point $x\in M$, there exists a chart $(U,h)$ on $M$ such that $x\in U$, we call $M$ a \emph{manifold of dimension $m$}, and we call a collection of charts whose chart domains cover all of $M$ an \emph{atlas}.The collection of all charts on $M$ is itself an atlas that we call the \emph{structure} on $M$.\\[5pt]
+On overlapping chart domains of charts $(U,h)$ and $(V,g)$, we consider the \emph{coordinate transformations}
 $$hg^{-1}: g(U\cap V)\to \mR^m, \text{ and } gh^{-1}: h(U\cap V)\to \mR^m$$
-- We say the charts are \emph{$C^r$-related} if the coordinate transformations $hg^{-1}, gh^{-1}$ are $C^r$,\\
-- and if all coordinate transformations of an atlas are $C^r$-related, we say the atlas is \emph{$C^r$-differentiable}.\\
-- A \emph{differential structure} is the set of all charts $C^r$-related to the charts in some atlas.\\
-- We shall say a manifold is $C^r$ if there exists a $C^r$-differentiable atlas of $M$.\\
-- If $M$ is $C^r$ and $N$ is a $C^r$ manifold of dimension $n\geq m$, the function $f: M\to N$ is \emph{$C^r$-differentiable} if for each $p\in M$, there exists charts $(U,h)$ on M and $(V,g)$ on N, such that $p\in U$, $f(p)\in V$ and 
+We say the charts are \emph{$C^r$-related} if the coordinate transformations $hg^{-1}, gh^{-1}$ are $C^r$, and if all coordinate transformations of an atlas are $C^r$-related, we say the atlas is \emph{$C^r$-differentiable}. A \emph{differential structure} is the set of all charts $C^r$-related to the charts in some atlas. We shall say a manifold is $C^r$ if there exists a $C^r$-differentiable atlas of $M$.\\[5pt]
+If $M$ is $C^r$ and $N$ is a $C^r$ manifold of dimension $n\geqslant m$, the function $f: M\to N$ is \emph{$C^r$-differentiable} if for each $p\in M$, there exists charts $(U,h)$ on M and $(V,g)$ on N, such that $p\in U$, $f(p)\in V$ and 
 $$gfh^{-1}: h(U\cap f^{-1}(V))\to \mR^n$$
-is $C^r$ (remark: this property thus holds for any choice of charts in the atlas covering $p$, $f(p)$ respectively).\\
-- The \emph{Jacobian} at $p$ is then defined as 
+is $C^r$. (Remark: this property thus holds for any choice of charts in the atlas covering $p$ and $f(p)$ respectively). The \emph{Jacobian} at $p$ is then defined as 
 $$Dgfh^{-1}(h(p))$$
-This depends on the choice of charts but the rank does not.\\ 
-- If the Jacobian is of maximal rank (rank $m$), we say $f$ is \emph{immersive at p},\\
-- and if $f$ is immersive everywhere, then we say $f$ is an \emph{immersion}.\\
-- An immersion that is homeomorphic upon its image is an \emph{embedding}.\\
-- Conversely, if $m\geq n$, and the Jacobian is of maximal rank (rank $n$), then $f$ is \emph{submersive at $p$},\\
-- and if submersive everhywhere a \emph{submersion}.\\
-- If $f: M\to N$ is an embedding, we say that $f(M)$ is a \emph{submanifold} of $N$.\\
-- A \emph{diffeomorphism} is a map $f:M\to N$ for which there exists a differentiable inverse, and in this case we shall call $M$ and $N$ \emph{diffeomorphic}. If $f$ is an embedding, it is possible to prove that $f:M\to f(M)$ is a diffeomorphism.\\
-- Finally, we will define some topologies. We let $C^r(M,N)$ denote the space of all $C^r$ differentiable maps from $M$ to $N$. We then let the topology of $C^r(M,N)$ be generated by the subbase consisting of sets defined as follows: for any choice of function $f\in C^r(M,N)$, charts $(U,h)$ on $M$ and $(V,g)$ on $N$, a compact set $K\subset U$ such that $f(K)\subset V$ and $\varepsilon>0$, we define $\mathcal{N}(f,(U,h),(V,g),K,\varepsilon)$ to be the set of all functions $\hat{f}\in C^r(M,N)$ for which $\hat{f}(K)\subset V$ and
+This depends on the choice of charts but the rank does not.\\[5pt]
+If the Jacobian is of maximal rank (rank $m$), we say $f$ is \emph{immersive at p}, and if $f$ is immersive everywhere, then we say $f$ is an \emph{immersion}. An immersion that is homeomorphic upon its image is an \emph{embedding}.\\[5pt]
+Conversely, if $m\geqslant n$, and the Jacobian is of maximal rank (rank $n$), then $f$ is \emph{submersive at $p$}, and if submersive everywhere it is a \emph{submersion}. If $f: M\to N$ is an embedding, we say that $f(M)$ is a \emph{submanifold} of $N$.\\[5pt]
+A \emph{diffeomorphism} is a map $f:M\to N$ for which there exists a differentiable inverse, and in this case we shall call $M$ and $N$ \emph{diffeomorphic}. If $f$ is an embedding, it is possible to prove that $f:M\to f(M)$ is a diffeomorphism.\\[5pt]
+Finally, we will define some topologies. We let $C^r(M,N)$ denote the space of all $C^r$ differentiable maps from $M$ to $N$. We then let the topology of $C^r(M,N)$ be generated by the subbase consisting of sets defined as follows: for any choice of function $f\in C^r(M,N)$, charts $(U,h)$ on $M$ and $(V,g)$ on $N$, a compact set $K\subset U$ such that $f(K)\subset V$ and $\varepsilon>0$, we define $\mathcal{N}(f,(U,h),(V,g),K,\varepsilon)$ to be the set of all functions $\hat{f}\in C^r(M,N)$ for which $\hat{f}(K)\subset V$ and
 $$\norm{D^kg\hat{f}h^{-1}(x)-D^kgfh^{-1}(x)}<\varepsilon$$
 for all $x\in h(K)$, $k=0,\ldots,r$, where $\norm{\cdot}$ is the usual Euclidean norm. If $M$ and $N$ are diffeomorphic, we let $\text{Diff}^r(M,N)$ be the subspace of $C^r(M,N)$ consisting of $C^r$-differentiable diffeomorphisms equipped with the subspace topology. Usually, we will use the shorter $\text{Diff}^r(M)$ for $\text{Diff}^r(M,M)$.
 \end{defn}
@@ -310,27 +380,27 @@ for all $a=(a_1,\ldots,a_n)$ with $\norm{a}< \delta$.
 Takens' theorem will allow us to do causal inference in the modelling framework introduced in this chapter. Below we give the theoretical details of this procedure.
 \section{Causal Inference with Takens' Theorem}
 In this section, we will show that we can only hope to recover the component graph from data using Takens' theorem. We shall later discuss attempts to reason further about the causal structure, but the results below will show that without further assumptions, we cannot distinguish direct and indirect causal links.\\\\
-The aim of this section is to show that under suitable regularity assumptions, we can create a correspondence between strongly connected components and sub-manifolds, and that this correspondence is precisely fine-grained enough to allow us to determine whether any two variables belong to the same strongly connected component and further the direction of the causal link if they do not. To do this, we have to formalize this correspondence. First of all, as discussed the component graph $CG_\varphi$ is a directed acyclic graph, and so we can think of the graph structure as a partial order, where $x,y\in CG_\varphi$ satisfy $y\geq x$ if $y\to x$. Considering then the upper sets, we inherit an ordering of these, since they are exactly defined with respect to the partial order, and since we are dealing with sets, we can unproblematically consider the union and intersection of upper sets. This structure is that of a lattice: 
+The aim of this section is to show that under suitable regularity assumptions, we can create a correspondence between strongly connected components and sub-manifolds, and that this correspondence is precisely fine-grained enough to allow us to determine whether any two variables belong to the same strongly connected component and further the direction of the causal link if they do not. To do this, we have to formalize this correspondence. First of all, as discussed the component graph $CG_\varphi$ is a directed acyclic graph, and so we can think of the graph structure as a partial order, where $x,y\in CG_\varphi$ satisfy $y\geqslant x$ if $y\to x$. Considering then the upper sets, we inherit an ordering of these, since they are exactly defined with respect to the partial order, and since we are dealing with sets, we can unproblematically consider the union and intersection of upper sets. This structure is that of a lattice: 
 \begin{defn}[Lattice]
-A \emph{lattice} $L$ is a partially ordered set if for every two elements $a,b\in L$, there exists a least common upper bound, called a \emph{join}, denoted $a \vee b$ and a greatest common lower bound, called a \emph{meet}, denoted $a\wedge b$. Further, we require that if $a_1\leq a_2$ and $b_1\leq b_2$, then
-$$a_1\wedge b_1\leq a_2\wedge b_2$$
+A \emph{lattice} $L$ is a partially ordered set if for every two elements $a,b\in L$, there exists a least common upper bound, called a \emph{join}, denoted $a \vee b$ and a greatest common lower bound, called a \emph{meet}, denoted $a\wedge b$. Further, we require that if $a_1\leqslant a_2$ and $b_1\leqslant b_2$, then
+$$a_1\wedge b_1\leqslant a_2\wedge b_2$$
 and
-$$a_1\vee b_1\leq a_2\vee b_2$$
+$$a_1\vee b_1\leqslant a_2\vee b_2$$
 We shall call $L$ \emph{distributive}, if
 $$a\wedge(b\vee c)=(a\wedge b)\vee (b\wedge c)$$
 \end{defn}
 We see that we can think of the set of upper sets as a lattice when equipping it with unions and intersections. This lattice is going to be the index set for our subdivisions of manifolds, and so this will give us a natural way to think of the causal structure. We introduce the notion of a filtration:
 \begin{defn}[Filtration]
-Let $I$ be a partially ordered set, and let $(X_i)_{i\in I}$ be a collection of topological spaces and let further $(\iota_{ij})_{j\leq i}$ be a family of continuous maps $\iota_{ij}: X_i\to X_j$ satisfying the consistency constraint
+Let $I$ be a partially ordered set, and let $(X_i)_{i\in I}$ be a collection of topological spaces and let further $(\iota_{ij})_{j\leqslant i}$ be a family of continuous maps $\iota_{ij}: X_i\to X_j$ satisfying the consistency constraint
 $$\iota_{ik}=\iota_{ij}\circ \iota_{jk}$$
 Then $(X_i,\iota_{ij})_I$ is an \emph{inverse system}, and we will also refer to it as a \emph{filtration}. An inverse system indexed by $I'$ obtained from $I$ by reversing all relations will be called a \emph{descending filtration} on $(X_i)_I$.
 \end{defn}
 This allows us to consider the causal structure as an object, and we can now use this object to create the correspondence discussed above. We will now define a descending filtration on the phase space. For this, we shall utilize that we can think of any compact finite dimensional manifold as a subspace of $\mR^n$ for suitable $n$, in fact this very fact is implied by Takens' theorem, and we shall think of the observed values as the coordinates of $\mR^n$. This reduces the generality of the approach somewhat, but it lends itself to interpretability and the modelling framework introduced in the beginning of this chapter. This leads us to the definition of a descending filtration of the phase space:
 \begin{defn}[Upper set filtration]
-Let $UL_\varphi$ be the lattice imposed by considering the upper sets of the component graph of a dynamical system $\varphi$. For $U\in UL_\varphi$, we define $|U|$ as the set of all variables contained the upper set $U$ and we will call it \textit{variable set} of $U$. Further, we let $\mR_U$ be the space spanned by $|U|$ of dimension $\#|U|$ and we call this the \textit{phase space} of $U$. We see now that for $U,V\in UL_\varphi$, we have $U\leq V$ if and only if $|U|\subset |V|$, which in turn is equivalent with $\mR_U\subset \mR_V$. We thus get a natural projection $\pi_{VU}:\mR_V\to\mR_U$. We further define $\pi_U$ as the natural projection $\mR^n\to \mR_U$. We see that this defines a descending filtration, and we call $(\mR_U,\pi_{UV})_{UL_\varphi}$ the \emph{upper set filtration of the phase space}.
+Let $UL_\varphi$ be the lattice imposed by considering the upper sets of the component graph of a dynamical system $\varphi$. For $U\in UL_\varphi$, we define $|U|$ as the set of all variables contained the upper set $U$ and we will call it \textit{variable set} of $U$. Further, we let $\mR_U$ be the space spanned by $|U|$ of dimension $\#|U|$ and we call this the \textit{phase space} of $U$. We see now that for $U,V\in UL_\varphi$, we have $U\leqslant V$ if and only if $|U|\subset |V|$, which in turn is equivalent with $\mR_U\subset \mR_V$. We thus get a natural projection $\pi_{VU}:\mR_V\to\mR_U$. We further define $\pi_U$ as the natural projection $\mR^n\to \mR_U$. We see that this defines a descending filtration, and we call $(\mR_U,\pi_{UV})_{UL_\varphi}$ the \emph{upper set filtration of the phase space}.
 \end{defn} 
 \begin{prop}
-Given a causal (\textit{definition!!}) dynamical system $\varphi$, and upper sets $U,V\in UL_\varphi$ with $U\leq V$, the family of maps $\{\varphi^t_W\}_{W\in UL_\varphi}$, where $\varphi_U^t$ is defined on $\mR_U$ and given by the equation
+Given a causal (\textit{definition!!}) dynamical system $\varphi$, and upper sets $U,V\in UL_\varphi$ with $U\leqslant V$, the family of maps $\{\varphi^t_W\}_{W\in UL_\varphi}$, where $\varphi_U^t$ is defined on $\mR_U$ and given by the equation
 $$\varphi^t_U\circ\pi_U(x)=\pi_U\circ \varphi^t(x)$$
 for all $x\in \mR$, is well-defined, and the the collection $(\mR_U,\pi_{UV})_{UL_\varphi}$ of dynamical systems is consistent, meaning that they satisfy
 $$\pi_{VU}\circ \varphi_V^t(x)=\varphi_U^t(x)\circ\pi_{VU}(x)$$
@@ -368,7 +438,7 @@ We assume the following of our dynamic system
 	\item Given non-comparable $U,V$ in the lattice $UL_\varphi$, there exist no continuous surjections $f:M_U\to M_V$ or $g:M_V\to M_U$.
 	\item We assume that $\varphi^T$ be generic for fixed $T$, and that $s$
 \end{enumerate}
-Let now $U,V$ be upper sets, let $\varphi_1,\varphi_2$ be corresponding observation functions and let $M_i=\Phi_{\varphi^T,y_i,k_i}(M)$ be the reconstructions, where $k_1\geq 2n_U$ and $k_2\geq 2n_V$. It then holds that:
+Let now $U,V$ be upper sets, let $\varphi_1,\varphi_2$ be corresponding observation functions and let $M_i=\Phi_{\varphi^T,y_i,k_i}(M)$ be the reconstructions, where $k_1\geqslant 2n_U$ and $k_2\geqslant 2n_V$. It then holds that:
 \begin{enumerate}[label=\roman*.]
 	\item $U=V$ if and only if there exists a homeomorphism
 	$$\Psi_{1,2}:M_1\to M_2$$
@@ -405,11 +475,11 @@ Takens' theorem implies that you can reconstruct the manifold by the map
 $t\mapsto (y(t),y(t-\tau),...,y(t-L\tau))$
 Using practical  
 \section{Reference Model}
-We will use the following model built on a multivariate Ornstein-Uhlenbeck process as a reference. More specifically, we will consider the following setup. Let the $d$-dimensional stochastic process $X_t$, $t\geq 0$, be given by the following stochastic differential equation
+We will use the following model built on a multivariate Ornstein-Uhlenbeck process as a reference. More specifically, we will consider the following setup. Let the $d$-dimensional stochastic process $X_t$, $t\geqslant 0$, be given by the following stochastic differential equation
 $$dX_t=M X_t\ dt+\rho I_d\ dW_t$$
-with $W_t$ a $d$-dimensional  Brownian motion, $M$ a $d\times d$ drift matrix, and $\rho\in \mathbb{R}$ a scalar. We will then consider observations at time points $0\leq t_1<t_2<\cdots <t_n$, $n\in \mathbb{N}$, with some observation noise
+with $W_t$ a $d$-dimensional  Brownian motion, $M$ a $d\times d$ drift matrix, and $\rho\in \mathbb{R}$ a scalar. We will then consider observations at time points $0\leqslant t_1<t_2<\cdots <t_n$, $n\in \mathbb{N}$, with some observation noise
 $$Y_{t_i}=X_{t_i}+\xi_i,\quad i=1,...,n$$
-where $\xi_i$ is iid with $\mathbb{E} \xi_i=0$ and $V(\xi_i)=\sigma^2$ for some variance parameter $\sigma^2\in \mathbb{R}_{\geq 0}$. Interesting variations of this model, is $\sigma^2=0$, implying no observation noise, and $\rho=0$, which removes stochasticity of the process.
+where $\xi_i$ is iid with $\mathbb{E} \xi_i=0$ and $V(\xi_i)=\sigma^2$ for some variance parameter $\sigma^2\in \mathbb{R}_{\geqslant 0}$. Interesting variations of this model, is $\sigma^2=0$, implying no observation noise, and $\rho=0$, which removes stochasticity of the process.
 
 \section{Simulations}
  
