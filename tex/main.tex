@@ -5,17 +5,24 @@
 % Math-related packages
 \usepackage{amsmath, amssymb, amsfonts, mathrsfs, latexsym, mathtools}
 \usepackage{ntheorem}
+\usepackage[framemethod=TikZ]{mdframed}
 \usepackage{centernot}
 
 % Miscellaneous packages
 \usepackage{enumitem}
-\usepackage{tcolorbox}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{theorems, skins, breakable}
 \usepackage{ulem}
 \usepackage{microtype}
 \usepackage{setspace}
 \usepackage{graphicx, caption}
-\usepackage{cleveref}
 \usepackage{chngcntr}
+\usepackage{cleveref}
+\definecolor{emphcolor}{HTML}{901A1E} % Using kuRed
+
+\newcommand{\coloremph}[1]{\textcolor{emphcolor}{\emph{#1}}}
 
 \DeclareCaptionStyle{mystyle}{%
   font=it, % Italif font
@@ -40,8 +47,9 @@
 \newtheorem{lem}{Lemma}
 
 % Definition environment with non-italicized text
+% Definition environment with non-italicized text
 \theoremstyle{break}
-\theoremheaderfont{\normalfont\bfseries}
+\theoremheaderfont{\normalfont\bfseries\vspace{3pt}}
 \theorembodyfont{\normalfont} % Non-italicized text
 \theoremseparator{.}
 \newtheorem{innerdefn}{Definition}
@@ -49,6 +57,36 @@
 \newenvironment{defn}
   {\begin{innerdefn}}
   {\ensuremath{\circ}\end{innerdefn}}
+  
+
+\newtheorem{inneralg}{Algorithm}
+\newenvironment{alg}{\begin{inneralg}}{\ensuremath{\circ}\end{inneralg}}  
+
+% Alternative definition environment
+\definecolor{kuRed}{HTML}{901A1E}
+\definecolor{kuGray}{HTML}{666666}
+\definecolor{lightKuGray}{HTML}{FFE8D1}
+
+% Define the 'mydefinition' tcolorbox environment
+\newtcolorbox[auto counter,number within=chapter]{mydefinition}[2][]{
+  breakable, % Allows the box to break across pages
+  colback=lightKuGray!80, % Background color for the entire box
+  colframe=lightKuGray!80, % Frame color
+  coltitle=black, % Text color for the title
+  title={\textbf{Definition~\thetcbcounter\ (#2)\ #1}}, % Title with bold "Definition" and optional description
+  fonttitle=\bfseries, % Make the title text bold
+  enhanced,
+  sharp corners,
+  boxrule=1pt, % Width of the frame lines
+  top=8pt, % Top space within the box (inside the frame)
+  bottom=8pt, % Bottom space within the box (inside the frame)
+  left=8pt, % Left space within the box (inside the frame)
+  right=8pt, % Right space within the box (inside the frame)
+  toprule=10pt,
+  before=\vskip15pt,
+  after=\vskip15pt,
+  #1 % For specifying additional options
+}
 
 \theoremstyle{nonumberplain}
 \theoremsymbol{\ensuremath{\square}} 
@@ -69,6 +107,7 @@
 \newcommand{\indep}{\perp \!\!\! \perp}
 
 \DeclareMathOperator{\pa}{pa}
+\DeclareMathOperator{\de}{de}
 \DeclareMathOperator{\nei}{ne}
 \DeclareMathOperator{\bd}{bd}
 \DeclareRobustCommand{\firstsecond}[2]{#2}
@@ -222,32 +261,65 @@ Assume that $(X,Y)$ has the joint distribution $\mP_{(X,Y)}$.
 \end{thm}
 The first point is a consequence of the Darmois-Skitovič theorem stating that if any two linear combinations with non-zero coefficients of a set of independent non-degenerate random variables are independent, then all the variables involved are Gaussian. The second point is the main result of \cite{ANM1}, and the third point the main result of \cite{ANM2}. In all three cases, we observe that except in rare or particularly simple examples, the direction of causality is identifiable in models with additive noise. This illustrates that with the right amount of structure and assumptions, we can render the causal direction perfectly identifiable and thus moves the problem of causal discovery into the realm of practical considerations. There exist a plethora of machine learning methods capable of reliably estimating very complex functions, as thus the question becomes one of checking an additive noise assumption, making sure that the random variables are not governed by a law exceptional to the result above and dealing with the uncertainty inherited from finite sample sizes. We refrain from entering into the practitioner's domain, and will instead use this result as an inspiration.
 \subsection{Graphical Models}
-We are particularly interested in modelling connected data with some sort of dependency structure, typically that of dependency of data over time. Moreover, we want to be able to include more variables in our analysis, and thus keeping track of interdependencies becomes intricate. To combat this problem, we introduce causal graphs to keep track of the causal structure of a network of variables. In this process, we will have to make some choices, that will have a significant impact on what can be expressed. We will try to address these artefacts along the way. When modelling stochastic variables with graphs, we enter the domain of graphical models, for which there exists a quite rich theory of which we will only be able to give a small taste. We refer to the thorough presentation of \cite{Steffen}, which also is the main inspiration for what is presented here. The main idea in graphical modelling is to encode (conditional) independence constraints of the system in a graph, and to use this graph as a tool for inference. This idea will be the main driver for causal inference in the purely stochastic setting as well, and therefore the models are very closely related. Emphasizing this relation serves both as a means of tracing the components of our models and as a port for importing notions from the graphical model setting where causal interpretability is more tricky. We begin with some simple graph terminology:
+We are particularly interested in modelling connected data with some sort of dependency structure, typically that of dependency of data over time. Moreover, we want to be able to include more variables in our analysis, and thus keeping track of interdependencies becomes intricate. To combat this problem, we introduce graphs to keep track of the causal structure of a network of variables. In this process, we will have to make some modelling choices with significant impact on what can be expressed. We will try to address these artefacts along the way. When modelling stochastic variables with graphs, we naturally encounter the domain of graphical models, for which there exists a quite rich theory of which we will only be able to give a small taste. We refer to the thorough presentation of \cite{Steffen}, which also is the main inspiration for what is presented here. The main idea in graphical modelling is to encode (conditional) independence constraints of the system in a graph, and to use this graph as a tool for inference. This idea is powerful enough for us to model causality directly in the form of causal graphical models. They are however in some cases more cumbersome than when modelling with SCMs, although this basic idea is the main driver of causal inference in this setting as well, and therefore the models are very closely related. Emphasizing this relation serves both as a means of tracing the components of our models and as a port for importing notions from the graphical model setting where causal interpretability is more tricky. We begin with some simple graph terminology:
 \begin{defn}[Graph terminology]
 Consider a \emph{graph} $\mathcal{G}=(\mathcal{V},\mathcal{E})$ with $\mathcal{V}$ the set of \emph{vertices} and $\mathcal{E}\subset \mathcal{V}\times \mathcal{V}$ the set of \emph{edges}.\\[5pt]
-We distinguish \textit{directed} ($-$) and \textit{undirected} edges ($\to$): For $u,v\in \mathcal{V}$, we write $u-v$ if $(u,v),(v,u)\in \mathcal{E}$, and $u\to v$ if only $(u,v)\in \mathcal{E}$.\\[5pt]
+We distinguish \textit{directed} ($-$) and \textit{undirected} edges ($\to$): For $u,v\in \mathcal{V}$, we write $u-v$ if $(u,v),(v,u)\in \mathcal{E}$, and $u\to v$ if only $(u,v)\in \mathcal{E}$. \\[5pt]
 If $u\to v$, we call $u$ a \emph{parent} of $v$, and we denote by $\pa(v)$ the set of parents of $v$. If $u-v$, we call $u$ a \emph{neighbour} of $v$, and we denote by $\nei(v)$ the set of neighbours of $v$. We define the \emph{boundary} of $v$ as $\bd(v)=\pa(v)\cup \nei(v)$, and for a subset $A\subset \mathcal{V}$, we define the parents of $A$ as
 $$\pa(A)=\bigcup_{v\in A}\pa(v)\setminus A $$
 A \emph{path} in $\mathcal{G}$ is a sequence of vertices $v_1,\ldots, v_n$ ($n \geqslant 2$) satisfying that for all $j=1,\ldots,n-1$, we have $v_{j+1}\in \bd(v_j)$, and a graph is \emph{connected} if any two vertices are contained in a path. A \emph{directed path} is a path for which all edges between the vertices are directed. A \textit{partially directed cycle} in $\mathcal{G}$ is a cycle with at least one directed edge, that is a path $v_1,\ldots, v_n$ ($n \geqslant 3$) with $v_1\in \bd(v_n)$ and $v_{j+1}\to v_j$ for some $j$.\\[5pt]
-For $A\subset V$, $\mathcal{G}_A$ denotes the subgraph of $\mathcal{G}$ with $A$ as vertex set and all edges inherited from $\mathcal{G}$, and we say it is the subgraph \emph{induced} by $A$.\\[5pt]
+For $A\subset V$, $\mathcal{G}_A$ denotes the subgraph of $\mathcal{G}$ with $A$ as vertex set and all edges inherited from $\mathcal{G}$, and we say it is the subgraph \emph{induced} by $A$.  We call a graph \emph{complete}, if there is an edge (directed or undirected) between every pair of vertices, and we call a maximal complete subgraph $\mathcal{G}_A <$for a \emph{clique}.\\[5pt]
 A \emph{chain component} is a connected  subgraph of $\mathcal{G}$ containing only undirected edges, and a \emph{minimal complex}  is an induced subgraph $\mathcal{G}_A$ with two distinguished nodes $a,b$ for which $\mathcal{G}_{A\setminus \{a,b\}}$ is a chain component and no path in $\mathcal{G}_A$ contains both $a$ and $b$. A minimal complex can be drawn as
 $$a\to v_1-\cdots-v_n\gets b$$
 We say that $\mathcal{G}$ is a \emph{chain graph} if it contains no partially directed cycles, and if further it contains no directed edges, we say $\mathcal{G}$ is a \emph{directed acyclic graph (DAG)}.
 \end{defn}
-Now we have to specify what information we want to express with a graphical representation of a set of variables. When building causal graph models, we want the graphs to encode all causal relationships between variables, while the intent behind the use of a graphical model is less ambitious from the get-go: we want 'only' to deduce conditional independences between variables from the graph. This is not to say that this is typically a weak assumption, on the contrary. Instead, it is more appropriately interpreted as a sign of just how restrictive the causal graph models are going to be of the distributions they govern. Satisfying a set of conditional independence constraints is what we shall call a Markov property of the joint distribution of a set of variables, and this is the centre of attention in graphical model theory.\\\\
+We will implicitly assume our graphs to be finite, meaning that there are only finitely many vertices. Now we have to specify what information we want to express with a graphical representation of a set of variables. When building causal graph models, we want the graphs to encode all causal relationships between variables, while the intent behind the use of a graphical model is less ambitious from the get-go: we want 'only' to deduce conditional independences between variables from the graph. This is not to say that this is typically a weak assumption, on the contrary. Instead, it is more appropriately interpreted as a sign of just how restrictive the causal graph models are going to be of the distributions they govern. Satisfying a set of conditional independence constraints is what we shall call a Markov property of the joint distribution of a set of variables, and this is the centre of attention in graphical model theory.\\\\
 For DAGs, there is a canonical way to define the Markov property, but there are multiple non-equivalent ways of defining a Markov property for chain graphs depending on how you want to treat the chain components. The choice of Markov property propagates throughout the modelling and determines what interpretations are valid. We shall encounter the possible existence of some complexes of causally interlinked variables later, and so for our purpose, we choose to define the Markov property in a fashion that treats chain components as one indivisible unit and we thereby accept the consequences for valid interpretations as discussed by \cite{ChainGraph}. These definitions are most easily expressed when assuming that there exists a joint density of the variables of interest, in which case they take the form:
 
-\begin{defn}[Markov Property]
-Let $(\Omega, \mathcal{F}, \mP)$ be a probability space. A distribution $P$ with density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the DAG} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
-$$f(x)=\prod_{v\in \mathcal{V}}f\left(x_v\mid x_{\pa(v)}\right)$$
+\begin{mydefinition}{The Markov property}
+Let $(\Omega, \mathcal{F}, \mP)$ be a probability space. A distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the DAG} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
+\begin{equation}\label{MPDAG}
+f(x)=\prod_{v\in \mathcal{V}}f\left(x_v\mid x_{\pa(v)}\right)
+\end{equation}
 where $x_A$ denotes $(x_v)_{v\in A}$ for a subset of variables $A\subset V$.\\[5pt]
-A distribution $P$ with density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the chain graph} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
-\begin{align*}
-f(x)&=\prod_{\tau\in \mathscr{T}}f\left(x_\tau\mid x_{\pa(\tau)}\right),\\
-f\left(x_\tau\mid x_{\pa(\tau)}\right)&=Z^{-1}\left(x_{\pa(\tau)}\right)\prod_{A\in \mathscr{A}(\tau)}\psi_A\left(x_A\right)
-\end{align*}
-where $\mathscr{A}(\tau)$
-\end{defn}
+A distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the chain graph} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
+\begin{equation}\label{MPCHAIN}
+ f(x)=\prod_{\tau\in \mathscr{T}}f\left(x_\tau\mid x_{\pa(\tau)}\right)
+\end{equation}
+where $\mathscr{T}$ is the set of chain components, and if further each factor itself factorizes in the following way
+$$f\left(x_\tau\mid x_{\pa(\tau)}\right)=\prod_{A\in \mathscr{A}(\tau)}\psi_A\left(x_A\right)$$
+where $\mathscr{A}(\tau)$ are the complete sets of the undirected graph $\left(\mathcal{G}_{\tau\cup\pa(\tau)}\right)^m$ obtained from $\mathcal{G}_{\tau\cup\pa(\tau)}$ by adding edges between all pairs of vertices that are parents of the same vertex, and $\psi_A$, $A\in \mathscr{A}(\tau)$, are functions depending on $x_\tau$ only through the coordinates $A\subset \tau$. 
+\end{mydefinition}
+Let us try to unpack these definitions. We see that the Markov property for chain graphs is consistent with the Markov property for DAGs, since the chain components of a DAG are simply the vertices of the graph. Next, in the DAG case, we can easily extract some more interpretable information about the variables from the Markov property by simple means of iteration:\\[5pt]
+First, take $A\subset \mathcal{V}$ such that $\pa(A)=\emptyset$. By the Markov property, we may then write
+$$f(x_A)=\int f(x)\ dx_{\mathcal{V}\setminus A}=\prod_{a\in A}f(x_a)\int\prod_{v\in \mathcal{V}\setminus A} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus A}$$
+We will now argue that the integrand of the last expression integrates to 1. Let $\mathcal{S}_0=\mathcal{V}\setminus A$ and assume $\mathcal{S}_0\neq\emptyset$. We iterate as follows over $j=0,\ldots,\left|\mathcal{S}_0\right|$:
+\begin{alg}\label{alg1}
+Given $\mathcal{S}_0\subset \mathcal{V}$.
+\begin{enumerate}[label=(\roman*)]
+	\item Take $u_j\in \mathcal{S}_j$, such that $u_j\not\in \pa\left(\mathcal{S}_j\right)$. If this were not possible, the following recursively defined sequence would be well-defined: let $x_0\in \mathcal{S}_j$, and let $x_{i+1}$ be chosen such that $x_i\in \pa(x_{i+1})$. This is an infinite directed path, and since $\mathcal{G}$ is acyclic, this would imply that $\mathcal{G}$ is not finite and hence a contradiction.
+	\item Set $\mathcal{S}_{j+1}\coloneqq\mathcal{S}_j\setminus \{u_j\}$.  
+	\item Defining
+$$\mathcal{I}_{j}\coloneqq \int\prod_{v\in \mathcal{S}_j} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{S}_j}$$
+for $ \mathcal{S}_j\neq \emptyset$ and $\mathcal{I}_j=1$ for $\mathcal{S}_j= \emptyset$, we may then write
+	$$\mathcal{I}_{j}=\mathcal{I}_{j+1}\times \int f\left(x_{u_j}\mid x_{\pa(u_j)}\right)\ dx_{u_j}=\mathcal{I}_{j+1}$$
+	since there is now only one factor depending on $x_{u_j}$.
+	\item Abort if $\mathcal{S}_{j+1}=\emptyset$, otherwise: return to (i).
+\end{enumerate}
+\end{alg}
+This proves $f(x_A)=\prod_{a\in A}f(x_a)$ and thereby that any two variables corresponding to vertices with no parents are independent.\\[5pt]
+Next, we fix $v_0\in \mathcal{V}$, and we let $\de(v_0)\subset \mathcal{V}$ be the set of \emph{descendants} of $v_0$, that is the set of all vertices for which there exists a directed path from $v_0$ to the given vertex - and we say $v_0\in \de(v_0)$. Let then $A\subset \mathcal{V}$ be any subset satisfying $\de(v_0)\cap A=\emptyset$. Define $A'\coloneqq \{v_0\}\cup\pa(v_0)\cup A$. We then observe that
+$$f\left(x_{A'}\right)=\int f(x)\ dx_{\mathcal{V}\setminus A'}=f\left(x_{v_0}\mid x_{\pa(v_0)}\right)\int \prod_{v\in \mathcal{V}\setminus\{v_0\}} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus A'}$$
+By choosing $\mathcal{S}_0=\de(v_0)\setminus\{v_0\}$, Algorithm \ref{alg1} yields that
+$$f(x_{A'})=f\left(x_{v_0}\mid x_{\pa(v_0)}\right)\int \prod_{v\in \mathcal{V}\setminus\de(v_0)} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus \de(v_0)\cup A'}$$
+Analogously, using Algorithm \ref{alg1} with $\mathcal{S}_0=\de(v_0)$ gives us
+$$
+f(x_{\pa(v_0)\cup A})=\int \prod_{v\in \mathcal{V}\setminus\de(v_0)} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus \de(v_0)\cup A'}
+$$
+and we conclude that
+$$f\left(x_{v_0}\mid x_{\pa(v_0)\cup A}\right)=f\left(x_{v_0}\mid x_{\pa(v_0)}\right)$$
+Thus we see the Markov property also imposes that conditioning on the variables corresponding ...\\[5pt]
+ 
 
 \subsection{Multivariate SCMs}
 The definition of the SCM easily extends to any number of variables with the definition that $X$ causes $Y$ if $Y\coloneqq f(X,Z_1,...,Z_n,N_X)$ and for a moment disregarding that $f$ may trivially depend on any variable - say in this context that $f$ depends 'non-trivially' on $X$. We can then easily imagine a a time series in an SCM in a discrete framework by simply associating each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit the problems with causality in pathological deterministic structures, and it is not immediate that this model is appropriate for continuous time models as well.\\\\
@@ -258,8 +330,8 @@ We shall call $(X_t)_{t\in \mZ}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mZ}$ a \emph{$d$
 \begin{defn}[Causal graph]
 Let $\mathcal{V}$ be a set consisting of vertices representing each observation of $X$, $X_t^j$, say $$\mathcal{V}=\left\{X_t^j: t\in \mZ,j\in\{1,\ldots,d\}\right\}\simeq \left\{(t,j)\mid t\in \mZ, j\in \{1,\ldots,d\}\right\}$$ and let $\mathcal{E}$ be a set of directed edges in the graph, that is 
 $$\mathcal{E}\subset \mathcal{V}\times \mathcal{V}$$
-satisfying that $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$ implies $t_1\leqslant t_2$, i.e. that there are no links backwards in time. If $t_1<t_2$ for all $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$, we shall say $\mathcal{E}$ contains no \emph{instantaneous effects}.\\
-We shall call $(\mathcal{V}, \mathcal{E})$ a \emph{causal graph} of the time series $(X_t)_{t\in \mZ}$. If there exists $v_1,v_2\in \mathcal{V}$, such that $(v_1,v_2)\in \mathcal{E}$, we shall say $v_1$ is a \emph{parent} of $v_2$, write $v_1\in \text{PA}_{v_2}$, and if $v_2=X_t^j$, we shall write $\text{PA}_{t}^j$ for $\text{PA}_{v_2}$. If $X_{t_1}^{j_1}$ is the parent of $X_{t_2}^{j_2}$, we shall say $X_{t_1}^{j_1}$ \emph{directly causes} $X_{t_2}^{j_2}$ and denote $X_{t_1}^{j_1}$ the \emph{direct cause} and $X_{t_2}^{j_2}$ the \emph{direct effect}.
+satisfying that $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$ implies $t_1\leqslant t_2$, i.e. that there are no links backwards in time. If $t_1<t_2$ for all $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$, we shall say $\mathcal{E}$ contains no \coloremph{instantaneous effects}.\\
+We shall call $(\mathcal{V}, \mathcal{E})$ a \coloremph{causal graph} of the time series $(X_t)_{t\in \mZ}$. If there exists $v_1,v_2\in \mathcal{V}$, such that $(v_1,v_2)\in \mathcal{E}$, we shall say $v_1$ is a \emph{parent} of $v_2$, write $v_1\in \text{PA}_{v_2}$, and if $v_2=X_t^j$, we shall write $\text{PA}_{t}^j$ for $\text{PA}_{v_2}$. If $X_{t_1}^{j_1}$ is the parent of $X_{t_2}^{j_2}$, we shall say $X_{t_1}^{j_1}$ \emph{directly causes} $X_{t_2}^{j_2}$ and denote $X_{t_1}^{j_1}$ the \emph{direct cause} and $X_{t_2}^{j_2}$ the \emph{direct effect}.
 \end{defn}
 In much of the causality literature, we would impose that the graph be acyclic, making the causal graph a directed acyclic graph (DAG). We will however concern ourselves with bidirectional causality later on, so we will not make this assumption the standard in this thesis. Remark however, that this assumption is fulfilled under any circumstance if we do not allow for instantaneous effects. With the approach of the structural causal model, we put the causal graph front and center in this modelling of causal structures.
 \begin{defn}[Structural causal model]
