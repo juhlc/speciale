@@ -390,7 +390,7 @@ diff_plot_data <- data.frame(
 {
 colfunc <- colorRampPalette(c("#7FD8BE","#FCAB64"))
 
-lag <- 10
+lag <- 11
 roll2 <- na.omit(rollmean(roll_temp_year3, k=lag, align="right"))
 ava_years_alt <- data.frame(xstart = 2021-1:length(roll2), xend = 2022-1:length(roll2)+0.1)
 filter_alt <- diff_plot_data$year < max(ava_years_alt$xend) & diff_plot_data$year > min(ava_years_alt$xstart) 
@@ -590,4 +590,5 @@ p <- ggplot(data, aes(x = Category, y = Value)) +
 print(p)
 }
 
+summary(VAR(cbind(diff_plot_data$anchovies, diff_plot_data$sardines, diff(roll2)[2:95]),p=1, type="none"))
 summary(restrict(VAR(cbind(diff_plot_data$anchovies, diff_plot_data$sardines, diff(roll2)[3:96]),p=1, type="none"), method="manual", resmat = t(matrix(c(0,0,1,0,0,1,0,0,1), ncol=3))))

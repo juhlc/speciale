@@ -5,11 +5,13 @@
 % Math-related packages
 \usepackage{amsmath, amssymb, amsfonts, mathrsfs, latexsym, mathtools}
 \usepackage{ntheorem}
+\usepackage{tikz}
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage{centernot}
 
 % Miscellaneous packages
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage{xcolor}
 \usepackage{etoolbox}
 \usepackage[most]{tcolorbox}
@@ -110,6 +112,8 @@
 \DeclareMathOperator{\de}{de}
 \DeclareMathOperator{\nei}{ne}
 \DeclareMathOperator{\bd}{bd}
+\DeclareMathOperator{\nd}{nd}
+\DeclareMathOperator{\an}{An}
 \DeclareRobustCommand{\firstsecond}[2]{#2}
 
 % Other settings
@@ -171,14 +175,14 @@ This distinction, subtle yet profound, reshapes our understanding of causality i
 Yet, while the deterministic paradigm offers a fascinating lens to understand causality, there is an inherent limitation. Real-world systems, especially in fields like economics, biology, and climate science, are rife with unpredictable fluctuations. These fluctuations cannot always be attributed solely to the endogenous dynamics of the system. No matter how meticulously one captures the deterministic dynamics, there will always be elements of seeming randomness and external influences that a purely deterministic model would struggle to account for. We return thus to stochastic processes. By reintroducing a stochastic element into our models, we can more faithfully represent the unpredictability and variability inherent in real-world systems. Stochasticity provides a framework to account for the 'noise' that isn't explained by the deterministic components of a system. Moreover, it's a nod to the humility of our modeling efforts – recognizing that there are always aspects of complex systems that are beyond our current understanding or are inherently random. 
 In the subsequent chapters, we will delve deeper into the fusion of deterministic dynamics with stochastic processes using  a mixture of simulation based methods and theoretical considerations seeking a harmonious balance that brings us closer to understanding the multifaceted nature of causality in dynamic systems.
 
-\chapter{Causal Inference with State Space Reconstruction}\label{chapTaken}
+\section*{Introduction}
 In this chapter, we introduce an approach to causal inference in dynamic systems, drawing inspiration from \cite{Sugihara}. In this thesis, we will adopt a rather broad definition of dynamical systems. We will envision them as objects tracing the evolution of a set of variables of interest over time under the assumption of some deterministic and suitably regular non-linear relationship. A more detailed and precise definition will be presented in subsequent sections.\\\\ The \textit{Convergent Cross Mapping (CCM)} method of \cite{Sugihara} anchors this chapter, but we will give a broader introduction to state space reconstruction based methods given a shared theoretical foundation. The theory of state space reconstruction is formulated in the language of differential topology, and Takens' theorem of 1981, \cite{Takens}, is a cornerstone. Takens' theorem solves the problem of constructing embeddings of high-dimensional systems from a single variable under a set of fairly general assumptions. In our context, such an embedding is a \textit{state space reconstruction} of a dynamic system. We will explore this concept further within this chapter.\\\\
 To illustrate the challenge of causal inference in complex dynamic systems, we will use the example of \cite{Sugihara} regarding the interactions between anchovies, sardines and sea surface temperature in the California Current ecosystem. This real-world example serves as a backdrop for the more theoretical nature of the rest of this chapter. We will also introduce the causal framework of structural causal models inspired by the account of \cite{Peters}. This framework not only offers a model for causal inference but also a guideline for formulating a causal language for models in a deterministic setting. Due to the inherent differences between the mathematical theory used to formulate models in stochastic and deterministic settings, we will aim to relate the underlying assumptions in each setting. However, we will inevitably encounter some conceptual problems, as any attempt to translate the philosophical concept of causality into mathematical terms will be endowed with non-trivial complications and notable exceptions. We will discuss these problems throughout as they arise and try to be explicit about the assumptions and potential problems of the causal framework chosen in this thesis. We will also briefly discuss alternative formulations less conducive to overly strong interpretations.\\\\
 We will then turn to a more stringent introduction to the theory of embeddings. This will allow us to formulate the main theoretical results of this thesis in full detail laying bare the explicit assumptions and results concerning identifiability of causal links in our framework. We will emphasize the definitions and proof techniques used to formulate and prove Takens' theorem and discuss some expansions and alternative formulations. Using the work of \cite{mathFound}, this paves the way for the main theorem of this thesis, namely a complete characterization of the causal inference possible from state space reconstruction in dynamic systems. This will complete the introduction of the theoretical set-up of the central model of this thesis.\\\\
 Concluding this chapter, we present a thorough account of CCM and its alternatives and extensions. Notably, we discuss the methods suggested by \cite{Ye2015} and \cite{Leng2020}, which address problems not resolved by CCM, respectively that of distinguishing bidirectional causality and unidirectional causality in systems with some degree of synchronicity; and that of identifying the causal chain in a system knowing the causal directions between causally related variables. We will also cover some related methods that are more rooted in machine learning but still use state space reconstruction for causal inference, albeit with less explicit theoretical foundation. We will then revisit the California Current example from the beginning and analyse it using the developed theory. However, it is crucial to remember that that the theory of this chapter applies only to purely deterministic systems, and real-world examples often have a mix of deterministic and stochastic structures. We will address this limitation in subsequent chapters, by considering a set-up replacing systems of differential equations with systems of stochastic differential equations, and analysing the effect of measurement noise or stochastic influences on the effectiveness of our methodology.
 \newpage
 
-\section{Sardines and Anchovies in the California Current System}
+\section*{An Example}
 In this section, we will briefly discuss a real-world example concerning sardine and anchovy populations in the California Current System. This is the same example considered by \cite{Sugihara} and so we aim to use the same data for our analysis with the modification that we include data from the period 2012-2022 as well. We will use the following data:
 \begin{itemize}
 \item Pacific sardine (\textit{Sardinops sagax}) California fish market catch landings recorded monthly in pounds in the period January 1928 up to and including December 2022. There are 12 months with redacted data.\footnote{\label{note1}Data from January 1928 up to and including December 2002 is obtained from from \textit{ERDDAP} at \cite{oldData}, and data from January 2003 up to and including December 2022 is obtained directly from \cite{newData}.}
@@ -209,9 +213,9 @@ where $A_1,\ldots, A_p\in \mR^{3\times 3}$ coefficient matrices and $u_t$ is a n
 We have to choose the parameter $p$ specifying the number of lags in the model, and this can be done by choosing the model according to a minimal information criterion like AIC. Fitting a VAR(1) model with first-differenced temperature data to the data, yields an estimate of $-2.6$ of the coefficient from temperature to anchovies and an estimate of $17.9$ of the coefficient from temperature to sardines. The remaining coefficients for sardine and anchovy are all estimated to $0.0$. No coefficient is significant 95\% level, but this is expected due to the small sample size. However, this does indicate that temperature might positively influence the sardine population and negatively influence the anchovy population. We are looking at averages of temperature over a 10-year period; any window of averaging in the range from 5 to 10 years does not change the sign and size of the estimates significantly, but when looking at the yearly averages of temperature alone, we no longer get estimates that does not round to 0. This shows that this indication is not just a happy accident, although we lack power to say anything definitively.\\\\ 
 These results do not, however, exploit some of the properties of dynamic systems that we observed at discussed above, and the present approach does require some data manipulation in order to use standard econometric methods. Notice for instance, that a VAR($p$)-model under standard assumptions entail a stationary time series, and so we have to look for transformations of our time-series yielding this property or at least something that can reasonably me modelled with a stationary time series. Here this is achieved by the standard transformation, but it is a model assumption that needs addressing. This is the inspiration for the work that we will now undertake.
 
-\section{Causal Framework}
-In this section, we will introduce approaches to causal modelling and compare corresponding definitions of causation. In the process we will try to illuminate the underlying motivations. We rely on the fundamental understanding of causality as the characterization of the effect of interventions in a system of variables, and we shall build our models on the back of graphical models. In doing this, we follow the conventions of causal graphical  models as pioneered by \cite{Spirtes} and \cite{Pearl}, and of course inspired by the work of \cite{Steffen}.
-\subsection{Simple Causal Model}
+\chapter{Causal Models}
+In this chapter, we will introduce approaches to causal modelling and compare corresponding definitions of causation. In the process we will try to illuminate the underlying motivations. We rely on the fundamental understanding of causality as the characterization of the effect of interventions in a system of variables, and we shall build our models on the back of graphical models. In doing this, we follow the conventions of causal graphical  models as pioneered by \cite{Spirtes} and \cite{Pearl}, and of course inspired by the work of \cite{Steffen}.
+\section{A Simple Causal Model}
 In that vein, one such approach to formalization is that of the \textit{Structural Causal Model (SCM)}, inspired by the terminology \cite{Peters}, which in its most simple form can be formulated for two variables as
 \begin{align*}
 C&\coloneqq N_C\\
@@ -260,21 +264,25 @@ Assume that $(X,Y)$ has the joint distribution $\mP_{(X,Y)}$.
 \end{enumerate}
 \end{thm}
 The first point is a consequence of the Darmois-Skitovič theorem stating that if any two linear combinations with non-zero coefficients of a set of independent non-degenerate random variables are independent, then all the variables involved are Gaussian. The second point is the main result of \cite{ANM1}, and the third point the main result of \cite{ANM2}. In all three cases, we observe that except in rare or particularly simple examples, the direction of causality is identifiable in models with additive noise. This illustrates that with the right amount of structure and assumptions, we can render the causal direction perfectly identifiable and thus moves the problem of causal discovery into the realm of practical considerations. There exist a plethora of machine learning methods capable of reliably estimating very complex functions, as thus the question becomes one of checking an additive noise assumption, making sure that the random variables are not governed by a law exceptional to the result above and dealing with the uncertainty inherited from finite sample sizes. We refrain from entering into the practitioner's domain, and will instead use this result as an inspiration.
-\subsection{Graphical Models}
-We are particularly interested in modelling connected data with some sort of dependency structure, typically that of dependency of data over time. Moreover, we want to be able to include more variables in our analysis, and thus keeping track of interdependencies becomes intricate. To combat this problem, we introduce graphs to keep track of the causal structure of a network of variables. In this process, we will have to make some modelling choices with significant impact on what can be expressed. We will try to address these artefacts along the way. When modelling stochastic variables with graphs, we naturally encounter the domain of graphical models, for which there exists a quite rich theory of which we will only be able to give a small taste. We refer to the thorough presentation of \cite{Steffen}, which also is the main inspiration for what is presented here. The main idea in graphical modelling is to encode (conditional) independence constraints of the system in a graph, and to use this graph as a tool for inference. This idea is powerful enough for us to model causality directly in the form of causal graphical models. They are however in some cases more cumbersome than when modelling with SCMs, although this basic idea is the main driver of causal inference in this setting as well, and therefore the models are very closely related. Emphasizing this relation serves both as a means of tracing the components of our models and as a port for importing notions from the graphical model setting where causal interpretability is more tricky. We begin with some simple graph terminology:
-\begin{defn}[Graph terminology]
+\section{Graphical Models}
+We are particularly interested in modelling connected data with some sort of dependency structure, typically that of the dependency of data over time. Moreover, we want to be able to include more variables in our analysis, and thus keeping track of interdependencies becomes intricate. To combat this problem, we introduce graphs to keep track of the causal structure of a network of variables. In this process, we will have to make some modelling choices with significant impact on what can be expressed. We will try to address these artefacts along the way. When modelling stochastic variables with graphs, we naturally encounter the domain of graphical models, for which there exists a quite rich theory of which we will only be able to give a small taste. We refer to the thorough presentation of \cite{Steffen}, which also is the main inspiration for what is presented here. The main idea in graphical modelling is to encode (conditional) independence constraints of the system in a graph, and to use this graph as a tool for inference. This idea is powerful enough for us to model causality directly in the form of causal graphical models. They are however in some cases more cumbersome than when modelling with SCMs, although this basic idea is the main driver of causal inference in this setting as well, and therefore the models are very closely related. Emphasizing this relation serves both as a means of tracing the components of our models and as a port for importing notions from the graphical model setting where causal interpretability is more tricky. We begin with some simple graph terminology:
+\begin{mydefinition}{Graph terminology}
 Consider a \emph{graph} $\mathcal{G}=(\mathcal{V},\mathcal{E})$ with $\mathcal{V}$ the set of \emph{vertices} and $\mathcal{E}\subset \mathcal{V}\times \mathcal{V}$ the set of \emph{edges}.\\[5pt]
 We distinguish \textit{directed} ($-$) and \textit{undirected} edges ($\to$): For $u,v\in \mathcal{V}$, we write $u-v$ if $(u,v),(v,u)\in \mathcal{E}$, and $u\to v$ if only $(u,v)\in \mathcal{E}$. \\[5pt]
-If $u\to v$, we call $u$ a \emph{parent} of $v$, and we denote by $\pa(v)$ the set of parents of $v$. If $u-v$, we call $u$ a \emph{neighbour} of $v$, and we denote by $\nei(v)$ the set of neighbours of $v$. We define the \emph{boundary} of $v$ as $\bd(v)=\pa(v)\cup \nei(v)$, and for a subset $A\subset \mathcal{V}$, we define the parents of $A$ as
-$$\pa(A)=\bigcup_{v\in A}\pa(v)\setminus A $$
-A \emph{path} in $\mathcal{G}$ is a sequence of vertices $v_1,\ldots, v_n$ ($n \geqslant 2$) satisfying that for all $j=1,\ldots,n-1$, we have $v_{j+1}\in \bd(v_j)$, and a graph is \emph{connected} if any two vertices are contained in a path. A \emph{directed path} is a path for which all edges between the vertices are directed. A \textit{partially directed cycle} in $\mathcal{G}$ is a cycle with at least one directed edge, that is a path $v_1,\ldots, v_n$ ($n \geqslant 3$) with $v_1\in \bd(v_n)$ and $v_{j+1}\to v_j$ for some $j$.\\[5pt]
+If $u\to v$, we call $u$ a \emph{parent} of $v$, and we denote by $\pa(v)$ the set of parents of $v$. If $u-v$, we call $u$ a \emph{neighbour} of $v$, and we denote by $\nei(v)$ the set of neighbours of $v$. We define the \emph{boundary} of $v$ as $\bd(v)=\pa(v)\cup \nei(v)$, and for a subset $A\subset \mathcal{V}$, we define the parents, neighbours and boundary of $A$ as
+\begin{align*}
+\pa(A)&=\bigcup_{v\in A}\pa(v)\setminus A\\
+ \nei(A)&=\bigcup_{v\in A}\nei(v)\setminus A\\
+ \bd(A)&=\bigcup_{v\in A}\bd(v)\setminus A
+\end{align*}
+A \emph{chain} in $\mathcal{G}$ is a sequence of vertices $v_1,\ldots, v_n$ ($n \geqslant 2$) satisfying that for all $j=1,\ldots,n-1$, we have $v_{j+1}\in \bd(v_j)$ or $v_{j}\in \bd(v_{j+1})$, and a \emph{path} is a chain  where only $v_{j+1}\in \bd(v_j)$ is allowed. A graph is \emph{connected} if any two vertices are contained in a path. A \emph{directed path} is a path for which all edges between the vertices are directed. A \textit{partially directed cycle} in $\mathcal{G}$ is a cycle with at least one directed edge, that is a path $v_1,\ldots, v_n$ ($n \geqslant 3$) with $v_1\in \bd(v_n)$ and $v_{j+1}\to v_j$ for some $j$.\\[5pt]
 For $A\subset V$, $\mathcal{G}_A$ denotes the subgraph of $\mathcal{G}$ with $A$ as vertex set and all edges inherited from $\mathcal{G}$, and we say it is the subgraph \emph{induced} by $A$.  We call a graph \emph{complete}, if there is an edge (directed or undirected) between every pair of vertices, and we call a maximal complete subgraph $\mathcal{G}_A <$for a \emph{clique}.\\[5pt]
 A \emph{chain component} is a connected  subgraph of $\mathcal{G}$ containing only undirected edges, and a \emph{minimal complex}  is an induced subgraph $\mathcal{G}_A$ with two distinguished nodes $a,b$ for which $\mathcal{G}_{A\setminus \{a,b\}}$ is a chain component and no path in $\mathcal{G}_A$ contains both $a$ and $b$. A minimal complex can be drawn as
 $$a\to v_1-\cdots-v_n\gets b$$
 We say that $\mathcal{G}$ is a \emph{chain graph} if it contains no partially directed cycles, and if further it contains no directed edges, we say $\mathcal{G}$ is a \emph{directed acyclic graph (DAG)}.
-\end{defn}
+\end{mydefinition}
 We will implicitly assume our graphs to be finite, meaning that there are only finitely many vertices. Now we have to specify what information we want to express with a graphical representation of a set of variables. When building causal graph models, we want the graphs to encode all causal relationships between variables, while the intent behind the use of a graphical model is less ambitious from the get-go: we want 'only' to deduce conditional independences between variables from the graph. This is not to say that this is typically a weak assumption, on the contrary. Instead, it is more appropriately interpreted as a sign of just how restrictive the causal graph models are going to be of the distributions they govern. Satisfying a set of conditional independence constraints is what we shall call a Markov property of the joint distribution of a set of variables, and this is the centre of attention in graphical model theory.\\\\
-For DAGs, there is a canonical way to define the Markov property, but there are multiple non-equivalent ways of defining a Markov property for chain graphs depending on how you want to treat the chain components. The choice of Markov property propagates throughout the modelling and determines what interpretations are valid. We shall encounter the possible existence of some complexes of causally interlinked variables later, and so for our purpose, we choose to define the Markov property in a fashion that treats chain components as one indivisible unit and we thereby accept the consequences for valid interpretations as discussed by \cite{ChainGraph}. These definitions are most easily expressed when assuming that there exists a joint density of the variables of interest, in which case they take the form:
+For DAGs, there is a canonical way to define the Markov property, but there are multiple non-equivalent ways of defining a Markov property for chain graphs depending on how you want to treat the chain components. The choice of Markov property propagates throughout the modelling and determines what interpretations are valid. Most approaches have in common that they set elements of chain components on equal footing, but with some special kind of structure. We shall encounter the possible existence of some complexes of causally interlinked variables later, and so for our purpose, we choose to define the Markov property in a fashion that allows for feedback mechanisms, which seem appropriate as an analogy of what we might observe in the deterministic world, and we thereby accept the consequences for valid interpretations as discussed by \cite{ChainGraph}. We will return to a short discussion of this later. These definitions are most easily expressed when assuming that there exists a joint density of the variables of interest, in which case they take the form:
 
 \begin{mydefinition}{The Markov property}
 Let $(\Omega, \mathcal{F}, \mP)$ be a probability space. A distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ is said to satisfy the \emph{Markov property with respect to the DAG} $\mathcal{G}=(\mathcal{V}, \mathcal{E})$, if
@@ -288,12 +296,14 @@ A distribution $P$ with strictly positive density $f$ with respect to the produc
 \end{equation}
 where $\mathscr{T}$ is the set of chain components, and if further each factor itself factorizes in the following way
 $$f\left(x_\tau\mid x_{\pa(\tau)}\right)=\prod_{A\in \mathscr{A}(\tau)}\psi_A\left(x_A\right)$$
-where $\mathscr{A}(\tau)$ are the complete sets of the undirected graph $\left(\mathcal{G}_{\tau\cup\pa(\tau)}\right)^m$ obtained from $\mathcal{G}_{\tau\cup\pa(\tau)}$ by adding edges between all pairs of vertices that are parents of the same vertex, and $\psi_A$, $A\in \mathscr{A}(\tau)$, are functions depending on $x_\tau$ only through the coordinates $A\subset \tau$. 
+where $\mathscr{A}(\tau)$ are the complete sets of the undirected graph $\left(\mathcal{G}_{\tau\cup\pa(\tau)}\right)^m$ obtained from $\mathcal{G}_{\tau\cup\pa(\tau)}$ by adding edges between all pairs of vertices that are parents to vertices in the same chain component, and $\psi_A$, $A\in \mathscr{A}(\tau)$, are functions depending on $x_\tau$ only through the coordinates $A\subset \tau$. 
 \end{mydefinition}
 Let us try to unpack these definitions. We see that the Markov property for chain graphs is consistent with the Markov property for DAGs, since the chain components of a DAG are simply the vertices of the graph. Next, in the DAG case, we can easily extract some more interpretable information about the variables from the Markov property by simple means of iteration:\\[5pt]
-First, take $A\subset \mathcal{V}$ such that $\pa(A)=\emptyset$. By the Markov property, we may then write
-$$f(x_A)=\int f(x)\ dx_{\mathcal{V}\setminus A}=\prod_{a\in A}f(x_a)\int\prod_{v\in \mathcal{V}\setminus A} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus A}$$
-We will now argue that the integrand of the last expression integrates to 1. Let $\mathcal{S}_0=\mathcal{V}\setminus A$ and assume $\mathcal{S}_0\neq\emptyset$. We iterate as follows over $j=0,\ldots,\left|\mathcal{S}_0\right|$:
+First, take $A\subset \mathcal{V}$, and let $\de(A)\subset \mathcal{V}$ be the set of \emph{descendants} of $A$, that is the set of all vertices for which there exists a directed path from a vertex in $A$ to the given vertex - and we say $A\subset \de(A)$. Let further $B\subset \mathcal{V}$ be any subset satisfying $\de(A)\cap B=\emptyset$, and define $\mathcal{C}\coloneqq A\cup\pa(A)\cup B$. By the Markov property, we may then write
+$$f\left(x_{\mathcal{C}}\right)=\int f(x)\ dx_{\mathcal{V}\setminus \mathcal{C}}=\prod_{a\in A}f\left(x_{a}\mid x_{\pa(a)}\right)\int \prod_{v\in \mathcal{V}\setminus A} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus \mathcal{C}}$$
+We will now try to reduce the remaining expression by iterating the integral. We first remark that the integral can be rewritten as
+$$\int \prod_{u\in \mathcal{V}\setminus \de(A)} f\left(x_u\mid x_{\pa(u)}\right) \int \prod_{v\in \de(A)\setminus A} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\de(A)\setminus A}\ dx_{\mathcal{V}\setminus \de(A)\cup \mathcal{C}}$$
+We will show that the inner integral is 1. Let $\mathcal{S}_0=\de(A)\setminus A$ and assume $\mathcal{S}_0\neq\emptyset$. We iterate as follows:
 \begin{alg}\label{alg1}
 Given $\mathcal{S}_0\subset \mathcal{V}$.
 \begin{enumerate}[label=(\roman*)]
@@ -303,26 +313,220 @@ Given $\mathcal{S}_0\subset \mathcal{V}$.
 $$\mathcal{I}_{j}\coloneqq \int\prod_{v\in \mathcal{S}_j} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{S}_j}$$
 for $ \mathcal{S}_j\neq \emptyset$ and $\mathcal{I}_j=1$ for $\mathcal{S}_j= \emptyset$, we may then write
 	$$\mathcal{I}_{j}=\mathcal{I}_{j+1}\times \int f\left(x_{u_j}\mid x_{\pa(u_j)}\right)\ dx_{u_j}=\mathcal{I}_{j+1}$$
-	since there is now only one factor depending on $x_{u_j}$.
+	since there is now only one factor depending on $x_{u_j}$ and the conditional density integrates to 1.
 	\item Abort if $\mathcal{S}_{j+1}=\emptyset$, otherwise: return to (i).
 \end{enumerate}
 \end{alg}
-This proves $f(x_A)=\prod_{a\in A}f(x_a)$ and thereby that any two variables corresponding to vertices with no parents are independent.\\[5pt]
-Next, we fix $v_0\in \mathcal{V}$, and we let $\de(v_0)\subset \mathcal{V}$ be the set of \emph{descendants} of $v_0$, that is the set of all vertices for which there exists a directed path from $v_0$ to the given vertex - and we say $v_0\in \de(v_0)$. Let then $A\subset \mathcal{V}$ be any subset satisfying $\de(v_0)\cap A=\emptyset$. Define $A'\coloneqq \{v_0\}\cup\pa(v_0)\cup A$. We then observe that
-$$f\left(x_{A'}\right)=\int f(x)\ dx_{\mathcal{V}\setminus A'}=f\left(x_{v_0}\mid x_{\pa(v_0)}\right)\int \prod_{v\in \mathcal{V}\setminus\{v_0\}} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus A'}$$
-By choosing $\mathcal{S}_0=\de(v_0)\setminus\{v_0\}$, Algorithm \ref{alg1} yields that
-$$f(x_{A'})=f\left(x_{v_0}\mid x_{\pa(v_0)}\right)\int \prod_{v\in \mathcal{V}\setminus\de(v_0)} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus \de(v_0)\cup A'}$$
-Analogously, using Algorithm \ref{alg1} with $\mathcal{S}_0=\de(v_0)$ gives us
+By Algorithm \ref{alg1}, the inner integral is 1, and thus we may conclude that
+$$f(x_{\mathcal{C}})=\prod_{a\in A}f\left(x_a\mid x_{\pa(a)}\right)\int \prod_{u\in \mathcal{V}\setminus \de(A)} f\left(x_u\mid x_{\pa(u)}\right)\ dx_{V\setminus \de(A)\cup \mathcal{C}}$$
+Analogously, using Algorithm \ref{alg1} with $\mathcal{S}_0=\de(A)$ gives us
 $$
-f(x_{\pa(v_0)\cup A})=\int \prod_{v\in \mathcal{V}\setminus\de(v_0)} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus \de(v_0)\cup A'}
+f(x_{\pa(A)\cup B})=\int \prod_{v\in \mathcal{V}\setminus\de(A)} f\left(x_v\mid x_{\pa(v)}\right)\ dx_{\mathcal{V}\setminus \de(A)\cup \mathcal{C}}
 $$
 and we conclude that
-$$f\left(x_{v_0}\mid x_{\pa(v_0)\cup A}\right)=f\left(x_{v_0}\mid x_{\pa(v_0)}\right)$$
-Thus we see the Markov property also imposes that conditioning on the variables corresponding ...\\[5pt]
- 
+$$f\left(x_{A}\mid x_{\pa(A)\cup B}\right)=\prod_{a\in A} f\left(x_{a}\mid x_{\pa(a)}\right)=f\left(x_A\mid x_{\pa(A)}\right)$$
+with the second equality obtained from the first with $B=\emptyset$. We see directly from this that when conditioning on the variables corresponding to the parents, further conditioning offers no new information as long as you don't condition on descendants. If we set the \textit{non-descendants} $\nd(A)\coloneqq\mathcal{V}\setminus \de(A)$ and apply the above result to $B\subset \nd(A)$, we also get
+$$f\left(x_{A\cup B}\mid x_{\pa(A)}\right)=f\left(x_A\mid x_{\pa(A)}\right)f\left(x_{B}\mid x_{\pa(A)}\right)$$
+by dividing our expression for $f(x_\mathcal{C})$ with $f(x_{\pa(A)\setminus B})$. In essence, we have proved that any vertex $\alpha$ is independent of its non-descendants given the parents, in the sense that $X_\alpha\indep X_{\nd(\alpha)}\mid X_{\pa(\alpha)}$, which is called the \textit{directed local Markov property}. In fact, we can reverse all our arguments with an appropriate 'reverse' version of Algorithm 1, and derive the Markov property directly from this property, but seeing as we now have a Markov property formulated without densities, it could be applied to distributions where the density version of the Markov property does not make sense. There are multiple different versions of Markov properties on graphs, that are in general not equivalent, but do align when working with sufficiently nice distributions. We will state one classical result of equivalence shortly.\\\\
+If we move to chain graphs, we see that the directed local Markov property then holds for the graph over all chain components $\tau\in \mathscr{T}$. We will now fix a chain component $\tau$, and look at what information is encoded in the second part of the definition of the Markov property. First up, we will look on the distribution of $X_\tau$ conditional on $X_{\pa(\tau)}$. Take now disjoint non-empty $\rho,\sigma\subset \tau$ with $\nei(\rho)\cap \sigma=\emptyset$, and let $\mathcal{C}\subset \rho\cup\sigma\cup \nei(\rho)$. We can then write
+\begin{align*}
+f\left(x_{\mathcal{C}\cup\pa(\tau)}\right)&=f(x_{\pa(\tau)})\times \int f\left(x_\tau\mid x_{\pa(\tau)}\right)\ dx_{\tau\setminus \mathcal{C}}
+\end{align*}
+by using algorithm 1 to integrate out all chain components that are descendants of $\tau$, and using that everything apart from the second term that is not integrated out in this fashion constitutes exactly the expression obtained with $\mathcal{C}=\emptyset$. Using that the complete sets in $(\mathcal{G}_{\tau\cup\pa(\tau)})^{m}$ containing $\rho$ can contain nothing but a subset of  the boundary of $\rho$, we see by the Markov property that 
+$$f\left(x_\tau\mid x_{\pa(\tau)}\right)=\psi_{\rho\cup\bd(\rho)}(x_{\rho\cup\bd(\rho)})\psi_{\tau\setminus \rho}(x_{\tau\setminus \rho})$$
+which in turn means we can write
+\begin{align*}
+f\left(x_\tau\mid x_{\pa(\tau)}\right)&=f\left(x_\rho\mid x_{\bd(\rho)}\right)f\left(x_{\tau\setminus\rho}\mid x_{\pa(\tau)}\right)\\
+&=f\left(x_\rho\mid x_{\bd(\rho)}\right)f\left(x_{\tau\setminus\rho\cup\nei(\rho)}\mid x_{\nei(\rho)\cup\pa(\tau)}\right)f\left(x_{\nei(\rho)}\mid x_{\pa(\tau)}\right)
+\end{align*}
+by adjusting with $\int \psi_{\rho\cup\bd(\rho)}(x_{\rho\cup\bd(\rho)})\ dx_\rho$ if necessary. We notice also that $f\left(x_\rho\mid x_{\bd(\rho)}\right)=f\left(x_\rho\mid x_{\nei(\rho)\cup\pa(\tau)}\right)$, since we may equally well pull out the latter as a factor of $f\left(x_\tau\mid x_{\pa(\tau)}\right)$ - this automatically implies $X_\rho\indep X_{\pa(\tau)}\mid X_{\bd(\rho)}$. Collecting all these observations gets us
+$$f\left(x_{\rho\cup\sigma}\mid x_{\nei(\rho)\cup \pa(\tau)}\right)=f\left(x_{\rho}\mid x_{\nei(\rho)\cup\pa(\tau)}\right)f\left(x_{\sigma}\mid x_{\nei(\rho)\cup\pa(\tau)}\right)$$
+or equivalently $X_\rho\indep X_\sigma\mid X_{\nei(\rho)}$ in the conditional distribution $X_{\tau\mid \pa(\tau)}$. We can summarize as follows:
+\begin{enumerate}[label=(\roman*)]
+	\item $\forall \tau\in \mathscr{T}: X_\tau\indep X_{\nd(\tau)}\mid X_{\pa(\tau)}$
+	\item $\forall \tau\in \mathscr{T},\forall \sigma\subset \tau: X_\sigma\indep X_{\tau\setminus \sigma}\mid X_{\nei(\sigma)\cup\pa(\tau)}$
+	\item $\forall \tau\in \mathscr{T},\forall \sigma\subset \tau: X_\sigma\indep X_{\pa(\tau)}\mid X_{\bd(\sigma)}$
+\end{enumerate}
+This is referred to as the \emph{block-recursive Markov property for chain graphs}	in the work of \cite{AMP}, and is again an equivalent formulation of the Markov property when working with strictly positive densities, but works even when densities do not exist. In \cite{AMP}, they suggest to replace the third condition with:
+\begin{enumerate}[label=(\roman*)*]
+\setcounter{enumi}{2}
+	\item $\forall \tau\in \mathscr{T},\forall \sigma\subset \tau: X_\sigma\indep X_{\pa(\tau)}\mid X_{\pa(\sigma)}$
+\end{enumerate}
+This defines an alternative non-equivalent Markov property, that goes under the name AMP for \textbf{A}nderson \textbf{M}adigan \textbf{P}earlman, or just \textbf{A}lternative \textbf{M}arkov \textbf{P}roperty. With this definition, we thus get independencies when conditioning on smaller sets than with our definition, and therefore the chain components are 'more divisible', and this can be useful if doing block regression where variables in each block are allowed to have interdependencies - perhaps due to some feature of the study design, one could hope to capture some common cause, i.e. confounding, in each block in this fashion.
+\\\\
+We see that a lot of information about the joint distribution is encoded in the graph and that assuming that a distribution satisfies a Markov property with respect to a graph can be a fairly restrictive assumption. We provide below a general result of \cite{Steffen} when working with densities, that shows that constraints imposed by the graph can be expressed in different equivalent ways. This provides us some flexibility when trying to understand the nature of these constraints; a task that can in general become quite intricate.
+\begin{thm}[Equivalency of Markov Properties]
+Let $(\Omega, \mathcal{F}, \mP)$ be a probability space. A distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ satisfies the Markov Property with respect to a chain graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ if and only if
+\begin{itemize}
+	\item a random variable $X$ with distribution $P$ satisfies the block-recursive Markov property for chain graphs with respect to $\mathcal{G}$, or
+	\item a random variable $X$ with distribution $P$ satisfies the \emph{global chain Markov property} with respect to $\mathcal{G}$, meaning that:\\ Let $(A,B,S)$ be any disjoint subsets of $\mathcal{V}$, and let $\an(A\cup B\cup S)$ denote the smallest set containing $A,B,S$ satisfying that if $\alpha\in \mathcal{G}, \beta \in \an(A\cup B\cup S)$ and there is a partially directed path from $\alpha$ to $\beta$, then $\alpha \in \an(A\cup B\cup S)$. If any path from a vertex in $A$ to a vertex in $B$ crosses $S$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$, where we have added edges between all pairs of vertices that are parents of the same vertex and thereafter removed the direction of all edges, then
+	$$X_A\indep X_B\mid X_S$$
+	In this case, we say that $S$ separates $A$ and $B$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$.\\\\
+	If $\mathcal{G}$ is a DAG, then $S$ separates $A$ and $B$, if and only if any chain $\pi$ from a vertex in $A$ to a vertex in $B$ contains a vertex $\gamma\in \pi$ such that $\gamma\in S$ and arrows of $\pi$ do not meet head-to-head at $\gamma$ or $\de(\gamma)\not\subset S$ and arrows of $\pi$ do meet head to head at $\gamma$. 
+\end{itemize}
+\end{thm}
+With this in place, we are now able to infer quite a lot of conditional independences from a graph $\mathcal{G}$ when a distribution satisfies the Markov property with respect to $\mathcal{G}$. What is not clear, is whether any procedure based on the above actually produces an exhaustive list of all conditional independences that are true in general. This question is answered by \cite{Remco} in the affirmative:
+\begin{thm}[Strong Completeness of Separation Criteria]\label{separate}
+For any chain graph $G=(\mathcal{V},\mathcal{E})$, there exists a $(\Omega, \mathcal{F}, \mP)$ a probability space, and a distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$, such that $P$ satisfies the Markov property with respect to $\mathcal{G}$ and such that for any random variable with distribution $P$, and any triplet $(A,B,C)$ of disjoint subsets of $\mathcal{V}$, then
+$$X_A\indep X_B\mid X_S$$
+if and only if $S$ separates $A$ and $B$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$.
+\end{thm}
+This result gives a complete characterization answering our question and a quite precise view of what information is encoded in the graph. With the completeness of the separation criterion in hand, the next question might then be if there is also a uniqueness property of our graphs: do each graph lead to a unique set of constraints on the distribution? This is however not true in general, as was proved by \cite{Frydenberg}, who gives a complete characterization of which graphs lead to the same set of conditional independences:
+\begin{thm}[Markov Equivalence of Graphs]
+Two chain graphs $\mathcal{G}_1=(\mathcal{V},\mathcal{E}_1)$ and $\mathcal{G}_2=(\mathcal{V},\mathcal{E}_2)$  imply the same set of conditional independences for a distribution satisfying the Markov property if and only if any pair of vertices are connected in $\mathcal{G}_1$ if and only if they are connected in $\mathcal{G}_2$, and $\mathcal{G}_1$, $\mathcal{G}_2$ share the same minimal complexes.\\
+In that case, we say that $\mathcal{G}_1$ and $\mathcal{G}_2$ are \emph{Markov equivalent}, and if any pair of vertices are connected in $\mathcal{G}_1$ if and only if they are connected in $\mathcal{G}_2$, we say that $\mathcal{G}_1$ and $\mathcal{G}_2$ have the same \emph{skeleton}.
+\end{thm}
+This result also gives us an upper bound on what can maximally be inferred about a graph when observing a distribution in practice. We return to this problem in the next section. With the machinery of graphical models, we can now turn to the question of how these chain graph models should be interpreted. In the work of \cite{ChainGraph}, there is a thorough account on this question, of which we will only give a brief summary now. Consider the graph below:
+\begin{center}
+\begin{tikzpicture}
+  % Nodes
+  \node (a) at (0,0) {a};
+  \node (b) at (0,-2) {b};
+  \node (c) at (2,0) {c};
+  \node (d) at (2,-2) {d};
+  
+  % Edges
+  \draw[->] (a) -- (c);
+  \draw[->] (b) -- (d);
+  \draw (c) -- (d);
 
-\subsection{Multivariate SCMs}
-The definition of the SCM easily extends to any number of variables with the definition that $X$ causes $Y$ if $Y\coloneqq f(X,Z_1,...,Z_n,N_X)$ and for a moment disregarding that $f$ may trivially depend on any variable - say in this context that $f$ depends 'non-trivially' on $X$. We can then easily imagine a a time series in an SCM in a discrete framework by simply associating each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit the problems with causality in pathological deterministic structures, and it is not immediate that this model is appropriate for continuous time models as well.\\\\
+  % Annotation
+  \node[left] at (-0.5, -1) {$\mathcal{G}$};
+\end{tikzpicture}
+\end{center}
+With our new-found criteria for inferring properties from graphs, we can decipher the graph in question. By theorem \ref{separate}, we get a one-to-one correspondence between separation statements and conditional independences that hold for all distributions satisfying the Markov property. Therefore, we will abuse the notation somewhat and move directly to using conditional independence notation for vertices on the graph corresponding to this correspondence. Thus, the graph encodes the following statements
+$$a\indep b,\quad a\indep d\mid \{b,c\},\quad b\indep c\mid \{a,d\}$$
+A small remark here, is that this graph is an example of where the AMP Markov Property differs from our definition, in that it implies $a\indep d\mid\{b\}$ and $b\indep c\mid\{d\}$, reflecting that dependencies within chain components under this assumption do not carry imprints of the parents of the different vertices. This lends itself more to an interpretation consistent with blocking, where this type of relationship between variables are used for variables that belong to the same group. Returning, to our set-up, one could imagine several different scenarios that we would represent with this graph, of which \cite{ChainGraph} consider the following:
+\begin{enumerate}[label=(\roman*)]
+	\item an unmeasured confounding variable,
+	\item selection bias,
+	\item a feed-back relationsship,
+	\item the causal direction being unknown,
+\end{enumerate}
+Below we have illustrated graphs corresponding to the situations (i) to (iii):
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+  % Graph G_1
+  \begin{scope}[shift={(0,0)}]
+    \node (a) at (0,0) {a};
+    \node (b) at (0,-2) {b};
+    \node (c) at (2,0) {c};
+    \node (d) at (2,-2) {d};
+    \node (h) at (3,-1) {h};
+
+    \draw[->] (a) -- (c);
+    \draw[->] (b) -- (d);
+    \draw[->] (h) -- (c);
+    \draw[->] (h) -- (d);
+
+    \node[above] at (1, 0.5) {$\mathcal{G}_1$};
+  \end{scope}
+
+  % Graph G_2
+  \begin{scope}[shift={(4,0)}]
+    \node (a) at (0,0) {a};
+    \node (b) at (0,-2) {b};
+    \node (c) at (2,0) {c};
+    \node (d) at (2,-2) {d};
+    \node (s) at (3,-1) {s};
+
+    \draw[->] (a) -- (c);
+    \draw[->] (b) -- (d);
+    \draw[->] (c) -- (s);
+    \draw[->] (d) -- (s);
+
+    \node[above] at (1, 0.5) {$\mathcal{G}_2$};
+  \end{scope}
+
+  % Graph G_3
+  \begin{scope}[shift={(8,0)}]
+    \node (a) at (0,0) {a};
+    \node (b) at (0,-2) {b};
+    \node (c) at (2,0) {c};
+    \node (d) at (2,-2) {d};
+
+    \draw[->] (a) -- (c);
+    \draw[->] (b) -- (d);
+    \draw[->,bend left] (c) to (d);
+    \draw[->,bend left] (d) to (c);
+
+    \node[above] at (1, 0.5) {$\mathcal{G}_3$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+Starting with $\mathcal{G}_1$, here we have a confounding variable $h$ that influences $c$ and $d$, and we assume that $h$ remains unobserved to us. We see that this graph implies $a\indep d$ and $b\indep c$ directly, which is not consistent with our graph. Moving to the graph $\mathcal{G}_2$, we are now imagining that the variables $c$ and $d$ are both influencing some affect, that we are implicitly conditioning on when observing the data - as is often seen when the variables we try to use for statistical inference influence whether the subjects participate in the study. In this case, we see that conditioning on $s$ removes the independence between $a$ and $b$, and so this interpretation is not consistent with our graph either.\\\\
+We move to the final graph $\mathcal{G}_3$, which is not a DAG (nor a chain graph). If we just try to use our graphical reasoning anyway, we would infer that $a$ and $d$ are not independent when conditioning on $\{b,c\}$ and likewise with $b$ and $c$ conditional on $\{a,d\}$. So the chain graph does not represent this situation either, but it is perhaps closer to capturing some essence here - essentially $a\indep b$ still holds and the failure stems from the fact that blocking one path from $a$ to $d$ unblocks the other. So even though our chain graph does not represent this ill-defined graphical model either, there may be something to work on here. Before that, we remark that our comments on $\mathcal{G}_3$ essentially  shows (iv) is not really feasible either: the conditional independences implied by a chain graph will not be true in general for a distribution for which the direction of the edge just has not been attributed (yet).\\\\
+Expanding on the feedback example, one might imagine that the dynamic described by our chain graph could result from an equilibrium in a feedback system. To that end, we might look at another improper graphical model, where we allow for an infinite amount of vertices and consider a limit distribution resulting from a feedback system. Reusing the example of \cite{ChainGraph}, we look at the following graph:
+\begin{figure}[H]
+  \centering
+  \resizebox{\textwidth}{!}{
+    \begin{tikzpicture}[auto, node distance=2cm]
+  % Nodes
+  \node (a) at (0,4) {a};
+  \node (b) at (0,-2) {b};
+  \node (c0) at (0,2) {c$_0$};
+  \node (d0) at (0,0) {d$_0$};
+  \node (c1) at (2,2) {c$_1$};
+  \node (d1) at (2,0) {d$_1$};
+  \node (c2) at (4,2) {};
+  \node (d3) at (7,0) {};
+  \node (ci) at (9,2) {c$_i$};
+  \node (di) at (9,0) {d$_i$};
+  \node (ci+1) at (11,2) {c$_{i+1}$};
+  \node (di+1) at (11,0) {d$_{i+1}$};
+  \node (ci+2) at (13,2) {};
+
+  % Edges from a to c's except c0
+  \foreach \x in {1,i,i+1}
+  {
+    \draw[->] (a) -- (c\x);
+  }
+
+  % Edges from b to d's except d0
+  \foreach \x in {1,i,i+1}
+  {
+    \draw[->] (b) -- (d\x);
+  }
+
+  % Arrows between c's and d's
+  \foreach \x in {1,i,i+1}
+  {
+    \draw[->] (c\x) -- (d\x);
+  }
+
+  % Arrows from d0 to c1 and di to ci+1
+  \draw[->] (d0) -- (c1);
+  \draw[->] (c0) -- (d0);
+  \draw[->] (d1) -- (c2);
+  \draw[->] (d3) -- (ci);
+  \draw[->] (di) -- (ci+1);
+  \draw[->] (di+1) -- (ci+2);
+  \draw[thick, dashed] (4,1) -- (7,1);
+  \draw[thick, dashed] (13,1) -- (16,1);
+\end{tikzpicture}
+}
+\end{figure}
+In this figure, we observe that $a\indep b$ and that we have $a\indep d_i\mid \{c_i,b\}$ and $b\indep c_i\mid\{d_{i-1},a\}$, although it is not true that $b\indep c_i\mid\{d_i,a\}$. So a snapshot of the system at some stage is not enough to produce the properties implied by the chain graph. However, as they argue in \cite{ChainGraph}, under the right conditions, $(X_{c_i},X_{d_i})$ and $(X_{c_i},X_{d_{i-1}})$ converge to the same equilibrium distribution, and so in equilibrium, and therefore approximately for a snapshot with large enough $i$'s, we have the desired conditional independences from the chain graph. One can be much more specific than this, and this idea yields some algorithms useful for simulating distributions that satisfy the Markov property with respect to $\mathcal{G}$. We refer to \cite{ChainGraph} for further details, and promise to return to these examples in a later chapter (???).\\\\
+We end this section by formulating a causal graphical model. We are not going to use it prominently in the rest of the thesis, but it does give a fairly intuitive approach to causal reasoning. For it to be a causal model, it has to model what happens when intervening in the system, meaning that if by some external forcing the distribution and dependencies of one variable is changed, the model has to capture what happens with the joint distribution. In the language of graphical models, this can be done as follows
+\begin{mydefinition}{Causal Graphical Model}
+A \emph{causal graphical model} over a set of random variables $X=(X_v)_{v\in \mathcal{V}}$ with respect to a chain graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ consists of a collection of functions $(f_\tau)_{\tau\in \mathscr{T}}$ satisfying that
+\begin{itemize}
+	\item the function $f_\tau$ depends on $\left(x_\tau,x_{\pa(\tau)}\right)$,
+	\item each function integrates to 1 in the first variable, i.e. for all $\tau\in \mathscr{T}$
+	$$\int f_\tau\left(x_\tau,x_{\pa(\tau)}\right)\ dx_\tau=1,$$
+	\item together, the functions induce the distribution $\mP_X$ over $X$ as follows
+	$$p(x)=\prod_{\tau\in \mathscr{T}} f_ \tau\left(x_\tau,x_{\pa(\tau)}\right),$$
+	\item each function factors according to the graph $\mathcal{G}$, i.e. for all $\tau\in \mathscr{T}$
+	$$f_\tau\left(x_\tau,x_{\pa(\tau)}\right)=\prod_{A\in \mathscr{A}(\tau)}\psi_A(x_A)$$
+	\item and the intervention $X_u\coloneqq q\left(\cdot \mid x_{\pa'(u)}\right)$, with respect to the chain graph $\mathcal{G}'$ differing only from $\mathcal{G}$ by the parents of $u$, induces the distribution
+	$$p\left(x \mid x_u\gets q\left(\cdot \mid x_{\pa'(u)}\right)\right)=q\left(x_u \mid x_{\pa'(u)}\right)\prod_{\tau\in \mathscr{T}'} f\left(x_\tau\mid x_{\pa(\tau)}\right)$$
+	We require $q$ to integrate to one, i.e.
+	$$\int q\left(x_u\mid x_{\pa'(u)}\right)\ dx_u=1.$$
+\end{itemize}
+\end{mydefinition}
+
+\section{Multivariate SCMs}
+We already discussed the notion of the SCM easily extends to any number of variables with the definition that $X$ causes $Y$ if $Y\coloneqq f(X,Z_1,...,Z_n,N_X)$ and for a moment disregarding that $f$ may trivially depend on any variable - say in this context that $f$ depends 'non-trivially' on $X$. We can then easily imagine a a time series in an SCM in a discrete framework by simply associating each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit the problems with causality in pathological deterministic structures, and it is not immediate that this model is appropriate for continuous time models as well.\\\\
 We will first give an introduction to our causal modelling in the terminology of the structural causal model (SCM), sometimes also referred to as a structural equation model (SEM),  which allows us to model time series in a discrete framework. We shall then discuss the extension to continuous time series and the link to the discrete time series framework. Our causal framework does come with some caveats, but we will try our best to discuss them along the way. We will present the SCMs as done in \cite{Peters}, and we will freely use standard terminology from graph theory. We start with the central object of study.
 \begin{defn}[Discrete time series]
 We shall call $(X_t)_{t\in \mZ}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mZ}$ a \emph{$d$-dimensional discrete time series}, where $X_t^j:\Omega\to \mR$ is a random variable and the observation of the $j$th variable of $X$ at time $t$.
@@ -389,6 +593,8 @@ Given a DAG $\mathcal{G}=(\mathcal{V},\mathcal{E})$, the \emph{transitive  closu
 The transitive closure of a causal graph encodes only the causal direction between variables but cannot distinguish between direct and indirect causal links. In other words, from the transitive closure you can infer all descendants of a given variable, but not the causal graph itself. It will turn out that this is exactly what we will be able to recover with the modelling framework based on Takens' theorem.
 
 Now for the link between discrete and continuous time models, we will briefly present the result proved by \cite{sokol2014}, that shows that the discretization of an SDE according to the Euler scheme and treating it with the discrete time model framework will give the same results in the limit.
+\chapter{State Space Reconstruction}
+
 \section{Takens' Theorem}
 In the following, we will switch gears from the more welcoming realm of considering functions in $\mR^n$ and $\mR$ and move to the realm of differential topology, which is inhabited by manifolds, vector fields and tangent bundles and worse. This is done, not for needless abstraction, but because the theory we shall be exploiting holds in this generality - and in fact as long we consider compact manifolds, we might as well think of them in Euclidean spaces nonetheless. So in practice, we will always be able to envision our models living in our usual space $\mR^n$, but it is not in any way useful to restrict ourselves at this point.\\
 We will consider different setups, but the base model is systems modelled as vector fields on invariant compact manifolds (separable, Hausdorff, locally Euclidean spaces), which can be generalized to cover vector fields with an attractor set, that need not in fact be a manifold, see \cite{Sauer1991}. As the theorem itself, this is formulated in the realm of differential topology and so the objects involved in the theorem and subsequqnt theory spring from there. Below we will briefly introduce and recite the definitions of the objects of relevance, if nothing else to clarify the terminology used in this thesis. In practice, most of our examples will come from partial differential equations (PDEs) and stochastic differential equations (SDEs); we will consider the link between these realms in more detail later. We will for now interpret the manifold as the 'path' of the system, that is the values that the system takes throughout time. With terminology borrowed from physics, one could call this the \textit{phase space}. The fundamental result we shall use, now known as Takens' theorem, was proved in 1981 by Floris Takens, \cite{Takens}, and states that one can reconstruct the manifold using only a univariate observation function; that is observing only one variable over time allows us to reconstruct the entire path of the dynamic system of all variables. The original theorem as stated by Takens is as follows:

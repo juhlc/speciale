@@ -1,5 +1,10 @@
 \begin{thebibliography}{}
 
+\bibitem[Andersson et~al., 2001]{AMP}
+Andersson, S.~A., Madigan, D., \& Perlman, M.~D. (2001).
+\newblock Alternative markov properties for chain graphs.
+\newblock {\em Scandinavian Journal of Statistics}, 28(1), 33--85.
+
 \bibitem[Butterworth, 1983]{Compete}
 Butterworth, D.~S. (1983).
 \newblock {Assessment and Management of Pelagic Stocks in the Southern Benguela
@@ -46,6 +51,11 @@ Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
 \newblock On the efficacy of state space reconstruction methods in determining
   causality.
 \newblock {\em SIAM Journal on Applied Dynamical Systems}, 14(1), 335--381.
+
+\bibitem[Frydenberg, 1990]{Frydenberg}
+Frydenberg, M. (1990).
+\newblock The chain graph markov property.
+\newblock {\em Scandinavian Journal of Statistics}, 17(4), 333--353.
 
 \bibitem[Granger, 1969]{Granger}
 Granger, C. W.~J. (1969).
@@ -135,6 +145,12 @@ Spirtes, P. \& Scheines, R. (1993).
 \newblock {\em Lecture Notes in Statistics: Causation, Prediction, and Search},
   volume~81.
 \newblock Springer-Verlag New York.
+
+\bibitem[Studeny \& Bouckaert, 1998]{Remco}
+Studeny, M. \& Bouckaert, R.~R. (1998).
+\newblock On chain graph models for description of conditional independence
+  structures.
+\newblock {\em The Annals of Statistics}, 26(4), 1434--1495.
 
 \bibitem[Sugihara et~al., 2012]{Sugihara}
 Sugihara, G., May, R., Ye, H., hao Hsieh, C., Deyle, E., Fogarty, M., \& Munch,

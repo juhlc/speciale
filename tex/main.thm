@@ -1,30 +1,32 @@
 \contentsline {thm}{{Theorem}{1}{Non-uniqueness of graph stuctures}}{14}{thm.1}%
 \contentsline {thm}{{Theorem}{2}{Identifiability in bivariate systems with additive noise}}{15}{thm.2}%
-\contentsline {innerdefn}{{Definition}{1}{Graph terminology}}{17}{innerdefn.1}%
-\contentsline {inneralg}{{Algorithm}{1}{}}{19}{inneralg.1}%
-\contentsline {innerdefn}{{Definition}{2}{Discrete time series}}{21}{innerdefn.2}%
-\contentsline {innerdefn}{{Definition}{3}{Causal graph}}{21}{innerdefn.3}%
-\contentsline {innerdefn}{{Definition}{4}{Structural causal model}}{22}{innerdefn.4}%
-\contentsline {innerdefn}{{Definition}{5}{Markov property and faithfulness}}{22}{innerdefn.5}%
-\contentsline {thm}{{Theorem}{3}{Granger causality}}{23}{thm.3}%
-\contentsline {innerdefn}{{Definition}{6}{Continuous time series}}{23}{innerdefn.6}%
-\contentsline {innerdefn}{{Definition}{7}{Dynamical system}}{24}{innerdefn.7}%
-\contentsline {innerdefn}{{Definition}{8}{Driver}}{24}{innerdefn.8}%
-\contentsline {innerdefn}{{Definition}{9}{Summary graph}}{24}{innerdefn.9}%
-\contentsline {innerdefn}{{Definition}{10}{Component graph}}{24}{innerdefn.10}%
-\contentsline {innerdefn}{{Definition}{11}{Upper set}}{25}{innerdefn.11}%
-\contentsline {innerdefn}{{Definition}{12}{Transitive closure}}{25}{innerdefn.12}%
-\contentsline {thm}{{Theorem}{4}{Takens, Version 1}}{26}{thm.4}%
-\contentsline {thm}{{Theorem}{5}{Takens, version 2}}{27}{thm.5}%
-\contentsline {innerdefn}{{Definition}{13}{Differential topology terminology}}{28}{innerdefn.13}%
-\contentsline {thm}{{Theorem}{6}{}}{29}{thm.6}%
-\contentsline {innerdefn}{{Definition}{14}{Lattice}}{31}{innerdefn.14}%
-\contentsline {innerdefn}{{Definition}{15}{Filtration}}{31}{innerdefn.15}%
-\contentsline {innerdefn}{{Definition}{16}{Upper set filtration}}{32}{innerdefn.16}%
-\contentsline {prop}{{Proposition}{1}{}}{32}{prop.1}%
-\contentsline {proof}{{Proof}{1}{}}{32}{proof.1}%
-\contentsline {innerdefn}{{Definition}{17}{}}{33}{innerdefn.17}%
-\contentsline {innerdefn}{{Definition}{18}{Filtration of observation functions}}{33}{innerdefn.18}%
-\contentsline {prop}{{Proposition}{2}{}}{33}{prop.2}%
-\contentsline {thm}{{Theorem}{7}{Identifiability in dynamic systems}}{33}{thm.7}%
-\contentsline {cor}{{Corollary}{1}{}}{34}{cor.1}%
+\contentsline {inneralg}{{Algorithm}{1}{}}{20}{inneralg.1}%
+\contentsline {thm}{{Theorem}{3}{Equivalency of Markov Properties}}{22}{thm.3}%
+\contentsline {thm}{{Theorem}{4}{Strong Completeness of Separation Criteria}}{23}{thm.4}%
+\contentsline {thm}{{Theorem}{5}{Markov Equivalence of Graphs}}{23}{thm.5}%
+\contentsline {innerdefn}{{Definition}{1}{Discrete time series}}{28}{innerdefn.1}%
+\contentsline {innerdefn}{{Definition}{2}{Causal graph}}{28}{innerdefn.2}%
+\contentsline {innerdefn}{{Definition}{3}{Structural causal model}}{28}{innerdefn.3}%
+\contentsline {innerdefn}{{Definition}{4}{Markov property and faithfulness}}{29}{innerdefn.4}%
+\contentsline {thm}{{Theorem}{6}{Granger causality}}{30}{thm.6}%
+\contentsline {innerdefn}{{Definition}{5}{Continuous time series}}{30}{innerdefn.5}%
+\contentsline {innerdefn}{{Definition}{6}{Dynamical system}}{30}{innerdefn.6}%
+\contentsline {innerdefn}{{Definition}{7}{Driver}}{31}{innerdefn.7}%
+\contentsline {innerdefn}{{Definition}{8}{Summary graph}}{31}{innerdefn.8}%
+\contentsline {innerdefn}{{Definition}{9}{Component graph}}{31}{innerdefn.9}%
+\contentsline {innerdefn}{{Definition}{10}{Upper set}}{31}{innerdefn.10}%
+\contentsline {innerdefn}{{Definition}{11}{Transitive closure}}{31}{innerdefn.11}%
+\contentsline {thm}{{Theorem}{7}{Takens, Version 1}}{33}{thm.7}%
+\contentsline {thm}{{Theorem}{8}{Takens, version 2}}{35}{thm.8}%
+\contentsline {innerdefn}{{Definition}{12}{Differential topology terminology}}{35}{innerdefn.12}%
+\contentsline {thm}{{Theorem}{9}{}}{37}{thm.9}%
+\contentsline {innerdefn}{{Definition}{13}{Lattice}}{39}{innerdefn.13}%
+\contentsline {innerdefn}{{Definition}{14}{Filtration}}{39}{innerdefn.14}%
+\contentsline {innerdefn}{{Definition}{15}{Upper set filtration}}{39}{innerdefn.15}%
+\contentsline {prop}{{Proposition}{1}{}}{40}{prop.1}%
+\contentsline {proof}{{Proof}{1}{}}{40}{proof.1}%
+\contentsline {innerdefn}{{Definition}{16}{}}{40}{innerdefn.16}%
+\contentsline {innerdefn}{{Definition}{17}{Filtration of observation functions}}{41}{innerdefn.17}%
+\contentsline {prop}{{Proposition}{2}{}}{41}{prop.2}%
+\contentsline {thm}{{Theorem}{10}{Identifiability in dynamic systems}}{41}{thm.10}%
+\contentsline {cor}{{Corollary}{1}{}}{42}{cor.1}%
