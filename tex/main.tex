@@ -8,6 +8,7 @@
 \usepackage{tikz}
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage{centernot}
+\usepackage{tikz-cd}
 
 % Miscellaneous packages
 \usepackage{enumitem}
@@ -236,7 +237,7 @@ where $f_Y$ is a measurable function and $N_Y$ a real-valued noise variable.
 In fact, the construction is fairly simple: If we consider the conditional cumulative distribution function $F_{Y|x}(y)\coloneqq \mP(Y\leqslant y\mid X=x)$ and define
 $$f_Y(x,n_Y)\coloneqq F^{-1}_{Y|x}(n_Y)=\inf\{y\in \mR: F_{Y|x}(y)\geqslant n_Y\}$$
 then we need only let $N_Y$ be uniformly distributed on $[0,1]$ and independent of $X$ for the above SCM to entail the distribution $\mP_{(X,Y)}$. In light of this, one might feel quite pessimistic about the prospect of causal inference, but once again one has to impose the right structure on the model. If we assume that the noise or randomness is additive, then the solution  to assume sufficient 'irregularity':
-\begin{thm}[Identifiability in bivariate systems with additive noise]
+\begin{thm}[Identifiability in bivariate systems with additive noise]\label{id}
 Assume that $(X,Y)$ has the joint distribution $\mP_{(X,Y)}$.
 \begin{enumerate}[label=(\roman*)]
 	\item Assume $\mP_{(X,Y)}$ admits the linear model
@@ -276,11 +277,14 @@ If $u\to v$, we call $u$ a \emph{parent} of $v$, and we denote by $\pa(v)$ the s
  \bd(A)&=\bigcup_{v\in A}\bd(v)\setminus A
 \end{align*}
 A \emph{chain} in $\mathcal{G}$ is a sequence of vertices $v_1,\ldots, v_n$ ($n \geqslant 2$) satisfying that for all $j=1,\ldots,n-1$, we have $v_{j+1}\in \bd(v_j)$ or $v_{j}\in \bd(v_{j+1})$, and a \emph{path} is a chain  where only $v_{j+1}\in \bd(v_j)$ is allowed. A graph is \emph{connected} if any two vertices are contained in a path. A \emph{directed path} is a path for which all edges between the vertices are directed. A \textit{partially directed cycle} in $\mathcal{G}$ is a cycle with at least one directed edge, that is a path $v_1,\ldots, v_n$ ($n \geqslant 3$) with $v_1\in \bd(v_n)$ and $v_{j+1}\to v_j$ for some $j$.\\[5pt]
-For $A\subset V$, $\mathcal{G}_A$ denotes the subgraph of $\mathcal{G}$ with $A$ as vertex set and all edges inherited from $\mathcal{G}$, and we say it is the subgraph \emph{induced} by $A$.  We call a graph \emph{complete}, if there is an edge (directed or undirected) between every pair of vertices, and we call a maximal complete subgraph $\mathcal{G}_A <$for a \emph{clique}.\\[5pt]
+For $A\subset V$, we call $A$ an \emph{ancestral set} if for all $\alpha\in A$ and  $\beta \in \mathcal{V}$ for which there exists a partially directed path from $\beta$ to $\alpha$ in $\mathcal{G}$, we have $\beta \in A$. We let $\an(A)$ denote the smallest ancestral set containing $A$.\\[5pt]
+For $A\subset V$, $\mathcal{G}_A$ denotes the subgraph of $\mathcal{G}$ with $A$ as vertex set and all edges inherited from $\mathcal{G}$, and we say it is the subgraph \emph{induced} by $A$.  We call a graph \emph{complete}, if there is an edge (directed or undirected) between every pair of vertices, and we call a maximal complete subgraph $\mathcal{G}_A$for a \emph{clique}.\\[5pt]
 A \emph{chain component} is a connected  subgraph of $\mathcal{G}$ containing only undirected edges, and a \emph{minimal complex}  is an induced subgraph $\mathcal{G}_A$ with two distinguished nodes $a,b$ for which $\mathcal{G}_{A\setminus \{a,b\}}$ is a chain component and no path in $\mathcal{G}_A$ contains both $a$ and $b$. A minimal complex can be drawn as
 $$a\to v_1-\cdots-v_n\gets b$$
+The graph obtained from $\mathcal{G}$ by removing the direction on all edges and adding edges between the distinguished nodes for all minimal complexes in $\mathcal{G}$ is called the \emph{mutualized graph of $\mathcal{G}$},\footnotemark\ and we denote it $\mathcal{G}^m$.\\[5pt]
 We say that $\mathcal{G}$ is a \emph{chain graph} if it contains no partially directed cycles, and if further it contains no directed edges, we say $\mathcal{G}$ is a \emph{directed acyclic graph (DAG)}.
 \end{mydefinition}
+\footnotetext{This terminology is indeed an invention of the author to avoid the term moralized graph, which is the standard terminology, but is considered outdated by the author}
 We will implicitly assume our graphs to be finite, meaning that there are only finitely many vertices. Now we have to specify what information we want to express with a graphical representation of a set of variables. When building causal graph models, we want the graphs to encode all causal relationships between variables, while the intent behind the use of a graphical model is less ambitious from the get-go: we want 'only' to deduce conditional independences between variables from the graph. This is not to say that this is typically a weak assumption, on the contrary. Instead, it is more appropriately interpreted as a sign of just how restrictive the causal graph models are going to be of the distributions they govern. Satisfying a set of conditional independence constraints is what we shall call a Markov property of the joint distribution of a set of variables, and this is the centre of attention in graphical model theory.\\\\
 For DAGs, there is a canonical way to define the Markov property, but there are multiple non-equivalent ways of defining a Markov property for chain graphs depending on how you want to treat the chain components. The choice of Markov property propagates throughout the modelling and determines what interpretations are valid. Most approaches have in common that they set elements of chain components on equal footing, but with some special kind of structure. We shall encounter the possible existence of some complexes of causally interlinked variables later, and so for our purpose, we choose to define the Markov property in a fashion that allows for feedback mechanisms, which seem appropriate as an analogy of what we might observe in the deterministic world, and we thereby accept the consequences for valid interpretations as discussed by \cite{ChainGraph}. We will return to a short discussion of this later. These definitions are most easily expressed when assuming that there exists a joint density of the variables of interest, in which case they take the form:
 
@@ -296,7 +300,7 @@ A distribution $P$ with strictly positive density $f$ with respect to the produc
 \end{equation}
 where $\mathscr{T}$ is the set of chain components, and if further each factor itself factorizes in the following way
 $$f\left(x_\tau\mid x_{\pa(\tau)}\right)=\prod_{A\in \mathscr{A}(\tau)}\psi_A\left(x_A\right)$$
-where $\mathscr{A}(\tau)$ are the complete sets of the undirected graph $\left(\mathcal{G}_{\tau\cup\pa(\tau)}\right)^m$ obtained from $\mathcal{G}_{\tau\cup\pa(\tau)}$ by adding edges between all pairs of vertices that are parents to vertices in the same chain component, and $\psi_A$, $A\in \mathscr{A}(\tau)$, are functions depending on $x_\tau$ only through the coordinates $A\subset \tau$. 
+where $\mathscr{A}(\tau)$ are the complete sets of the undirected graph $\left(\mathcal{G}_{\tau\cup\pa(\tau)}\right)^m$ and $\psi_A$, $A\in \mathscr{A}(\tau)$ are functions depending on $x_\tau$ only through the coordinates $A\subset \tau$. 
 \end{mydefinition}
 Let us try to unpack these definitions. We see that the Markov property for chain graphs is consistent with the Markov property for DAGs, since the chain components of a DAG are simply the vertices of the graph. Next, in the DAG case, we can easily extract some more interpretable information about the variables from the Markov property by simple means of iteration:\\[5pt]
 First, take $A\subset \mathcal{V}$, and let $\de(A)\subset \mathcal{V}$ be the set of \emph{descendants} of $A$, that is the set of all vertices for which there exists a directed path from a vertex in $A$ to the given vertex - and we say $A\subset \de(A)$. Let further $B\subset \mathcal{V}$ be any subset satisfying $\de(A)\cap B=\emptyset$, and define $\mathcal{C}\coloneqq A\cup\pa(A)\cup B$. By the Markov property, we may then write
@@ -333,13 +337,16 @@ If we move to chain graphs, we see that the directed local Markov property then 
 f\left(x_{\mathcal{C}\cup\pa(\tau)}\right)&=f(x_{\pa(\tau)})\times \int f\left(x_\tau\mid x_{\pa(\tau)}\right)\ dx_{\tau\setminus \mathcal{C}}
 \end{align*}
 by using algorithm 1 to integrate out all chain components that are descendants of $\tau$, and using that everything apart from the second term that is not integrated out in this fashion constitutes exactly the expression obtained with $\mathcal{C}=\emptyset$. Using that the complete sets in $(\mathcal{G}_{\tau\cup\pa(\tau)})^{m}$ containing $\rho$ can contain nothing but a subset of  the boundary of $\rho$, we see by the Markov property that 
-$$f\left(x_\tau\mid x_{\pa(\tau)}\right)=\psi_{\rho\cup\bd(\rho)}(x_{\rho\cup\bd(\rho)})\psi_{\tau\setminus \rho}(x_{\tau\setminus \rho})$$
+\begin{equation}\label{fact}
+f\left(x_\tau\mid x_{\pa(\tau)}\right)=\psi_{\rho\cup\bd(\rho)}(x_{\rho\cup\bd(\rho)})\psi_{\tau\setminus \rho}(x_{\tau\setminus \rho})
+\end{equation}
 which in turn means we can write
 \begin{align*}
 f\left(x_\tau\mid x_{\pa(\tau)}\right)&=f\left(x_\rho\mid x_{\bd(\rho)}\right)f\left(x_{\tau\setminus\rho}\mid x_{\pa(\tau)}\right)\\
 &=f\left(x_\rho\mid x_{\bd(\rho)}\right)f\left(x_{\tau\setminus\rho\cup\nei(\rho)}\mid x_{\nei(\rho)\cup\pa(\tau)}\right)f\left(x_{\nei(\rho)}\mid x_{\pa(\tau)}\right)
 \end{align*}
-by adjusting with $\int \psi_{\rho\cup\bd(\rho)}(x_{\rho\cup\bd(\rho)})\ dx_\rho$ if necessary. We notice also that $f\left(x_\rho\mid x_{\bd(\rho)}\right)=f\left(x_\rho\mid x_{\nei(\rho)\cup\pa(\tau)}\right)$, since we may equally well pull out the latter as a factor of $f\left(x_\tau\mid x_{\pa(\tau)}\right)$ - this automatically implies $X_\rho\indep X_{\pa(\tau)}\mid X_{\bd(\rho)}$. Collecting all these observations gets us
+by adjusting with $\int \psi_{\rho\cup\bd(\rho)}(x_{\rho\cup\bd(\rho)})\ dx_\rho$ if necessary. We notice also that $$f\left(x_\rho\mid x_{\bd(\rho)}\right)=f\left(x_\rho\mid x_{\nei(\rho)\cup\pa(\tau)}\right)$$
+since we may equally well pull out the latter as a factor of $f\left(x_\tau\mid x_{\pa(\tau)}\right)$ - this automatically implies $X_\rho\indep X_{\pa(\tau)}\mid X_{\bd(\rho)}$. Collecting all these observations gets us
 $$f\left(x_{\rho\cup\sigma}\mid x_{\nei(\rho)\cup \pa(\tau)}\right)=f\left(x_{\rho}\mid x_{\nei(\rho)\cup\pa(\tau)}\right)f\left(x_{\sigma}\mid x_{\nei(\rho)\cup\pa(\tau)}\right)$$
 or equivalently $X_\rho\indep X_\sigma\mid X_{\nei(\rho)}$ in the conditional distribution $X_{\tau\mid \pa(\tau)}$. We can summarize as follows:
 \begin{enumerate}[label=(\roman*)]
@@ -355,19 +362,19 @@ This is referred to as the \emph{block-recursive Markov property for chain graph
 This defines an alternative non-equivalent Markov property, that goes under the name AMP for \textbf{A}nderson \textbf{M}adigan \textbf{P}earlman, or just \textbf{A}lternative \textbf{M}arkov \textbf{P}roperty. With this definition, we thus get independencies when conditioning on smaller sets than with our definition, and therefore the chain components are 'more divisible', and this can be useful if doing block regression where variables in each block are allowed to have interdependencies - perhaps due to some feature of the study design, one could hope to capture some common cause, i.e. confounding, in each block in this fashion.
 \\\\
 We see that a lot of information about the joint distribution is encoded in the graph and that assuming that a distribution satisfies a Markov property with respect to a graph can be a fairly restrictive assumption. We provide below a general result of \cite{Steffen} when working with densities, that shows that constraints imposed by the graph can be expressed in different equivalent ways. This provides us some flexibility when trying to understand the nature of these constraints; a task that can in general become quite intricate.
-\begin{thm}[Equivalency of Markov Properties]
+\begin{thm}[Equivalency of Markov Properties]\label{equiv}
 Let $(\Omega, \mathcal{F}, \mP)$ be a probability space. A distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$ satisfies the Markov Property with respect to a chain graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ if and only if
 \begin{itemize}
 	\item a random variable $X$ with distribution $P$ satisfies the block-recursive Markov property for chain graphs with respect to $\mathcal{G}$, or
-	\item a random variable $X$ with distribution $P$ satisfies the \emph{global chain Markov property} with respect to $\mathcal{G}$, meaning that:\\ Let $(A,B,S)$ be any disjoint subsets of $\mathcal{V}$, and let $\an(A\cup B\cup S)$ denote the smallest set containing $A,B,S$ satisfying that if $\alpha\in \mathcal{G}, \beta \in \an(A\cup B\cup S)$ and there is a partially directed path from $\alpha$ to $\beta$, then $\alpha \in \an(A\cup B\cup S)$. If any path from a vertex in $A$ to a vertex in $B$ crosses $S$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$, where we have added edges between all pairs of vertices that are parents of the same vertex and thereafter removed the direction of all edges, then
+	\item a random variable $X$ with distribution $P$ satisfies the \emph{global chain Markov property} with respect to $\mathcal{G}$, meaning that:\\ If $(A,B,S)$ are disjoint subsets of $\mathcal{V}$, and if any path from a vertex in $A$ to a vertex in $B$ crosses $S$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$, then
 	$$X_A\indep X_B\mid X_S$$
 	In this case, we say that $S$ separates $A$ and $B$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$.\\\\
-	If $\mathcal{G}$ is a DAG, then $S$ separates $A$ and $B$, if and only if any chain $\pi$ from a vertex in $A$ to a vertex in $B$ contains a vertex $\gamma\in \pi$ such that $\gamma\in S$ and arrows of $\pi$ do not meet head-to-head at $\gamma$ or $\de(\gamma)\not\subset S$ and arrows of $\pi$ do meet head to head at $\gamma$. 
+	If $\mathcal{G}$ is a DAG, then $S$ separates $A$ and $B$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$, if and only if any chain $\pi$ in $\mathcal{G}$ from a vertex in $A$ to a vertex in $B$ contains a vertex $\gamma\in \pi$ such that either $\gamma\in S$ and arrows of $\pi$ do not meet head-to-head at $\gamma$ or $\de(\gamma)\cap S=\emptyset$ and arrows of $\pi$ do meet head-to-head at $\gamma$. 
 \end{itemize}
 \end{thm}
 With this in place, we are now able to infer quite a lot of conditional independences from a graph $\mathcal{G}$ when a distribution satisfies the Markov property with respect to $\mathcal{G}$. What is not clear, is whether any procedure based on the above actually produces an exhaustive list of all conditional independences that are true in general. This question is answered by \cite{Remco} in the affirmative:
 \begin{thm}[Strong Completeness of Separation Criteria]\label{separate}
-For any chain graph $G=(\mathcal{V},\mathcal{E})$, there exists a $(\Omega, \mathcal{F}, \mP)$ a probability space, and a distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$, such that $P$ satisfies the Markov property with respect to $\mathcal{G}$ and such that for any random variable with distribution $P$, and any triplet $(A,B,C)$ of disjoint subsets of $\mathcal{V}$, then
+For any chain graph $G=(\mathcal{V},\mathcal{E})$, there exists a $(\Omega, \mathcal{F}, \mP)$ a probability space, and a distribution $P$ with strictly positive density $f$ with respect to the product measure $\mP^{\otimes \mathcal{V}}$, such that $P$ satisfies the Markov property with respect to $\mathcal{G}$ and such that for any random variable $X$ with distribution $P$, and any triplet $(A,B,C)$ of disjoint subsets of $\mathcal{V}$, then
 $$X_A\indep X_B\mid X_S$$
 if and only if $S$ separates $A$ and $B$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$.
 \end{thm}
@@ -509,7 +516,7 @@ Expanding on the feedback example, one might imagine that the dynamic described 
 In this figure, we observe that $a\indep b$ and that we have $a\indep d_i\mid \{c_i,b\}$ and $b\indep c_i\mid\{d_{i-1},a\}$, although it is not true that $b\indep c_i\mid\{d_i,a\}$. So a snapshot of the system at some stage is not enough to produce the properties implied by the chain graph. However, as they argue in \cite{ChainGraph}, under the right conditions, $(X_{c_i},X_{d_i})$ and $(X_{c_i},X_{d_{i-1}})$ converge to the same equilibrium distribution, and so in equilibrium, and therefore approximately for a snapshot with large enough $i$'s, we have the desired conditional independences from the chain graph. One can be much more specific than this, and this idea yields some algorithms useful for simulating distributions that satisfy the Markov property with respect to $\mathcal{G}$. We refer to \cite{ChainGraph} for further details, and promise to return to these examples in a later chapter (???).\\\\
 We end this section by formulating a causal graphical model. We are not going to use it prominently in the rest of the thesis, but it does give a fairly intuitive approach to causal reasoning. For it to be a causal model, it has to model what happens when intervening in the system, meaning that if by some external forcing the distribution and dependencies of one variable is changed, the model has to capture what happens with the joint distribution. In the language of graphical models, this can be done as follows
 \begin{mydefinition}{Causal Graphical Model}
-A \emph{causal graphical model} over a set of random variables $X=(X_v)_{v\in \mathcal{V}}$ with respect to a chain graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ consists of a collection of functions $(f_\tau)_{\tau\in \mathscr{T}}$ satisfying that
+A \emph{causal graphical model} over a set of random variables $X=(X_v)_{v\in \mathcal{V}}$ with respect to a chain graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ consists of a collection of functions $(f_\tau)_{\tau\in \mathscr{T}}$ indexed by the chain components $\mathscr{T}$ satisfying that
 \begin{itemize}
 	\item the function $f_\tau$ depends on $\left(x_\tau,x_{\pa(\tau)}\right)$,
 	\item each function integrates to 1 in the first variable, i.e. for all $\tau\in \mathscr{T}$
@@ -518,82 +525,191 @@ A \emph{causal graphical model} over a set of random variables $X=(X_v)_{v\in \m
 	$$p(x)=\prod_{\tau\in \mathscr{T}} f_ \tau\left(x_\tau,x_{\pa(\tau)}\right),$$
 	\item each function factors according to the graph $\mathcal{G}$, i.e. for all $\tau\in \mathscr{T}$
 	$$f_\tau\left(x_\tau,x_{\pa(\tau)}\right)=\prod_{A\in \mathscr{A}(\tau)}\psi_A(x_A)$$
-	\item and the intervention $X_u\coloneqq q\left(\cdot \mid x_{\pa'(u)}\right)$, with respect to the chain graph $\mathcal{G}'$ differing only from $\mathcal{G}$ by the parents of $u$, induces the distribution
-	$$p\left(x \mid x_u\gets q\left(\cdot \mid x_{\pa'(u)}\right)\right)=q\left(x_u \mid x_{\pa'(u)}\right)\prod_{\tau\in \mathscr{T}'} f\left(x_\tau\mid x_{\pa(\tau)}\right)$$
+	\item the intervention $X_\sigma\coloneqq q\left(\cdot \mid x_{\pa'(\sigma)}\right)$ in a chain component $\sigma\subset\rho\in \mathscr{T} $ with respect to the chain graph $\mathcal{G}'$ differing only from $\mathcal{G}$ by the parents of $\sigma$, induces the distribution
+	\begin{align*}
+	&p\left(x \mid X_\sigma\gets q\left(\cdot \mid x_{\pa'(\sigma)}\right)\right)\\
+	=&q\left(x_\sigma \mid x_{\pa'(\sigma)}\right)f'\left(x_{\rho}\mid x_{\pa(\rho)}\right)\prod_{\tau\in \mathscr{T}\setminus\{\rho\}} f\left(x_\tau\mid x_{\pa(\tau)}\right)
+	\end{align*}
+	where we using the factorization \ref{fact} can write
+	$$f'\left(x_{\rho}\mid x_{\pa(\rho)}\right)=\psi_{\tau\setminus\sigma}\left(x_{\tau\setminus \sigma}\right)\times \int \psi_{\sigma\cup\bd(\sigma)}\left(x_{\sigma\cup\bd(\sigma)}\right)\ dx_\sigma$$
 	We require $q$ to integrate to one, i.e.
-	$$\int q\left(x_u\mid x_{\pa'(u)}\right)\ dx_u=1.$$
+	$$\int q\left(x_\sigma\mid x_{\pa'(\sigma)}\right)\ dx_\tau=1.$$
 \end{itemize}
 \end{mydefinition}
-
+We see that the functions $f_\tau$ in the definition take the place of the conditional distributions, and that in this formulation, intervening in a part of a chain component does not change the connections to the rest of the chain component or to its descendants, but only to the parents and in the internal structure.
 \section{Multivariate SCMs}
-We already discussed the notion of the SCM easily extends to any number of variables with the definition that $X$ causes $Y$ if $Y\coloneqq f(X,Z_1,...,Z_n,N_X)$ and for a moment disregarding that $f$ may trivially depend on any variable - say in this context that $f$ depends 'non-trivially' on $X$. We can then easily imagine a a time series in an SCM in a discrete framework by simply associating each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit the problems with causality in pathological deterministic structures, and it is not immediate that this model is appropriate for continuous time models as well.\\\\
-We will first give an introduction to our causal modelling in the terminology of the structural causal model (SCM), sometimes also referred to as a structural equation model (SEM),  which allows us to model time series in a discrete framework. We shall then discuss the extension to continuous time series and the link to the discrete time series framework. Our causal framework does come with some caveats, but we will try our best to discuss them along the way. We will present the SCMs as done in \cite{Peters}, and we will freely use standard terminology from graph theory. We start with the central object of study.
-\begin{defn}[Discrete time series]
-We shall call $(X_t)_{t\in \mZ}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mZ}$ a \emph{$d$-dimensional discrete time series}, where $X_t^j:\Omega\to \mR$ is a random variable and the observation of the $j$th variable of $X$ at time $t$.
+Having build a foundation in graphical models, we now move on to the topic of structural causal models or SCMs. The bivariate SCM we considered earlier extends quite nicely with our new-found graph terminology. The SCM are quite similar in spirit to the causal graphical model defined in the previous section, but it is much more explicit. We will only work with DAGs in this section, since the structure of an SCM corresponds nicely to a DAG. With the definition we give, one could argue that this is by construction, but it is indeed very natural to think in DAGs, especially in light of the discussion in the previous section on interpretations of chain graphs. Without further ado, we give the following definition:
+\begin{mydefinition}{Structural Causal Model}
+A \emph{structural causal model} $\mathfrak{C}$ over a set of random variables $X=(X_v)_{v\in \mathcal{V}}$ with respect to a DAG $\mathcal{G}=(\mathcal{V},\mathcal{E})$ consists of a collection of determnistic functions $(f_v)_{\tau\in \mathcal{V}}$ and a set of independent random variables $(N_v)_{v\in \mathcal{V}}$, both indexed by the vertices $\mathcal{V}$, satisfying that
+\begin{itemize}
+	\item the function $f_v$ depends on $\left(x_{\pa(v)}, n_v\right)$,
+	\item each variable is given by
+	$$X_v=f_v\left(X_{\pa(v)}, N_v\right)$$
+	\item the intervention $X_a\coloneqq q\left(X_{\pa'(a)}, N'_a\right)$ for $a\in \mathcal{V}$ with respect to the DAG $\mathcal{G}'$ differing only from $\mathcal{G}$ by the parents of $a$ and the random variable $N'_a$ independent from $(N_v)_{v\in \mathcal{V}\setminus \{a\}}$, induces the \emph{postintervention SCM} with respect to $\mathcal{G}'$ obtained by replacing $f_a$ with $q$.
+\end{itemize}
+If $u\in \pa(v)$ for $u,v\in \mathcal{V}$, we call $X_u$ the \emph{cause} and $X_v$ the \emph{effect}. 
+\end{mydefinition}
+First of all, we see that the edges in the graph correspond exactly to whether a variable depends on another in its functional expression. This is exactly why a directed graph is natural for this kind of model, and ensuring it is acyclic removes any doubt on whether these models are well-defined: we can unravel this definition from the 'top', starting with a vertex without parents, for which the structural causal model then explicitly defines the distribution of the variable, and then successively move down the graph computing the exact distribution of a variable expressed via the noise terms of the preceding steps. In that light, the following result taken from \cite{Pearl} should not be surprising:
+\begin{thm}[Entailed Distributions from SCMs]
+Every structural causal model $\mathfrak{C}$ induces a unique distribution that satisfies the directed local Markov property.
+\end{thm}
+We see the directed local Markov property stems directly from conditioning on the parents in the functional expression for each variable, which leaves a term depending only on the noise. This is also the key when modelling interventions here, namely that the conditional distributions when conditioning on parents do not change for the rest of the variables when intervening on one variable. We did something similar when looking at interventions in causal graphical models, namely that the conditionals for the rest of the model remains unchanged despite the intervention. This leads us to one of a few very important assumptions that we have (somewhat) implicitly made here when working with structural causal models:
+\begin{enumerate}[itemindent=15pt,label=(SC\arabic*)]
+	\item \emph{Causal Markov Assumption}: we assume that each variable only depends on the other variables through its parents,
+	\item \emph{Modularity Assumption}: we assume that when intervening on one variable, the conditional distributions of other variables given their parents remains unchanged,
+	\item \emph{Ignorability Assumption}: we assume that we can ignore the effect of all other potential variables,
+	\item \emph{Exogeneity Assumption}: we assume that the noise terms are independent of the other variables in the model,
+\end{enumerate}
+We see that the (SC1)-(SC3) are shared by the causal graphical model above, while the last assumption does not pertain to that situation. Both of them also share that they model the joint distribution via decomposition according to a graph. One might ask: why even consider structural causal models, when we even had a more general modelling framework in the previous section? There are several reasons: the first one being that an SCM is a much more direct way of modelling, and so it is more straightforward to work with than the conditional densities that are front and center in the causal graphical model. The structural causal model also leads to identifiability results like we saw with theorem \ref{id}, that would be much harder to formulate for causal graphical models. A further, but for our purposes much less interesting, consequence, is that you can model counterfactual statements with SCMs, meaning that you can look at the outcome of an intervention under a concrete observed realization. This is highly philosophical in nature and not something that we will return to.\\\\
+One direct consequence of the previous theorem, is that if the entailed distribution of an SCM has positive joint density, then theorem \ref{equiv} yields that it satisfies the Markov property as defined in the previous section. What is more, we may then apply all results from the previous section. When observing data, we then already know that what we might hope to recover in general from looking at conditional independences between variables is the skeleton and the minimal complexes of the graph. But that is not nothing - that could be very much of interest. But as we saw in the last section, there exists a distribution that satisfy precisely the unconditional independence constraints encoded by a graph, but we cannot be sure that a distribution satisfying the Markov property satisfy only the unconditional independence constraints encoded by the graph. This motivates the following definition:
+\begin{mydefinition}{Causal Faithfulness}
+We say that a distribution $P$ over $\mR^{\mathcal{V}}$ is \emph{faithful} to a DAG $\mathcal{G}$, if for any random variable $X$ with distribution $P$ and any triplet $(A,B,S)$ of disjoint subsets of $\mathcal{V}$, where $S$ separates $A$ and $B$ in the graph $\left(\mathcal{G}_{\an(A\cup B\cup S)}\right)^m$, we have
+$$X_A\indep X_B\mid X_S$$
+\end{mydefinition}
+Causal faithfulness is a strong assumption, because it allows us to infer which variables are causally linked and in some cases even the direction without further assumptions if only we can check conditional independences. Unsurprisingly however, this is impossible in general as shown by \cite{CondIndTest}:
+\begin{thm}[No Free Lunch for Conditional Independence Testing]
+Let $\mathcal{E}_0$ be the set of all distributions for $(X,Y,Z)\in \mR^{d_X+d_Y+d_Z}$, $d_X,d_Y,d_Z\in \mN$, that have density with respect to the Lebesgue measure, let $\mathcal{P}_0\subset \mathcal{E_0}$ be the subset of distributions under which $X\indep Y\mid Z$, and let $\mathcal{Q}_0=\mathcal{E}_0\setminus\mathcal{P}_0$.\\[5pt]
+Given any sample size $n\in \mN$, any level $\alpha\in (0,1)$, and any test
+$$\psi_n:\mR^{nd_X+nd_Y+nd_Z}\to \{0,1\}$$
+that have valid level $\alpha$ for the null hypothesis $\mathcal{P}_0$
+$$\sup_{P\in \mathcal{P}_0}\mP_P(\psi_n=1)\leq \alpha$$
+then
+$$\forall Q\in \mathcal{Q}_0:\quad \mP_Q(\psi_n=1)\leq \alpha$$
+\end{thm}
+In their work, \cite{CondIndTest} give some conditions on when one can construct a valid conditional independence test, but we refrain once again from entering into more specifics in this domain. Assuming a sufficient amount of structure allows for the graph skeleton to be inferred. Moreover, the entire graph can be identified if assuming sufficient structure: one such approach is to do as in theorem \ref{id} and assume additive noise and non-linear functions, and in this way analogous results for multivariate SCMs can be established as well, see \cite{ANM3}. We do however notice, that if first the graph is known, then there exist a plethora of machine learning techniques to estimate functions from data, and the rest of the components of the components in the SCM could in theory be inferred this way. So with sufficiently strong assumptions, we can actually learn the SCM from observational data and directly make predictions of the effect of interventions in the system, but this would take us into the realm of practicalities and away from our task at hand. Therefore, we will instead quickly move on to how to use the SCM framework to model time series. 
+\section{Causal Modelling of Time Series}
+We now return to the problem of incorporating the aspect of temporal dependence in the SCM. The simplest idea when modelling time series with SCMs in a discrete framework, is to simply associate each variable at a given time with a unique variable. Imposing that a variable at any given time can only cause other variables further forward in time gives this model an appropriate time structure. We inherit all problems with causality from the previous sections, and it is not immediate that this model is appropriate for continuous time models as well. Since all observations are in nature discrete, this might not be the biggest of issues, but it does ask questions of the influence of which observation times are observed which could perhaps be answered with a model in continuous time and sometimes both notation and theory becomes more appealing in this setting. Nonetheless, we can come some way with a discrete framework and we begin with a definition of the objects that we are working with:
+\begin{mydefinition}{Discrete Time Series}
+Let $(\Omega,\mathcal{E},\mP)$ be a probability space. We shall call $(X_t)_{t\in \mZ}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mZ}$ a \emph{$d$-dimensional discrete time series}, where $X_t^j:\Omega\to \mR$ is a random variable and the observation of the $j$th variable of $X$ at time $t$.\\[5pt]
+\end{mydefinition}
+Usually we only observe a discrete time series for some values $0,\ldots, T$, and is this case, we can easily define a time series SCM. In particular, we remark that an assumption of no instantaneous effects on top of causal links following the flow of time automatically ensures the acyclicity of the graph.
+\begin{defn}[Summary graph]
+Given a dynamical system $\varphi$, the \emph{interaction graph} or \emph{summary graph} is a directed graph $\mathcal{IG}_\varphi=(\mathcal{V},\mathcal{E})$, with $\mathcal{V}$ corresponding to the variables of $\varphi$ and a directed edge from $x$ to $y$ if $x$ directly drives $y$.
 \end{defn}
-\begin{defn}[Causal graph]
-Let $\mathcal{V}$ be a set consisting of vertices representing each observation of $X$, $X_t^j$, say $$\mathcal{V}=\left\{X_t^j: t\in \mZ,j\in\{1,\ldots,d\}\right\}\simeq \left\{(t,j)\mid t\in \mZ, j\in \{1,\ldots,d\}\right\}$$ and let $\mathcal{E}$ be a set of directed edges in the graph, that is 
-$$\mathcal{E}\subset \mathcal{V}\times \mathcal{V}$$
-satisfying that $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$ implies $t_1\leqslant t_2$, i.e. that there are no links backwards in time. If $t_1<t_2$ for all $(X_{t_1}^{j_1},X_{t_2}^{j_2})\in \mathcal{E}$, we shall say $\mathcal{E}$ contains no \coloremph{instantaneous effects}.\\
-We shall call $(\mathcal{V}, \mathcal{E})$ a \coloremph{causal graph} of the time series $(X_t)_{t\in \mZ}$. If there exists $v_1,v_2\in \mathcal{V}$, such that $(v_1,v_2)\in \mathcal{E}$, we shall say $v_1$ is a \emph{parent} of $v_2$, write $v_1\in \text{PA}_{v_2}$, and if $v_2=X_t^j$, we shall write $\text{PA}_{t}^j$ for $\text{PA}_{v_2}$. If $X_{t_1}^{j_1}$ is the parent of $X_{t_2}^{j_2}$, we shall say $X_{t_1}^{j_1}$ \emph{directly causes} $X_{t_2}^{j_2}$ and denote $X_{t_1}^{j_1}$ the \emph{direct cause} and $X_{t_2}^{j_2}$ the \emph{direct effect}.
-\end{defn}
-In much of the causality literature, we would impose that the graph be acyclic, making the causal graph a directed acyclic graph (DAG). We will however concern ourselves with bidirectional causality later on, so we will not make this assumption the standard in this thesis. Remark however, that this assumption is fulfilled under any circumstance if we do not allow for instantaneous effects. With the approach of the structural causal model, we put the causal graph front and center in this modelling of causal structures.
-\begin{defn}[Structural causal model]
-Let $(X_t)_{t\in \mZ}$ be a discrete time series, let $\mathcal{G}=(\mathcal{V},\mathcal{E})$ be a causal graph, let $(N_v)_{v\in \mathcal{V}}$ be a family of random variables (noise variables), and let $f_1,\ldots,f_d$ be a family of deterministic functions that is not constant in any of its arguments. Then we call this setup a \emph{structural causal model}, if
-$$X_t^j=f_j(\text{PA}_t^j,U_{X_{t}^j})$$
-A few further assumptions are usually added here. Often, we assume the noise variables $(N_v)_{v\in \mathcal{V}}$ to satisfy that the sets $(N_{X_t^1},\ldots,N_{X_t^{d}})$ for values of $t\in \mZ$ are jointly independent. Another typical assumption is $(X_t)_{t\in \mZ}$ being strictly stationary. And finally, often we assume that $\text{PA}_t^j$ contain only observations from time period $t-q$ and forward for a fixed $q\in \mN$.\\
-If for some set $A\subset V$, we replace the causal graph $G$ by a causal graph $G'$ that satisfies $\text{PA}_t^j$ is replaced by $J(j)\subset V$ for $j\in A$ in the new causal graph, and if we replace $f_j$ with some $\zeta_j$ for $j\in A$, we call the resulting new structural causal model for the \textit{postintervention structural causal model}.
-\end{defn}
-Mathematically, there is really nothing preventing us from defining causal graphs for continuous time series, but the interpretability of such a graph is somewhat compromised insofar that we may no longer meaningfully draw it without reverting to some discretization scheme. More problematic, is perhaps how to restrict the assignments in a meaningful fashion.
-\begin{defn}[Markov property and faithfulness]
-We define graph independence as following
-\end{defn}
-
-\subsection{Causal Modelling of Time Series}
-We now return to the problem of incorporating the aspect of temporal dependence in the structual causal model.
-The following idea was presented by Granger (reference?), and we may actually give explicit conditions for the efficacy of the Granger causality framework in our current model set-up.\\\\
-%%
-However, the upside of this model is that it allows for an alternative formulation of cause and effect under some admittedly rather restrictive assumptions, namely Granger causality:\\
+In some sense, we can think of this graph as the graph obtained by collapsing the time variable in the causal graph; if at some time point $x$ causes $y$, then we put a directed edge from $x$ to $y$ in the interaction graph. Thus we obtain a new graph containing causal directions: remark that assuming this graph is acyclic becomes more untenable.\\\\
+The following idea was presented by Granger \cite{Granger}, and we may actually give explicit conditions for the efficacy of the Granger causality framework in our current model set-up.
 \textit{Consider an SCM without instantaneous effects for the time series $X_t$. Then $X^j$ causes $X^k$ if and only if there exists $t'\in \mZ$ such that
 $$X_{t'}^j\centernot \indep X_{t'}^k\mid X_{t<t'}^{-j}$$}
 Informally, this implies that $X^j$ causes $X^k$ if the prediction of $X^k$ based on all available information is improved when including $X^j$. In principle, this would require one to observe and include all relevant variables in the world.\\
-Alternatively, we can approach the problem from a different angle. Granger causality approaches the problem from a probabilistic setting, and is thus irrelevant in deterministic settings. Furthermore, when implementing Granger causality in practice, basing causal inference upon the improvement in prediction when including a variable is heavily compromised in dynamic systems where the variables are governed by an underlying structure whereby information about other variables will be encoded in a variable simply by the nature of the dynamic system - and as such implementations of Granger causality may erroneously attribute causal links between variables that are not causally linked. In fact, in dynamic systems we have the result of Takens (1981) suggesting that observed values of one variable from a dynamic system may in fact suffice in obtaining the dynamics of the entire systems. We will discuss the theoretical details hereof later. Meanwhile we can exploit this idea of information being encoded in effect variables to great effect: this allows us to reformulate causality from the point of view of deterministic systems. The principle itself is fairly simple, but we do require some technical assumptions to make the theory work, which are not in any way empirically motivated nor entirely interpretable, but fare under what we usually consider regularity assumptions - a sweep-it-under-the-rug-interpretation would be that we just assume the data to be reasonably well-behaved. The basic idea is that if $C$ is the cause of $E$, then $E$ must contain information of $C$, since the dynamics of $C$ must be reflected in $E$ in light of a functional relationship, whereas the reverse cannot be true. Thus when reconstructing the entire dynamic system from the observed values of $E$ in accordance with the theorem, we would expect to recover the dynamics of $C$. We should however expect the reverse statement to be false, since the self-contained dynamics of $E$ would not be reflected in $C$, and so the dynamic system reconstructed from the observed values of $C$ would not recover the dynamics of $E$. Notice that this in fact implies the opposite of Granger causality: we should be able to predict the cause $C$ using the effect $E$ but not conversely. This is quite a radical difference. To obtain further understanding, we will have to delve into the theoretical details. 
-%%%
+Furthermore, when implementing Granger causality in practice, basing causal inference upon the improvement in prediction when including a variable is heavily compromised in dynamic systems where the variables are governed by an underlying structure whereby information about other variables will be encoded in a variable simply by the nature of the dynamic system - and as such implementations of Granger causality may erroneously attribute causal links between variables that are not causally linked. In fact, in dynamic systems we have the result of Takens (1981) suggesting that observed values of one variable from a dynamic system may in fact suffice in obtaining the dynamics of the entire systems. We will discuss the theoretical details hereof later.\\\\
+
 \begin{thm}[Granger causality]
 O
 \end{thm}
+
+
 We now turn our attention towards continuous time models and we will present the models of driving systems as presented in \cite{mathFound}. The definition of continuous time series is straightforward a generalization of that of discrete time series.
 \begin{defn}[Continuous time series]
 We shall call $(X_t)_{t\in \mR}=(X_t^{1},\ldots,X_{t}^d)_{t\in \mR}$ a \emph{$d$-dimensional continuous time series}, where $X_t^j:\Omega\to \mR$ is a random variable and the observation of the $j$th variable of $X$ at time $t$.
 \end{defn}
-More interestingly of course is that of the dynamical systems that we will treat in this thesis. We will take it directly from \cite{mathFound}.
-\begin{defn}[Dynamical system]
-A \emph{dynamical system} is a collection of maps $\varphi^t:\mR^n\to\mR^n$ indexed by some $t\in \mZ$, in which case we say it is \emph{discrete}, or some $t\in \mR$, in which case we say it is \emph{continuous}.\\
-We shall call a function $y:\mR^n\to \mR$ an \emph{observation function}, and we shall note that $y(\varphi^t)_t$ defines a time series.
-\end{defn}
-As discussed above, considering a graph on the entirety of a continuous time series.
-\begin{defn}[Driver]
-Given a dynamical system $\varphi$, and two variables $x$ and $y$ of $\varphi$, the variable $x$ \emph{directly drives} $y$ if the dynamics of $y$ directly depend on $x$, that is $y_{t+1}=g(x,\cdot)$ for discrete systems and $\dot{y}=g(x,\cdot)$ for continuous.
-\end{defn}
-\begin{defn}[Summary graph]
-Given a dynamical system $\varphi$, the \emph{interaction graph} or \emph{summary graph} is a directed graph $\mathcal{IG}_\varphi=(\mathcal{V},\mathcal{E})$, with $\mathcal{V}$ corresponding to the variables of $\varphi$ and a directed edge from $x$ to $y$ if $x$ directly drives $y$.
-\end{defn}
-In some sense, we can think of this graph as the graph obtained by collapsing the time variable in the causal graph; if at some time point $x$ causes $y$, then we put a directed edge from $x$ to $y$ in the interaction graph. Thus we obtain a new graph containing causal directions: remark that assuming this graph is acyclic becomes more untenable.
-\begin{defn}[Component graph]
-A subset of vertices $W\subset V$ of the interaction graph is called a \emph{strongly connected component}, if for any $u,v\in W$ there exists a directed path from $u$ to $v$ and a directed path from $v$ to $u$. We define the \emph{component graph} as the graph obtained from the interaction graph by taking the set of strongly connected components $\mathcal{S}$ as the set of vertices, and letting there be a directed edge from $p\in \mathcal{S}$ to $q\in \mathcal{S}$ if there exists a $u\in p,v\in q$ such that there exists a directed path from $u$ to $v$.
-\end{defn}
-Note that being strongly connected defines an equivalence relation. The component graph will turn out to be very relevant in the following analysis.
-\begin{defn}[Upper set]
-An \emph{upper set} is a subset $U\subset \mathcal{S}$ satisfying that if $q\in U$ and there is a directed path from $p$ to $q$, then $p\in U$.
-\end{defn}
-It will turn out that each upper set corresponds to a self-contained dynamical system. The final component in our later analysis is the so-called \textit{transitive closure}:
-\begin{defn}[Transitive closure]
-Given a DAG $\mathcal{G}=(\mathcal{V},\mathcal{E})$, the \emph{transitive  closure of $\mathcal{G}$} is the graph obtained from $\mathcal{G}$ by taking the vertices $\mathcal{V}$ and include the edge between $u\in \mathcal{V}$ and $v\in \mathcal{V}$ if and only if there is a directed path from $u$ to $v$.
-\end{defn}
-The transitive closure of a causal graph encodes only the causal direction between variables but cannot distinguish between direct and indirect causal links. In other words, from the transitive closure you can infer all descendants of a given variable, but not the causal graph itself. It will turn out that this is exactly what we will be able to recover with the modelling framework based on Takens' theorem.
 
-Now for the link between discrete and continuous time models, we will briefly present the result proved by \cite{sokol2014}, that shows that the discretization of an SDE according to the Euler scheme and treating it with the discrete time model framework will give the same results in the limit.
+Mathematically, there is really nothing preventing us from defining causal graphs for continuous time series, but the interpretability of such a graph is somewhat compromised insofar that we may no longer meaningfully draw it without reverting to some discretization scheme. More problematic, is perhaps how to restrict the assignments in a meaningful fashion. Now for the link between discrete and continuous time models, we will briefly present the result proved by \cite{sokol2014}, that shows that the discretization of an SDE according to the Euler scheme and treating it with the discrete time model framework will give the same results in the limit.
 \chapter{State Space Reconstruction}
+
+
+\section{Dynamical Systems}
+We will now move on to the study of dynamical systems. This field has at its root the theory of differential equations  of order 1 and deals with the evolution of systems over time. In the stochastic world, this can done by enforcing a Markov property consisting of an update rule, but a popular choice is to copy the differential equation approach via a generalization to stochastic differential equations. In this way, we can built stochastic influences on top of a model of the dynamics from the dynamical systems theory. We return to this problem in Chapter 4, but in this chapter, we will not deviate from the deterministic setting. We can define a dynamical system very generally:
+\begin{mydefinition}{Abstract Dynamical System}
+An \emph{abstract dynamical system} $\mathfrak{D}$ is a tuple $(\varphi, T,\mathcal{X})$, where $T\in \{\mR,\mR_+,\mZ,\mZ_+\}$, $\mathcal{X}$ is a non-empty set, and $\varphi$ is a function
+$$\varphi: T\times \mathcal{X}\to \mathcal{X}$$
+satisfying
+\begin{enumerate}[label=(\roman*)]
+	\item for all $x\in \mathcal{X}$: $\varphi(0,x)=x$,
+	\item for all $x\in \mathcal{X}$ and $s,t \in T$: $\varphi(t,\varphi(s,x))=\varphi(t+s,x)$
+\end{enumerate}
+We call 
+\begin{itemize}
+\item $T$ the \emph{time set} of $\mathfrak{D}$, 
+\item $\mathcal{X}$ the \emph{state space} of $\mathfrak{D}$, 
+\item $(\varphi^t)_{t\in T}$ the \emph{flow} of $\mathfrak{D}$ with
+$\varphi^t(x)\coloneqq \varphi(t,x)$ for fixed $t\in T$ the \emph{time $t$-map},
+\item and for fixed $x\in \mathcal{X}$, $\varphi_x(t)\coloneqq \varphi(t,x)$ the \emph{trajectory of $x$}.
+\end{itemize}
+If $\mathcal{X}\subset \mR^d$ for some $d\in \mN$, then we shall call $\mathfrak{D}$ a \emph{real dynamical system} or just a \emph{dynamical system}.
+\end{mydefinition}
+In our case, we are mainly interesting in modelling flow over time and thus for $T$ to be our set of time points for the dynamical system, but the definition works equally well when assuming that $T$ is a monoid instead, see \cite{inbook}. In this section, we seek to explain how a dynamical system can arise from a differential equation and the connection between a single trajectory from a differential equation and a dynamical system. To that end, we introduce some of the key results on the existence and uniqueness when working with differential equations of order 1:
+\begin{thm}[Existence and Uniqueness Theorem]\label{ThmDiffEq}
+Fix $d\in \mN$. Let $F:\mathcal{U}\to\mR^d$ be a continuous function with $U$ an open subset of $\mR^{1+d}$. We consider the following differential equation for differentiable $x:\mR\to\mR^{d}$:
+\begin{equation}\label{diffeq}
+x'(t)=F\left(t,x(t)\right)
+\end{equation}
+We then have the following results:
+\begin{enumerate}[label=(\roman*)]
+	\item \textbf{Peano's theorem:} For every $(t_0,x_0)$ there exists a solution on some open interval $I$ to the differential equation \ref{diffeq} going through $x_0$ at $t_0$, meaning that:\\
+	For every $(t_0,x_0)\in \mathcal{U}$, there exist an open interval $I$ and a differentiable function $\gamma: I\to \mR^d$, such that $t_0\in I$, $\gamma(t_0)=x_0$ and for all $t\in I$
+		$$\gamma'(t)=F\left(t,\gamma(t)\right)$$
+	\item \textbf{Picard's theorem:} Assume $F$ is locally Lipschitz in $x$:\\[5pt]
+	It holds for every $(t_0,x_0)\in \mathcal{U}$, that there exists $\delta>0$ and $C>0$, such that $\overline{B_\delta(t_0)\times B_\delta(x_0)}\subset \mathcal{U}$ and
+	$$x_1,x_2\in \overline{B_\delta(x_0)}, t_0\in \overline{B_\delta(t_0)}\Rightarrow \norm{F(t,x_1)-F(t,x_2)}\leqslant C\norm{x_1-x_2}.$$
+	Then for every $(t_0,x_0)$ there exists a unique solution on some open interval $I$ to the differential equation \ref{diffeq} going through $x_0$ at $t_0$, meaning that:\\
+	If $\gamma_1: I_1\to\mR^d$ and $\gamma_2:I_2\to\mR^d$ satisfy equation \ref{diffeq}, and further there exists $t_0\in I_1\cap I_2$ with $\gamma_1(t_0)=\gamma_2(t_0)$, then $\gamma_1(t)=\gamma_2(t)$ for all $t\in I_1\cap I_2$.
+	\item Assume $F$ is globally Lipschitz in $x$:\\[5pt]
+	There exists $C>0$ such that
+	$$(t,x_1),(t,x_2)\in \mathcal{U}\Rightarrow \norm{F(t,x_1)-F(t,x_2)}\leq C\norm{x_1-x_2}$$
+	Then the differential equation \ref{diffeq} is complete, meaning that:\\
+	For every $(t_0,x_0)$ there exists a unique solution on all of $\mR$ to the differential equation \ref{diffeq} going trough $x_0$ at $t_0$.
+	\item Assume $F$ is $C^k$. Then any solution to the differential equation \ref{diffeq} is itself $C^k$.
+\end{enumerate}
+\end{thm}
+These results are not on topic for this thesis, but are very useful and yields many desirable properties about the solutions to differential equations of type \ref{diffeq}. See \cite{Dynamics} for proofs. We are interested in dynamical systems, so we will construct a dynamical system from a differential equation. This is done by considering differential equations involving vector fields, which we define as follows:
+\begin{mydefinition}{Vector Field}
+Let $F:\mathcal{X}\to\mR^d$ be a continuous function defined on an open set $\mathcal{X}\subset \mR^d$, then $F$ is called a \emph{vector field} on the state space $\mathcal{X}$.\\[5pt]
+The differential equation
+\begin{equation}\label{diffeqvf}
+x'(t)=F(x(t))
+\end{equation}
+with $F$ a vector field is called an \emph{autonomous differential equation}.
+\end{mydefinition}
+\noindent The terminology of autonomy comes from the following observation:\\
+If $\gamma:I\to\mR^d$ is a solution to equation \ref{diffeqvf}, then it holds for all $a\in\mR$, that the function $\gamma^a:I-a\to\mR^d$ defined on $I-a\coloneqq \{s-a: s\in I\}$ by $\gamma^a(t)\coloneqq \gamma(t+a)$ is then also a solution of equation \ref{diffeqvf}, since
+$$\left(\gamma^a\right)'(t)=\gamma '(t+a)=F(\gamma(t+a))=F(\gamma^a(t))$$
+for all $t\in I-a$. Hence if a solution $\gamma$ goes through $x_0$ at $t_0$, we can find a solution that goes through $x_0$ at any time point; in particular $\gamma^{t_0}$ is a solution going through $x_0$ at $0$. This means the initial condition is less important, and we might as well always take $t_0=0$. We will in these considerations just take a starting condition $x_0$ to mean a solution has to go through $x_0$ at $t$.\\[5pt]
+We will now construct a dynamical system from an autonomous differential equation. So consider once more the autonomous differential equation \ref{diffeqvf}, and assume that it is complete and that all solutions are unique. Theorem \ref{ThmDiffEq} gives sufficient but not necessary conditions for this to happen. Then we let $\mathfrak{D}=(\varphi,\mR,\mathcal{X})$ with $\varphi$ defined as follows: For $x\in \mathcal{X}$, take $\gamma_x$ to be the solution with starting condition $x$. We then define
+$$\varphi(t,x)\coloneqq \gamma_x(t)$$
+The time $t$-maps are thus given by $\varphi^t:\gamma_x(0)\mapsto \gamma_x(t)$ and are well-defined by the uniqueness assumption. We can easily check that:
+\begin{enumerate}[label=(\roman*)]
+	\item for all $x\in \mathcal{X}$, we have $\varphi(0,x)=x$ by construction,
+	\item for all $x\in \mathcal{X}$ and $s,t\in \mR$, then by our observations on autonomy, we have
+	$$\varphi^{t+s}(x)=\gamma_x(t+s)=\gamma_x^s(t)=\varphi(t,\gamma_x^s(0))=\varphi(t,\gamma_x(s))=\varphi(t,\varphi(s,x))$$
+\end{enumerate}
+This proves that $\mathfrak{D}$ is a dynamical system. By theorem \ref{ThmDiffEq}, we have that if $F$ is also $C^k$, then so is $\varphi$, and we deduce that the time $t$-maps $\varphi^t$ are $C^k$ diffeomorphisms on $\mR^k$ with inverses $\varphi^{-t}$, meaning that they are $C^k$ and have a $C^k$ inverse. If we wanted, we could easily expand the theory here to a more complicated set-up, and consider differential equations of the form
+$$x^{(k)}(t)=F\left(t,x(t),x^{(1)}(t),\ldots, x^{(k-1)}(t)\right)$$
+for $F:\mR^{1+kd}\to\mR^d$ continuous, since we may simply rewrite this as the autonomous differential equation
+\begin{align*}
+&\left(\text{id},x,x^{(1)},\ldots,x^{(k-1)}\right)'(t)\\
+=&\left(1,x^{(1)}(t),\ldots,x^{(k-1)}(t),F\left(t,x(t),x^{(1)}(t),\ldots, x^{(k-1)}(t)\right)\right)
+\end{align*}
+resulting in a flow on $\mR^{1+kd}$ instead of on $\mR^d$. Having seen how differential equations give rise to dynamical systems, we will soon turn to the problem of trying to better understand the geometry of the  resulting dynamical systems. First up in that quest, we recognize that we can modify a dynamical system in different ways while still preserving the geometry. For instance, moving the dynamical system around in space does not change the geometry of the system, and more generally, if we preserve the geometry of the space with a transformation, then the flow after the transformation should be the same geometrically. Moreover, if 'speeding up' a solution, for instance by the transformation $\varphi(t,x)\mapsto\varphi(c\cdot t,x)$ with $c>1$, or  more generally if manipulating the time by a monotone function, the flow of the dynamical system would be essentially equivalent, but of course not identical. Our first task is therefore to introduce some definitions to account for this:
+\begin{mydefinition}{Conjugacy and Equivalency of Flows}
+Let $(f^t)_t$ and $(g^t)_t$ be flows of two complete autonomous differential equations
+$$x'(t)=F(x(t)), \quad F:\mathcal{X}\to\mR^d\quad\text{and}\quad y'(t)=G(y(t)),\quad G:\mathcal{Y}\to\mR^d$$
+We say that $(f^t)_t$ and $(g^t)_t$ are \emph{topologically equivalent} if there is a homeomorphism $h:\mathcal{X}\to\mathcal{Y}$ and a monotone function $\tau:\mR\to\mR$ such that
+$$h(f^t(x))=g^{\tau(t)}(h(x))$$
+$h$ is called a \emph{topological equivalence}, and if $h$ and $\tau$ are $C^k$ diffeomorphisms for $k\geqslant 1$, then we say the flows are \emph{$C^k$-equivalent} and $h$ is a \emph{$C^k$-equivalence}.\\[5pt]
+If $\tau(t)=t$ for all $t\in \mR$, then we say that the flows are \emph{topologically conjugate} (resp. \emph{$C^k$-conjugate}) and we call $h$ a \emph{topological conjugacy} (resp. \emph{$C^k$-conjugacy}).
+\end{mydefinition}
+\noindent Two flows being equivalent can also be summarized by the following commutative diagram:
+\begin{center}
+\begin{tikzpicture}[>=stealth, every node/.style={draw=none}]
+  % Nodes
+  \node (X1) at (0, 2) {$\mathcal{X} \times \mathbb{R}$};
+  \node (X2) at (3, 2) {$\mathcal{X}$};
+  \node (Y1) at (0, 0) {$\mathcal{Y} \times \mathbb{R}$};
+  \node (Y2) at (3, 0) {$\mathcal{Y}$};
+
+  % Arrows
+  \draw[->] (X1) -- node[above] {$f^t$} (X2);
+  \draw[->] (X1) -- node[left] {$(h,\tau)$} (Y1);
+  \draw[->] (X2) -- node[right] {$h$} (Y2);
+  \draw[->] (Y1) -- node[below] {$g^{\tau(t)}$} (Y2);
+\end{tikzpicture}
+\end{center}
+
+
+
+
+
+\section{The Geometry of Dynamical Systems}
 
 \section{Takens' Theorem}
 In the following, we will switch gears from the more welcoming realm of considering functions in $\mR^n$ and $\mR$ and move to the realm of differential topology, which is inhabited by manifolds, vector fields and tangent bundles and worse. This is done, not for needless abstraction, but because the theory we shall be exploiting holds in this generality - and in fact as long we consider compact manifolds, we might as well think of them in Euclidean spaces nonetheless. So in practice, we will always be able to envision our models living in our usual space $\mR^n$, but it is not in any way useful to restrict ourselves at this point.\\
@@ -658,7 +774,20 @@ for all $a=(a_1,\ldots,a_n)$ with $\norm{a}< \delta$.
 Takens' theorem will allow us to do causal inference in the modelling framework introduced in this chapter. Below we give the theoretical details of this procedure.
 \section{Causal Inference with Takens' Theorem}
 In this section, we will show that we can only hope to recover the component graph from data using Takens' theorem. We shall later discuss attempts to reason further about the causal structure, but the results below will show that without further assumptions, we cannot distinguish direct and indirect causal links.\\\\
-The aim of this section is to show that under suitable regularity assumptions, we can create a correspondence between strongly connected components and sub-manifolds, and that this correspondence is precisely fine-grained enough to allow us to determine whether any two variables belong to the same strongly connected component and further the direction of the causal link if they do not. To do this, we have to formalize this correspondence. First of all, as discussed the component graph $CG_\varphi$ is a directed acyclic graph, and so we can think of the graph structure as a partial order, where $x,y\in CG_\varphi$ satisfy $y\geqslant x$ if $y\to x$. Considering then the upper sets, we inherit an ordering of these, since they are exactly defined with respect to the partial order, and since we are dealing with sets, we can unproblematically consider the union and intersection of upper sets. This structure is that of a lattice: 
+The aim of this section is to show that under suitable regularity assumptions, we can create a correspondence between strongly connected components and sub-manifolds, and that this correspondence is precisely fine-grained enough to allow us to determine whether any two variables belong to the same strongly connected component and further the direction of the causal link if they do not. To do this, we have to formalize this correspondence. First of all, as discussed the component graph $CG_\varphi$ is a directed acyclic graph, and so we can think of the graph structure as a partial order, where $x,y\in CG_\varphi$ satisfy $y\geqslant x$ if $y\to x$. Considering then the upper sets, we inherit an ordering of these, since they are exactly defined with respect to the partial order, and since we are dealing with sets, we can unproblematically consider the union and intersection of upper sets. This structure is that of a lattice:
+
+\begin{defn}[Driver]
+Given a dynamical system $\varphi$, and two variables $x$ and $y$ of $\varphi$, the variable $x$ \emph{directly drives} $y$ if the dynamics of $y$ directly depend on $x$, that is $y_{t+1}=g(x,\cdot)$ for discrete systems and $\dot{y}=g(x,\cdot)$ for continuous.
+\end{defn}
+\begin{defn}[Component graph]
+A subset of vertices $W\subset V$ of the interaction graph is called a \emph{strongly connected component}, if for any $u,v\in W$ there exists a directed path from $u$ to $v$ and a directed path from $v$ to $u$. We define the \emph{component graph} as the graph obtained from the interaction graph by taking the set of strongly connected components $\mathcal{S}$ as the set of vertices, and letting there be a directed edge from $p\in \mathcal{S}$ to $q\in \mathcal{S}$ if there exists a $u\in p,v\in q$ such that there exists a directed path from $u$ to $v$.
+\end{defn}
+Note that being strongly connected defines an equivalence relation. The component graph will turn out to be very relevant in the following analysis.
+It will turn out that each upper set corresponds to a self-contained dynamical system. The final component in our later analysis is the so-called \textit{transitive closure}:
+\begin{defn}[Transitive closure]
+Given a DAG $\mathcal{G}=(\mathcal{V},\mathcal{E})$, the \emph{transitive  closure of $\mathcal{G}$} is the graph obtained from $\mathcal{G}$ by taking the vertices $\mathcal{V}$ and include the edge between $u\in \mathcal{V}$ and $v\in \mathcal{V}$ if and only if there is a directed path from $u$ to $v$.
+\end{defn}
+The transitive closure of a causal graph encodes only the causal direction between variables but cannot distinguish between direct and indirect causal links. In other words, from the transitive closure you can infer all descendants of a given variable, but not the causal graph itself. It will turn out that this is exactly what we will be able to recover with the modelling framework based on Takens' theorem.\\[10pt]
 \begin{defn}[Lattice]
 A \emph{lattice} $L$ is a partially ordered set if for every two elements $a,b\in L$, there exists a least common upper bound, called a \emph{join}, denoted $a \vee b$ and a greatest common lower bound, called a \emph{meet}, denoted $a\wedge b$. Further, we require that if $a_1\leqslant a_2$ and $b_1\leqslant b_2$, then
 $$a_1\wedge b_1\leqslant a_2\wedge b_2$$
@@ -724,7 +853,7 @@ Let now $U,V$ be upper sets, let $\varphi_1,\varphi_2$ be corresponding observat
 	$$\Pi_{1,2}:M_2\to M_1$$ 
 \end{enumerate}
 \end{thm}
-We have now proven that under conditions (I1)-(I4), it is actually possible to determine the causal flow in a dynamic system. The first condition is a regularity assumption that things are sufficiently well-behaved. We will give an alternative statement, where this condition is replaced, but in spirit this type of assumption is needed for any reconstruction to take place. It is the author's view that this is a reasonable assumption in most settings: although it might never actually be true that an observed system is restricted to a compact smooth manifold, we can think as we do in any kind of modelling as the imagined dynamic being a simplified representation of the system, and as far as the observed system behaves somewhat controlled locally, such a representation will probably be useful in capturing information about the system.\\\\ The second and third conditions are somewhat less reasonable in appearance; we are assuming the non-existence of mappings that if they existed would undermine the theoretical foundation of the theorem. This is undesirable. As is done in \cite{mathFound}, this is referred to the \textit{manifold being fully resolved}. An implied interpretation hereof is that it is simply matter of observing sufficient amounts of a data to separate different parts of the system - more on this later. This assumption is quite a standard one, and it is something that will appear in practical considerations nonetheless. A further comment on this, is that it corresponds somewhat to the faithfulness assumption often made when working with structural causal models.\\\\ The final assumption is entirely impossible to test as well, but we will interpret genericity in the same way as \textit{almost everywhere}, and assume that it is unlikely that we would ever get non-generic functions by accident. The almost everywhere interpretation is often a probabilistic one whereas this one is not, but as so often the difference is philosophical.\\\\
+We have now proven that under conditions (I1)-(I4), it is actually possible to determine the causal directions in a dynamical system. The first condition is a regularity assumption that things are sufficiently well-behaved. We will give an alternative statement, where this condition is replaced, but in spirit this type of assumption is needed for any reconstruction to take place. It is the author's view that this is a reasonable assumption in most settings: although it might never actually be true that an observed system is restricted to a compact smooth manifold, we can think as we do in any kind of modelling as the imagined dynamic being a simplified representation of the system, and as far as the observed system behaves somewhat controlled locally, such a representation will probably be useful in capturing information about the system.\\\\ The second and third conditions are somewhat less reasonable in appearance; we are assuming the non-existence of mappings that if they existed would undermine the theoretical foundation of the theorem. This is undesirable. As is done in \cite{mathFound}, this is referred to the \textit{manifold being fully resolved}. An implied interpretation hereof is that it is simply matter of observing sufficient amounts of a data to separate different parts of the system - more on this later. This assumption is quite a standard one, and it is something that will appear in practical considerations nonetheless. A further comment on this, is that it corresponds somewhat to the faithfulness assumption often made when working with structural causal models.\\\\ The final assumption is entirely impossible to test as well, but we will interpret genericity in the same way as \textit{almost everywhere}, and assume that it is unlikely that we would ever get non-generic functions by accident. The almost everywhere interpretation is often a probabilistic one whereas this one is not, but as so often the difference is philosophical.\\\\
 We have to in
 \begin{cor}
 Let $\varphi$ be a causal dynamical system, and let $UL_\varphi$ be the corresponding lattice. Assume that assumptions I1)-I4) are fulfilled for all elements in $UL_\varphi$. Then the following algorithm recovers the transitive closure of the component graph $CG_\varphi$:
@@ -737,17 +866,18 @@ Let $\varphi$ be a causal dynamical system, and let $UL_\varphi$ be the correspo
 We remark the inherent simplicity of this approach as compared with Granger causality: in Granger causality, we have to account for all relevant information in order to allow for causal reasoning; here we need only consider the prints of the time series themselves. Of course, some potential problems may hide in our rather abstract set of assumptions I1)-I4). For instance, we cannot rule out a causal mirage due to synchronization: imagine a common causal confounder between two systems resulting in two heavily synchronized, but essentially 'independent' dynamic systems. This would result in erroneous causal interpretations, and so the problem of hidden confounders presents itself in this world as well. However, we would expect these mirages to occur only in the presence of heavy synchronization, so this potential undermining of causal inference may be less severe than in similar problems.\\\\ 
 We used the term independent before, which of course is not to be interpreted in the probabilistic sense, as this is entirely meaningless in our setup; all our objects are deterministic, and they are all trivially independent in a probabilistic model. It is not quite true in a literal way either, since we assume that they are linked by a common cause; so all  that is meant that any further dynamic not imposed by the cause must be inherent to the subsystem and thus 'independent' of other subsystems.
 
-\section{Convergent Cross Mapping and Extensions}
+\chapter{Convergent Cross Mapping}
+Meanwhile we can exploit this idea of information being encoded in effect variables to great effect: this allows us to reformulate causality from the point of view of deterministic systems. The principle itself is fairly simple, but we do require some technical assumptions to make the theory work, which are not in any way empirically motivated nor entirely interpretable, but fare under what we usually consider regularity assumptions - a sweep-it-under-the-rug-interpretation would be that we just assume the data to be reasonably well-behaved. The basic idea is that if $C$ is the cause of $E$, then $E$ must contain information of $C$, since the dynamics of $C$ must be reflected in $E$ in light of a functional relationship, whereas the reverse cannot be true. Thus when reconstructing the entire dynamic system from the observed values of $E$ in accordance with the theorem, we would expect to recover the dynamics of $C$. We should however expect the reverse statement to be false, since the self-contained dynamics of $E$ would not be reflected in $C$, and so the dynamic system reconstructed from the observed values of $C$ would not recover the dynamics of $E$. Notice that this in fact implies the opposite of Granger causality: we should be able to predict the cause $C$ using the effect $E$ but not conversely. This is quite a radical difference. To obtain further understanding, we will have to delve into the theoretical details. 
+\url{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13150}
 
 \section{Analysis}
 
 
-\chapter{Dynamic Systems with Noise}
- 
-
-
+\chapter{Dynamic Systems under Noise}
+\cite{StableManifoldStoc} 
 
 \chapter{Simulation Study}
+\url{https://pure.au.dk/portal/files/136561486/Causal_inference_from_noisy_time_series_data_AM17.pdf}
 \section{Implementation}
 Takens' theorem implies that you can reconstruct the manifold by the map
 $t\mapsto (y(t),y(t-\tau),...,y(t-L\tau))$
@@ -763,6 +893,9 @@ where $\xi_i$ is iid with $\mathbb{E} \xi_i=0$ and $V(\xi_i)=\sigma^2$ for some 
  
 
 \chapter{Machine Learning Extensions}
+\url{https://arxiv.org/pdf/nlin/0405016.pdf}\\[5pt]
+\url{file:///C:/Users/rasmu/Downloads/s41598-021-87316-6.pdf}\\[5pt]
+\url{https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-021-87316-6/MediaObjects/41598_2021_87316_MOESM1_ESM.pdf}
 \bibliographystyle{apalike2}
 \bibliography{kilder}
 \end{document}

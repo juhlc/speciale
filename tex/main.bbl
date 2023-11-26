@@ -104,6 +104,12 @@ Leng, S., Ma, H., Kurths, J., Lai, Y.-C., Lin, W., Aihara, K., \& Chen, L.
 \newblock Partial cross mapping eliminates indirect causal influences.
 \newblock {\em Nature Communications}, 11(1), 2632.
 
+\bibitem[Mohammed et~al., 2008]{StableManifoldStoc}
+Mohammed, S.-E.~A., Zhang, T., \& Zhao, H. (2008).
+\newblock {\em Stable Manifold Theorem for Semilinear Stochastic Evolution
+  Equations and Stochastic Partial Differential Equations}.
+\newblock Providence, United States: American Mathematical Society.
+
 \bibitem[Pearl, 2009]{Pearl}
 Pearl, J. (2009).
 \newblock {\em Causality}.
@@ -120,6 +126,11 @@ Peters, J., Janzing, D., \& Schölkopf, B. (2017).
 \newblock {\em Elements of Causal Learning}.
 \newblock MIT Press, 1st edition.
 
+\bibitem[Peters et~al., 2014]{ANM3}
+Peters, J., Mooij, J.~M., Janzing, D., \& Sch{{\"o}}lkopf, B. (2014).
+\newblock Causal discovery with continuous additive noise models.
+\newblock {\em Journal of Machine Learning Research}, 15(58), 2009--2053.
+
 \bibitem[Sauer et~al., 1991]{Sauer1991}
 Sauer, T., Yorke, J.~A., \& Casdagli, M. (1991).
 \newblock Embedology.
@@ -134,6 +145,11 @@ Schwartzlose, R.~A., Alheit, J., Bakun, A., Baumgartner, T.~R., Cloete, R.,
 \newblock Worldwide large-scale fluctuations of sardine and anchovy
   populations.
 \newblock {\em South African Journal of Marine Science}, 21(1), 289--347.
+
+\bibitem[Shah \& Peters, 2020]{CondIndTest}
+Shah, R.~D. \& Peters, J. (2020).
+\newblock The hardness of conditional independence testing and the generalised
+  covariance measure.
 
 \bibitem[Sokol \& Hansen, 2014]{sokol2014}
 Sokol, A. \& Hansen, N.~R. (2014).
@@ -163,6 +179,12 @@ Takens, F. (1981).
 \newblock {\em Detecting Strange Attractors in Turbulence. Lecture Notes in
   Mathematics}, volume 898, (pp.\ 366--381).
 \newblock Springer New York.
+
+\bibitem[Viana \& Espinar, 2021]{Dynamics}
+Viana, M. \& Espinar, J.~M. (2021).
+\newblock {\em Differential Equations : A Dynamical Systems Approach to Theory
+  and Practice}.
+\newblock Providence, United States: American Mathematical Society.
 
 \bibitem[Ye et~al., 2015]{Ye2015}
 Ye, H., Deyle, E.~R., Gilarranz, L.~J., \& Sugihara, G. (2015).
