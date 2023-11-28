@@ -115,6 +115,7 @@
 \DeclareMathOperator{\bd}{bd}
 \DeclareMathOperator{\nd}{nd}
 \DeclareMathOperator{\an}{An}
+\DeclareMathOperator{\rank}{rank}
 \DeclareRobustCommand{\firstsecond}[2]{#2}
 
 % Other settings
@@ -652,13 +653,13 @@ We then have the following results:
 \end{enumerate}
 \end{thm}
 These results are not on topic for this thesis, but are very useful and yields many desirable properties about the solutions to differential equations of type \ref{diffeq}. See \cite{Dynamics} for proofs. We are interested in dynamical systems, so we will construct a dynamical system from a differential equation. This is done by considering differential equations involving vector fields, which we define as follows:
-\begin{mydefinition}{Vector Field}
-Let $F:\mathcal{X}\to\mR^d$ be a continuous function defined on an open set $\mathcal{X}\subset \mR^d$, then $F$ is called a \emph{vector field} on the state space $\mathcal{X}$.\\[5pt]
+\begin{mydefinition}{Real Vector Field}
+Let $F:\mathcal{X}\to\mR^d$ be a continuous function defined on an open set $\mathcal{X}\subset \mR^d$, then $F$ is called a \emph{(real) vector field} on the state space $\mathcal{X}$.\\[5pt]
 The differential equation
 \begin{equation}\label{diffeqvf}
 x'(t)=F(x(t))
 \end{equation}
-with $F$ a vector field is called an \emph{autonomous differential equation}.
+with $F$ a vector field is called an \emph{autonomous differential equation}. If $\varphi$ is a solution of this equation, then $(\varphi^t)_t$ is called the \emph{flow of $F$} with $\varphi^t: \mathcal{X}\to \mathcal{X}$ for fixed $t\in \mR$ given by $x\mapsto\varphi(t,x)$.
 \end{mydefinition}
 \noindent The terminology of autonomy comes from the following observation:\\
 If $\gamma:I\to\mR^d$ is a solution to equation \ref{diffeqvf}, then it holds for all $a\in\mR$, that the function $\gamma^a:I-a\to\mR^d$ defined on $I-a\coloneqq \{s-a: s\in I\}$ by $\gamma^a(t)\coloneqq \gamma(t+a)$ is then also a solution of equation \ref{diffeqvf}, since
@@ -672,14 +673,17 @@ The time $t$-maps are thus given by $\varphi^t:\gamma_x(0)\mapsto \gamma_x(t)$ a
 	\item for all $x\in \mathcal{X}$ and $s,t\in \mR$, then by our observations on autonomy, we have
 	$$\varphi^{t+s}(x)=\gamma_x(t+s)=\gamma_x^s(t)=\varphi(t,\gamma_x^s(0))=\varphi(t,\gamma_x(s))=\varphi(t,\varphi(s,x))$$
 \end{enumerate}
-This proves that $\mathfrak{D}$ is a dynamical system. By theorem \ref{ThmDiffEq}, we have that if $F$ is also $C^k$, then so is $\varphi$, and we deduce that the time $t$-maps $\varphi^t$ are $C^k$ diffeomorphisms on $\mR^k$ with inverses $\varphi^{-t}$, meaning that they are $C^k$ and have a $C^k$ inverse. If we wanted, we could easily expand the theory here to a more complicated set-up, and consider differential equations of the form
+This proves that $\mathfrak{D}$ is a dynamical system. By theorem \ref{ThmDiffEq}, we have that if $F$ is also $C^k$, then so is $\varphi$, and we deduce that the time $t$-maps $\varphi^t$ are $C^k$ diffeomorphisms on $\mR^k$ with inverses $\varphi^{-t}$, meaning that they are $C^k$ and have a $C^k$ inverse. Moreover, If we wanted, we could easily expand the theory here to a more complicated set-up, and consider differential equations of the form
 $$x^{(k)}(t)=F\left(t,x(t),x^{(1)}(t),\ldots, x^{(k-1)}(t)\right)$$
 for $F:\mR^{1+kd}\to\mR^d$ continuous, since we may simply rewrite this as the autonomous differential equation
 \begin{align*}
 &\left(\text{id},x,x^{(1)},\ldots,x^{(k-1)}\right)'(t)\\
 =&\left(1,x^{(1)}(t),\ldots,x^{(k-1)}(t),F\left(t,x(t),x^{(1)}(t),\ldots, x^{(k-1)}(t)\right)\right)
 \end{align*}
-resulting in a flow on $\mR^{1+kd}$ instead of on $\mR^d$. Having seen how differential equations give rise to dynamical systems, we will soon turn to the problem of trying to better understand the geometry of the  resulting dynamical systems. First up in that quest, we recognize that we can modify a dynamical system in different ways while still preserving the geometry. For instance, moving the dynamical system around in space does not change the geometry of the system, and more generally, if we preserve the geometry of the space with a transformation, then the flow after the transformation should be the same geometrically. Moreover, if 'speeding up' a solution, for instance by the transformation $\varphi(t,x)\mapsto\varphi(c\cdot t,x)$ with $c>1$, or  more generally if manipulating the time by a monotone function, the flow of the dynamical system would be essentially equivalent, but of course not identical. Our first task is therefore to introduce some definitions to account for this:
+resulting in a flow on $\mR^{1+kd}$ instead of on $\mR^d$. We shall later generalize to general manifolds when moving to the theoretical considerations of Takens' theorem, but seeing as the dynamical systems that arise from autonomous differential equations are more instrumental when thinking of systems of equations, we shall use those as our starting point and main source of intuition.
+
+\section{The Geometry of Dynamical Systems}
+Having seen how differential equations give rise to dynamical systems, we will now turn to the problem of trying to better understand the geometry of the  resulting dynamical systems. First up in that quest, we recognize that we can modify a dynamical system in different ways while still preserving the geometry. For instance, moving the dynamical system around in space does not change the geometry of the system, and more generally, if we preserve the geometry of the space with a transformation, then the flow after the transformation should be the same geometrically. Moreover, if 'speeding up' a solution, for instance by the transformation $\varphi(t,x)\mapsto\varphi(c\cdot t,x)$ with $c>1$, or  more generally if manipulating the time by a monotone function, the flow of the dynamical system would be essentially equivalent, but of course not identical. Our first task is therefore to introduce some definitions to account for this:
 \begin{mydefinition}{Conjugacy and Equivalency of Flows}
 Let $(f^t)_t$ and $(g^t)_t$ be flows of two complete autonomous differential equations
 $$x'(t)=F(x(t)), \quad F:\mathcal{X}\to\mR^d\quad\text{and}\quad y'(t)=G(y(t)),\quad G:\mathcal{Y}\to\mR^d$$
@@ -704,12 +708,85 @@ If $\tau(t)=t$ for all $t\in \mR$, then we say that the flows are \emph{topologi
   \draw[->] (Y1) -- node[below] {$g^{\tau(t)}$} (Y2);
 \end{tikzpicture}
 \end{center}
+Having this foundation allows us to more precisely describe the geometry of the dynamical system. First up, we shall see that the dynamical system has a very particular structure locally around stationary points. Stationary points serve a parallel purpose to those defined in introductory calculus. For us, we will understand them as follows:
+\begin{mydefinition}{Stationary Points}
+Let $F:\mathcal{X}\to \mR^d$ be a $C^1$ vector field with $\mathcal{X}\subset \mR^d$ open. We say that
+\begin{itemize}
+	\item $p\in \mathcal{X}$ is \emph{stationary} if $F(p)=0$,
+	\item a stationary point $p\in \mathcal{X}$ is \emph{simple} if the Jacobian $DF(p)$ has full rank,
+	\item a simple stationary point $p\in \mathcal{X}$ is \emph{hyperbolic} if all the eigenvalues of $DF(p)$ have non-zero real parts,
+	\item a hyperbolic stationary point is an \emph{attractor} if all eigenvalues of $DF(p)$ have negative real parts,
+	\item a hyperbolic stationary point is a \emph{repeller} if all eigenvalues of $DF(p)$ have positive real parts, and
+	\item a hyperbolic stationary point is a \emph{saddle point} if it is neither an attractor nor a repeller.	
+\end{itemize}
+\end{mydefinition}
+It is straightforward to see that if $p$ is a stationary point of a $C^1$ vector field, then $p$ is a fixed point of the time $t$-maps of the dynamical system arising from the autonomous differential equation \ref{diffeqvf}, i.e. $f^t(p)=p$. Moreover, it is not too hard to show that $Df_p(t)=\exp(tDF(p))$ with $f_p$ the trajectory of $p$. This allows us to translate the properties in terms of the vector field into properties in terms of the flow. With this terminology settled, we will now look at how these definitions correspond to geometric properties of flows around stationary points. One classical result is the Grobman-Hartman theorem:
+\begin{thm}[Grobman-Hartman Theorem for Flows]
+Let $p\in \mathcal{X}$ be a hyperbolic stationary point of a $C^1$ vector field $F:\mathcal{X}\to\mR^d$. Then there exist neighborhoods $\mathcal{V}$ of $p$ and $\mathcal{W}$ of $0\in \mR^d$, and a topological conjugacy $H:\mathcal{V}\to\mathcal{W}$ with $H(p)=0$ conjugating the flow of $F$ restricted to $\mathcal{V}$ to the flow of the linear vector field $A=DF(p)$ restricted to $\mathcal{W}$.
+\end{thm}
+This theorem shows that we can linearize the flow around stationary points, which in turn gives way for a much richer description of the geometry of the flow. We find that that we can aptly describe this structure with the theory of manifolds. The key reasoning behind this result, is that the we can extrapolate behaviour around the fixed points of a flow from the linearization given by the Grobman-Hartman Theorem. We record all this structure in the following result, which is also the main result of this theoretical section and links the theory of dynamical systems with the theoretical results on state space reconstruction, we will consider in the rest of chapter. It goes as follows:
+\begin{thm}[Stable Manifold Theorem]\label{stable}
+Let $F:\mathcal{X}\to \mR^d$ be a $C^k$ vector field, $k\geqslant 1$, at let $p\in \mathcal{X}$ be a hyperbolic stationary point, and let $A:\mR^d\to\mR^d$ be the linear map $x\mapsto DF(p)x$. Moreover, let $(f^t)_t$ be the flow of $F$. Then there exists invariant subspaces $E^s,E^u\subset\mR^d$, satisfying that 
+\begin{enumerate}[label=(\roman*)]
+	\item $E^s,E^u$ decompose $\mR^d$: $\mR^d=E^s\oplus E^u$,
+	\item $E^s,E^u$ are invariant under $A$: $A(E^s)\subset E^s$ and $A(E^u)\subset E^u$,
+	\item all eigenvalues of a matrix representing $A|_{E^s}$ have negative real parts, and all eigenvalues of a matrix representing $A|_{E^u}$ have positive real parts.
+\end{enumerate}
+Moreover there exist injective $C^k$ maps $\psi^s: E^s\to \mathcal{X}$ and $\psi^u:E^u\to\mathcal{X}$ satisfying that
+\begin{enumerate}[label=(\roman*)]
+\setcounter{enumi}{3}
+	\item $\psi^s(0)=\psi^u(0)=p$,
+	\item $D\psi^s(0)E^s=E^s$ and  $D\psi^u(0)E^u=E^u$,
+ \item $\psi^s,\psi^u$ are of maximal rank: for all $u\in E^s$, $$\rank D\psi^s(u)=\dim E^s$$ and for all $v\in E^u$, $$\rank D\psi^u(v)=\dim E^u,$$
+ \item and the images of $E^s/E^u$ under $\psi^s/\psi^u$ are attracting/repelling:
+ \begin{align*}
+  \psi^s(E^s)&=\{x\in \mathcal{X}:\lim_{t\to\infty}f^t(x)=p\},\\
+ \psi^u(E^u)&=\{x\in \mathcal{X}:\lim_{t\to\infty}f^{-t}(x)=p\}
+ \end{align*}
+\end{enumerate}
+\end{thm}
+This theorem implies that if we have reason to believe that we are observing trajectories from a dynamical system that converge to some steady state or limit, then the theorem above realizes that trajectory on a suitable set, that has a lot of structure. We will quickly see that these sets are in fact manifolds, as we are about to define. As for the proofs of the Grobman-Hartman theorem and the stable manifold theorem, we refer once more to \cite{Dynamics}. Before that, there are several important remarks to make to this theorem:
+\begin{itemize}
+	\item If $p$ is an attractor, then we see that $E^s$ is all of $\mR^d$, and if $p$ is a repeller, then $E^u$ is all of $\mR^d$. In particular, if $p$ is an attractor, we observe by the mere fact that $\mathcal{X}\subset \mR$ that the attractor set $\psi^s(E^s)$ is a neighbourhood of $p$, so everything around $p$ will converge to this point. 
+	\item If $\mathcal{X}$ is compact and convex, then it is a consequence of Brouwer's fixed point theorem that a time $t$-map $f:\mathcal{X}\to\mathcal{X}$ has a fixed point $p\in \mathcal{X}$, and if it is hyperbolic this activates the stable manifold theorem. This is in fact a stronger statement than that of the stable manifold theorem, since it implies the latter by the correspondence between fixed points of time $t$-maps of a vector field and stationary points of the vector field.
+	\item It is a generic property that a linear map $\mR^d\to\mR^d$ is hyperbolic, meaning that the set of hyperbolic linear vector fields is an open and dense set of the space $\mathcal{L}(\mR^d,\mR^d)$ equipped with any topology induced by a norm: for instance one could go the matrix representation and use the matrix norm. This is the first example of a generic property in this thesis, but we shall see that this a typical concept in this setting.
+\end{itemize}
+We see that the stable manifold theorem can be more eloquently formulating in the language of manifolds. In practice, the manifolds we will consider can always be thought of as subspaces of $\mR^d$ for a suitable dimension $d\in \mN$, but it does help somewhat in the eloquence and not much intuition is lost. To that end, we do some heavy lifting now in generalizing the basic concepts from calculus to the world of differential topology and manifolds in order to better formulate the theorems in subsequent sections:
+\begin{mydefinition}{Manifolds}
+Let $M$ be a separable Hausdorff space and let $m\in \mN$.\\[5pt]
+We call $(U,h)$ a \emph{chart} if $U\subset M$ is open and $h: U\to \mR^m$ is a homeomorphism onto its range with $U$ the \emph{chart domain} and $h$ the \emph{coordinate function}.\\[5pt]
+If for each point $x\in M$, there exists a chart $(U,h)$ on $M$ such that $x\in U$, we call $M$ a \emph{manifold of dimension $m$}, and we call a collection of charts whose chart domains cover all of $M$ an \emph{atlas}.The collection of all charts on $M$ is itself an atlas that we call the \emph{structure} on $M$.\\[5pt]
+On overlapping chart domains of charts $(U,h)$ and $(V,g)$, we consider the \emph{coordinate transformations}
+$$hg^{-1}: g(U\cap V)\to \mR^m, \text{ and } gh^{-1}: h(U\cap V)\to \mR^m$$
+We say the charts are \emph{$C^r$-related} if the coordinate transformations $hg^{-1}, gh^{-1}$ are $C^r$, and if all coordinate transformations of an atlas are $C^r$-related, we say the atlas is \emph{$C^r$-differentiable}. A \emph{differential structure} is the set of all charts $C^r$-related to the charts in some atlas. We shall say a manifold is $C^r$ if there exists a $C^r$-differentiable atlas of $M$.\\[5pt]
+If $M$ is $C^r$ and $N$ is a $C^r$ manifold of dimension $n\geqslant m$, the function $f: M\to N$ is \emph{$C^r$-differentiable} if for each $p\in M$, there exists charts $(U,h)$ on M and $(V,g)$ on N, such that $p\in U$, $f(p)\in V$ and 
+$$gfh^{-1}: h(U\cap f^{-1}(V))\to \mR^n$$
+is $C^r$. (Remark: this property thus holds for any choice of charts in the atlas covering $p$ and $f(p)$ respectively). The \emph{Jacobian} at $p$ is then defined as 
+$$Dgfh^{-1}(h(p))$$
+This depends on the choice of charts but the rank does not.\\[5pt]
+If the Jacobian is of maximal rank (rank $m$), we say $f$ is \emph{immersive at p}, and if $f$ is immersive everywhere, then we say $f$ is an \emph{immersion}. An immersion that is homeomorphic upon its image is an \emph{embedding}.\\[5pt]
+Conversely, if $m\geqslant n$, and the Jacobian is of maximal rank (rank $n$), then $f$ is \emph{submersive at $p$}, and if submersive everywhere it is a \emph{submersion}. If $f: M\to N$ is an embedding, we say that $f(M)$ is a \emph{submanifold} of $N$.\\[5pt]
+A \emph{diffeomorphism} is a map $f:M\to N$ for which there exists a differentiable inverse, and in this case we shall call $M$ and $N$ \emph{diffeomorphic}. If $f$ is an embedding, it is possible to prove that $f:M\to f(M)$ is a diffeomorphism.\\[5pt]
+Finally, we will define some topologies. We let $C^r(M,N)$ denote the space of all $C^r$ differentiable maps from $M$ to $N$. We then let the topology of $C^r(M,N)$ be generated by the subbase consisting of sets defined as follows: for any choice of function $f\in C^r(M,N)$, charts $(U,h)$ on $M$ and $(V,g)$ on $N$, a compact set $K\subset U$ such that $f(K)\subset V$ and $\varepsilon>0$, we define $\mathcal{N}(f,(U,h),(V,g),K,\varepsilon)$ to be the set of all functions $\hat{f}\in C^r(M,N)$ for which $\hat{f}(K)\subset V$ and
+$$\norm{D^kg\hat{f}h^{-1}(x)-D^kgfh^{-1}(x)}<\varepsilon$$
+for all $x\in h(K)$, $k=0,\ldots,r$, where $\norm{\cdot}$ is the usual Euclidean norm. If $M$ and $N$ are diffeomorphic, we let $\text{Diff}^r(M,N)$ be the subspace of $C^r(M,N)$ consisting of $C^r$-differentiable diffeomorphisms equipped with the subspace topology. Usually, we will use the shorter $\text{Diff}^r(M)$ for $\text{Diff}^r(M,M)$.
+\end{mydefinition}
+We recognize immediately that the maps $\psi^s$ and $\psi^u$ of the stable manifold theorem (\ref{stable}) are injective $C^k$ immersions, and that the attractor and repeller sets $W^s(p)\coloneqq \psi^s(E^s)$ and $W^u(p)\coloneqq \psi^u(E^u)$ are indeed manifolds, that we usually call respectively the \emph{stable manifold} and the \emph{unstable manifold}. We recognize a certain likeness to the limiting distributions leading to undirected edges when working with chain graphs from the idea of attractor sets in the dynamical systems world. We end this section by extending the theory of dynamical systems to this manifold setting:
+\begin{mydefinition}{Differential Equations on Manifolds}
+A \emph{vector field} on a manifold $M$ is a map $F:M\to TM$, and a \emph{differential equation} is given by
+\end{mydefinition}
+We solve differential equations on manifolds by localization on charts, using the results from theorem \ref{ThmDiffEq} to generate solutions. Of course some technicalities arise in this context, but it is mainly a matter of looking at the behavior on overlapping charts and using the properties of the coordinate transformations. In all essence, we can give the following analogy of theorem \ref{ThmDiffEq}:
+\begin{thm}[Solutions to Differential Equations on Manifolds]\label{ThmManifDiffEq}
+Fix $d\in \mN$. Let $F:\mathcal{U}\to\mR^d$ be a continuous function with $U$ an open subset of $\mR^{1+d}$. We consider the following differential equation for differentiable $x:\mR\to\mR^{d}$:
+\begin{equation}\label{diffeq}
+x'(t)=F\left(t,x(t)\right)
+\end{equation}
+We then have the following results:
+\textbf{Peano's theorem:} For every $(t_0,x_0)$ there exists a solution on some open interval $I$ to the differential equation \ref{diffeq} going through $x_0$ at $t_0$, meaning that:\\
+	For every $(t_0,x_0)\in \mathcal{U}$, there exist an open interval $I$ and a differentiable function $\gamma: I\to \mR^d$, such that $t_0\in I$, $\gamma(t_0)=x_0$ and for all $t\in I$
+		$$\gamma'(t)=F\left(t,\gamma(t)\right)$$
 
-
-
-
-
-\section{The Geometry of Dynamical Systems}
+\end{thm}
 
 \section{Takens' Theorem}
 In the following, we will switch gears from the more welcoming realm of considering functions in $\mR^n$ and $\mR$ and move to the realm of differential topology, which is inhabited by manifolds, vector fields and tangent bundles and worse. This is done, not for needless abstraction, but because the theory we shall be exploiting holds in this generality - and in fact as long we consider compact manifolds, we might as well think of them in Euclidean spaces nonetheless. So in practice, we will always be able to envision our models living in our usual space $\mR^n$, but it is not in any way useful to restrict ourselves at this point.\\
@@ -734,25 +811,7 @@ $$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
 is an embedding. \cite{Huke}
 \end{thm}
 By periodic with period less than or equal to $2m$, we mean that $\varphi^{k}(x)=x$ for some $k\leqslant 2m$. If $\tau$ is chosen such that there are no periodic points of $\varphi_\tau$, or if we assume some structure on the periodic points, then we need only worry about whether $y$ is generic. In fact, if $\varphi_\tau$ is not generic for some choice of $\tau$, it will usually be after some small perturbation in $\tau$ (\textit{is it true, reference?}). Therefore in practice multiple lags can be tested, and we should thus be able to fairly easily sidestep this problem. Before moving on to definitions and technicalities, we will at this point however notice that we have a theorem that gives an explicit construction that will fairly generally allow us to completely recover the dynamics of a system from only a single variable observed over time. In contrast to the choice of $\tau$, we will however usually have in practice that the observation functions are fixed. So even if the same technique of small perturbations of a non-generic observation function produces a generic observation, we do not have access to it. Therefore we will usually have to assume a given observation function is generic, if there is no reason to believe otherwise. However, in some cases we can actually endow genericity with causal interpretation - we return to this in the next section. For now, we expand upon Takens' theorem.  We start of with the basic definitions needed following very closely the terminology and presentation from \cite{Huke2}. 
-\begin{defn}[Differential topology terminology]
-Let $M$ be a separable Hausdorff space and let $m\in \mN$.\\[5pt]
-We call $(U,h)$ a \emph{chart} if $U\subset M$ is open and $h: U\to \mR^m$ is a homeomorphism onto its range with $U$ the \emph{chart domain} and $h$ the \emph{coordinate function}.\\[5pt]
-If for each point $x\in M$, there exists a chart $(U,h)$ on $M$ such that $x\in U$, we call $M$ a \emph{manifold of dimension $m$}, and we call a collection of charts whose chart domains cover all of $M$ an \emph{atlas}.The collection of all charts on $M$ is itself an atlas that we call the \emph{structure} on $M$.\\[5pt]
-On overlapping chart domains of charts $(U,h)$ and $(V,g)$, we consider the \emph{coordinate transformations}
-$$hg^{-1}: g(U\cap V)\to \mR^m, \text{ and } gh^{-1}: h(U\cap V)\to \mR^m$$
-We say the charts are \emph{$C^r$-related} if the coordinate transformations $hg^{-1}, gh^{-1}$ are $C^r$, and if all coordinate transformations of an atlas are $C^r$-related, we say the atlas is \emph{$C^r$-differentiable}. A \emph{differential structure} is the set of all charts $C^r$-related to the charts in some atlas. We shall say a manifold is $C^r$ if there exists a $C^r$-differentiable atlas of $M$.\\[5pt]
-If $M$ is $C^r$ and $N$ is a $C^r$ manifold of dimension $n\geqslant m$, the function $f: M\to N$ is \emph{$C^r$-differentiable} if for each $p\in M$, there exists charts $(U,h)$ on M and $(V,g)$ on N, such that $p\in U$, $f(p)\in V$ and 
-$$gfh^{-1}: h(U\cap f^{-1}(V))\to \mR^n$$
-is $C^r$. (Remark: this property thus holds for any choice of charts in the atlas covering $p$ and $f(p)$ respectively). The \emph{Jacobian} at $p$ is then defined as 
-$$Dgfh^{-1}(h(p))$$
-This depends on the choice of charts but the rank does not.\\[5pt]
-If the Jacobian is of maximal rank (rank $m$), we say $f$ is \emph{immersive at p}, and if $f$ is immersive everywhere, then we say $f$ is an \emph{immersion}. An immersion that is homeomorphic upon its image is an \emph{embedding}.\\[5pt]
-Conversely, if $m\geqslant n$, and the Jacobian is of maximal rank (rank $n$), then $f$ is \emph{submersive at $p$}, and if submersive everywhere it is a \emph{submersion}. If $f: M\to N$ is an embedding, we say that $f(M)$ is a \emph{submanifold} of $N$.\\[5pt]
-A \emph{diffeomorphism} is a map $f:M\to N$ for which there exists a differentiable inverse, and in this case we shall call $M$ and $N$ \emph{diffeomorphic}. If $f$ is an embedding, it is possible to prove that $f:M\to f(M)$ is a diffeomorphism.\\[5pt]
-Finally, we will define some topologies. We let $C^r(M,N)$ denote the space of all $C^r$ differentiable maps from $M$ to $N$. We then let the topology of $C^r(M,N)$ be generated by the subbase consisting of sets defined as follows: for any choice of function $f\in C^r(M,N)$, charts $(U,h)$ on $M$ and $(V,g)$ on $N$, a compact set $K\subset U$ such that $f(K)\subset V$ and $\varepsilon>0$, we define $\mathcal{N}(f,(U,h),(V,g),K,\varepsilon)$ to be the set of all functions $\hat{f}\in C^r(M,N)$ for which $\hat{f}(K)\subset V$ and
-$$\norm{D^kg\hat{f}h^{-1}(x)-D^kgfh^{-1}(x)}<\varepsilon$$
-for all $x\in h(K)$, $k=0,\ldots,r$, where $\norm{\cdot}$ is the usual Euclidean norm. If $M$ and $N$ are diffeomorphic, we let $\text{Diff}^r(M,N)$ be the subspace of $C^r(M,N)$ consisting of $C^r$-differentiable diffeomorphisms equipped with the subspace topology. Usually, we will use the shorter $\text{Diff}^r(M)$ for $\text{Diff}^r(M,M)$.
-\end{defn}
+
 
 Before moving on, we will outline the main stages in Takens' theorem just to get an understanding of the proof techniques. In the following, we will use the subspace topology on $C^2(M,\mR)$ inherited from $C^1(M,\mR)$ and likewise on $\text{Diff}^2(M)$. In all topological statements below, this is what is meant. We proceed by proving the 2nd version of Takens' theorem as follows:
 \begin{enumerate}[label=\roman*)]
@@ -870,32 +929,36 @@ We used the term independent before, which of course is not to be interpreted in
 Meanwhile we can exploit this idea of information being encoded in effect variables to great effect: this allows us to reformulate causality from the point of view of deterministic systems. The principle itself is fairly simple, but we do require some technical assumptions to make the theory work, which are not in any way empirically motivated nor entirely interpretable, but fare under what we usually consider regularity assumptions - a sweep-it-under-the-rug-interpretation would be that we just assume the data to be reasonably well-behaved. The basic idea is that if $C$ is the cause of $E$, then $E$ must contain information of $C$, since the dynamics of $C$ must be reflected in $E$ in light of a functional relationship, whereas the reverse cannot be true. Thus when reconstructing the entire dynamic system from the observed values of $E$ in accordance with the theorem, we would expect to recover the dynamics of $C$. We should however expect the reverse statement to be false, since the self-contained dynamics of $E$ would not be reflected in $C$, and so the dynamic system reconstructed from the observed values of $C$ would not recover the dynamics of $E$. Notice that this in fact implies the opposite of Granger causality: we should be able to predict the cause $C$ using the effect $E$ but not conversely. This is quite a radical difference. To obtain further understanding, we will have to delve into the theoretical details. 
 \url{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13150}
 
-\section{Analysis}
-
-
-\chapter{Dynamic Systems under Noise}
-\cite{StableManifoldStoc} 
-
-\chapter{Simulation Study}
-\url{https://pure.au.dk/portal/files/136561486/Causal_inference_from_noisy_time_series_data_AM17.pdf}
 \section{Implementation}
 Takens' theorem implies that you can reconstruct the manifold by the map
 $t\mapsto (y(t),y(t-\tau),...,y(t-L\tau))$
 Using practical  
-\section{Reference Model}
+\subsection*{Reference Model}
 We will use the following model built on a multivariate Ornstein-Uhlenbeck process as a reference. More specifically, we will consider the following setup. Let the $d$-dimensional stochastic process $X_t$, $t\geqslant 0$, be given by the following stochastic differential equation
 $$dX_t=M X_t\ dt+\rho I_d\ dW_t$$
 with $W_t$ a $d$-dimensional  Brownian motion, $M$ a $d\times d$ drift matrix, and $\rho\in \mathbb{R}$ a scalar. We will then consider observations at time points $0\leqslant t_1<t_2<\cdots <t_n$, $n\in \mathbb{N}$, with some observation noise
 $$Y_{t_i}=X_{t_i}+\xi_i,\quad i=1,...,n$$
 where $\xi_i$ is iid with $\mathbb{E} \xi_i=0$ and $V(\xi_i)=\sigma^2$ for some variance parameter $\sigma^2\in \mathbb{R}_{\geqslant 0}$. Interesting variations of this model, is $\sigma^2=0$, implying no observation noise, and $\rho=0$, which removes stochasticity of the process.
+\section{Direct Extensions}
 
-\section{Simulations}
- 
 
-\chapter{Machine Learning Extensions}
+\section{Machine Learning Extensions}
 \url{https://arxiv.org/pdf/nlin/0405016.pdf}\\[5pt]
 \url{file:///C:/Users/rasmu/Downloads/s41598-021-87316-6.pdf}\\[5pt]
 \url{https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-021-87316-6/MediaObjects/41598_2021_87316_MOESM1_ESM.pdf}
+
+\section{Dynamic Systems under Noise}
+Consider the following generalization of the Ornstein-Uhlenbeck process:
+$$du(t)=-Au(t)\ dt+F(u(t))\ dt+B u(t)\ dW_t,\quad t\geqslant 0$$
+with the following assumption on $F:H\to H$
+\cite{StableManifoldStoc} 
+
+\section{Simulation Study}
+\url{https://pure.au.dk/portal/files/136561486/Causal_inference_from_noisy_time_series_data_AM17.pdf}
+
+
+
+
 \bibliographystyle{apalike2}
 \bibliography{kilder}
 \end{document}
