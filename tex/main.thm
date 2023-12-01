@@ -1,31 +1,29 @@
-\contentsline {thm}{{Theorem}{1}{Non-uniqueness of graph stuctures}}{14}{thm.1}%
-\contentsline {thm}{{Theorem}{2}{Identifiability in bivariate systems with additive noise}}{15}{thm.2}%
-\contentsline {inneralg}{{Algorithm}{1}{}}{20}{inneralg.1}%
-\contentsline {thm}{{Theorem}{3}{Equivalency of Markov Properties}}{23}{thm.3}%
-\contentsline {thm}{{Theorem}{4}{Strong Completeness of Separation Criteria}}{23}{thm.4}%
-\contentsline {thm}{{Theorem}{5}{Markov Equivalence of Graphs}}{24}{thm.5}%
-\contentsline {thm}{{Theorem}{6}{Entailed Distributions from SCMs}}{29}{thm.6}%
-\contentsline {thm}{{Theorem}{7}{No Free Lunch for Conditional Independence Testing}}{30}{thm.7}%
-\contentsline {innerdefn}{{Definition}{1}{Summary graph}}{32}{innerdefn.1}%
-\contentsline {thm}{{Theorem}{8}{Granger causality}}{32}{thm.8}%
-\contentsline {innerdefn}{{Definition}{2}{Continuous time series}}{33}{innerdefn.2}%
-\contentsline {thm}{{Theorem}{9}{Existence and Uniqueness Theorem}}{36}{thm.9}%
-\contentsline {thm}{{Theorem}{10}{Grobman-Hartman Theorem for Flows}}{40}{thm.10}%
-\contentsline {thm}{{Theorem}{11}{Stable Manifold Theorem}}{41}{thm.11}%
-\contentsline {thm}{{Theorem}{12}{Solutions to Differential Equations on Manifolds}}{44}{thm.12}%
-\contentsline {thm}{{Theorem}{13}{Takens, Version 1}}{45}{thm.13}%
-\contentsline {thm}{{Theorem}{14}{Takens, version 2}}{46}{thm.14}%
-\contentsline {thm}{{Theorem}{15}{}}{47}{thm.15}%
-\contentsline {innerdefn}{{Definition}{3}{Driver}}{49}{innerdefn.3}%
-\contentsline {innerdefn}{{Definition}{4}{Component graph}}{49}{innerdefn.4}%
-\contentsline {innerdefn}{{Definition}{5}{Transitive closure}}{49}{innerdefn.5}%
-\contentsline {innerdefn}{{Definition}{6}{Lattice}}{50}{innerdefn.6}%
-\contentsline {innerdefn}{{Definition}{7}{Filtration}}{50}{innerdefn.7}%
-\contentsline {innerdefn}{{Definition}{8}{Upper set filtration}}{50}{innerdefn.8}%
-\contentsline {prop}{{Proposition}{1}{}}{51}{prop.1}%
-\contentsline {proof}{{Proof}{1}{}}{51}{proof.1}%
-\contentsline {innerdefn}{{Definition}{9}{}}{51}{innerdefn.9}%
-\contentsline {innerdefn}{{Definition}{10}{Filtration of observation functions}}{52}{innerdefn.10}%
-\contentsline {prop}{{Proposition}{2}{}}{52}{prop.2}%
-\contentsline {thm}{{Theorem}{16}{Identifiability in dynamic systems}}{52}{thm.16}%
-\contentsline {cor}{{Corollary}{1}{}}{53}{cor.1}%
+\contentsline {thm}{{Theorem}{1}{Non-uniqueness of graph stuctures}}{9}{thm.1}%
+\contentsline {thm}{{Theorem}{2}{Identifiability in bivariate systems with additive noise}}{9}{thm.2}%
+\contentsline {inneralg}{{Algorithm}{1}{}}{14}{inneralg.1}%
+\contentsline {thm}{{Theorem}{3}{Equivalency of Markov Properties}}{17}{thm.3}%
+\contentsline {thm}{{Theorem}{4}{Strong Completeness of Separation Criteria}}{18}{thm.4}%
+\contentsline {thm}{{Theorem}{5}{Markov Equivalence of Graphs}}{18}{thm.5}%
+\contentsline {thm}{{Theorem}{6}{Entailed Distributions from SCMs}}{23}{thm.6}%
+\contentsline {thm}{{Theorem}{7}{No Free Lunch for Conditional Independence Testing}}{25}{thm.7}%
+\contentsline {thm}{{Theorem}{8}{Granger Causality}}{27}{thm.8}%
+\contentsline {thm}{{Theorem}{9}{Existence and Uniqueness Theorem}}{32}{thm.9}%
+\contentsline {thm}{{Theorem}{10}{Grobman-Hartman Theorem for Flows}}{37}{thm.10}%
+\contentsline {thm}{{Theorem}{11}{Stable Manifold Theorem}}{37}{thm.11}%
+\contentsline {thm}{{Theorem}{12}{Solutions to Differential Equations on Manifolds}}{41}{thm.12}%
+\contentsline {thm}{{Theorem}{13}{Takens, Version 1}}{41}{thm.13}%
+\contentsline {thm}{{Theorem}{14}{Takens, version 2}}{43}{thm.14}%
+\contentsline {thm}{{Theorem}{15}{}}{44}{thm.15}%
+\contentsline {innerdefn}{{Definition}{1}{Driver}}{46}{innerdefn.1}%
+\contentsline {innerdefn}{{Definition}{2}{Component graph}}{46}{innerdefn.2}%
+\contentsline {innerdefn}{{Definition}{3}{Transitive closure}}{46}{innerdefn.3}%
+\contentsline {innerdefn}{{Definition}{4}{Lattice}}{47}{innerdefn.4}%
+\contentsline {innerdefn}{{Definition}{5}{Filtration}}{47}{innerdefn.5}%
+\contentsline {innerdefn}{{Definition}{6}{Upper set filtration}}{47}{innerdefn.6}%
+\contentsline {prop}{{Proposition}{1}{}}{48}{prop.1}%
+\contentsline {proof}{{Proof}{1}{}}{48}{proof.1}%
+\contentsline {innerdefn}{{Definition}{7}{}}{48}{innerdefn.7}%
+\contentsline {innerdefn}{{Definition}{8}{Filtration of observation functions}}{49}{innerdefn.8}%
+\contentsline {prop}{{Proposition}{2}{}}{49}{prop.2}%
+\contentsline {thm}{{Theorem}{16}{Identifiability in dynamic systems}}{49}{thm.16}%
+\contentsline {cor}{{Corollary}{1}{}}{50}{cor.1}%

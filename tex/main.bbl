@@ -57,6 +57,11 @@ Frydenberg, M. (1990).
 \newblock The chain graph markov property.
 \newblock {\em Scandinavian Journal of Statistics}, 17(4), 333--353.
 
+\bibitem[Giunti \& Mazzola, 2012]{inbook}
+Giunti, M. \& Mazzola, C. (2012).
+\newblock {\em Dynamical Systems on Monoids: Toward a General Theory of
+  Deterministic Systems and Motion}, (pp.\ 173--185).
+
 \bibitem[Granger, 1969]{Granger}
 Granger, C. W.~J. (1969).
 \newblock Investigating causal relations by econometric models and
@@ -179,6 +184,11 @@ Takens, F. (1981).
 \newblock {\em Detecting Strange Attractors in Turbulence. Lecture Notes in
   Mathematics}, volume 898, (pp.\ 366--381).
 \newblock Springer New York.
+
+\bibitem[Valjarević \& Merkle, 2021]{Sepa}
+Valjarević, D. \& Merkle, A. (2021).
+\newblock Statistical causality and measurable separability of σ-algebras.
+\newblock {\em Statistics & Probability Letters}, 177, 109166.
 
 \bibitem[Viana \& Espinar, 2021]{Dynamics}
 Viana, M. \& Espinar, J.~M. (2021).
