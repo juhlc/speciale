@@ -9,6 +9,8 @@
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage{centernot}
 \usepackage{tikz-cd}
+\usetikzlibrary{arrows.meta, decorations.pathreplacing, bending,patterns}
+
 
 % Miscellaneous packages
 \usepackage{enumitem}
@@ -115,6 +117,7 @@
 \DeclareMathOperator{\bd}{bd}
 \DeclareMathOperator{\nd}{nd}
 \DeclareMathOperator{\an}{An}
+\DeclareMathOperator{\supp}{supp}
 \DeclareMathOperator{\rank}{rank}
 \DeclareRobustCommand{\firstsecond}[2]{#2}
 
@@ -169,20 +172,17 @@ Reference 2: Distinguishing time-delayed causal interactions using convergent cr
 
 \newpage
 
-\section*{Introduction}
-\addcontentsline{toc}{section}{Introduction}
+\chapter{Introduction}
 Causality is a cornerstone of understanding in various scientific domains, and at its core, causal inference addresses the intricate dance between correlation and causation. While correlation hints at a mutual relationship between two variables, causation pushes us into the territory of assertion — \textit{does one variable truly influence the other?} Traditional statistics employs randomization as a useful tool. Imagine a medical scenario where you can control who receives a treatment: If you can ensure that it is perfectly random who receives the treatment and patients receiving the treatment consistently show improvement compared to those who don't, we can easily attribute that difference to the treatment. However, when variables are merely observed without that level of control, establishing causation becomes more complex. Causal statistics thus requires another level of statistical modelling, because we want to reason about what happens when intervening in the process.\\\\
 This thesis delves into the vibrant world of causal relationships in dynamic systems. Granger causality, a seminal and widely used concept in causal analysis of time series, yields one approach to causal inference in time-dependent data. It is based on the thoughts of \cite{Granger}, and it posits that if the past of a variable $C$ contains unique information about another variable $E$, the variable $C$ is said to 'Granger-cause' the variable $E$. This approach to causal inference is based on prediction and at its core, it operates on the principle that cause precedes effect, which means that knowledge of the cause can enhance the predictability of the effect. However, while Granger causality offers a framework for assessing causality in probabilistic settings, it encounters challenges in deterministic systems. Dynamic systems, by nature, have variables that are interconnected and governed by underlying structures. This interconnectedness means that information about one variable can often be extracted from another due to the system's inherent dynamics, rather than any direct causal link.\\\\
-A case in point is the result from Takens (1981) which suggests that observing a single variable from a dynamic system might be sufficient to capture the entire system's dynamics. This interconnectedness can lead Granger causality to mistakenly identify causal links where none exist. Enter now the deterministic systems' viewpoint: Instead of relying on simple prediction improvement as a marker of causality, we focus on the inherent information within variables. If variable 
+A case in point is the result from \cite{Takens} which suggests that observing a single variable from a dynamic system might be sufficient to capture the entire system's dynamics. This interconnectedness can lead Granger causality to mistakenly identify causal links where none exist. Enter now the deterministic systems' viewpoint: Instead of relying on simple prediction improvement as a marker of causality, we focus on the inherent information within variables. If variable 
 $C$ causes variable $E$, then $E$ should encapsulate information about the dynamics of $C$. However, $C$ would not necessarily contain comprehensive information about $E$, as it would not include information about the dynamics of $E$ not imposed by $C$. This perspective flips Granger causality on its head: while Granger causality might predict the effect 
 $C$ using the cause $E$, a deterministic viewpoint effectively suggests the opposite. \\\\
 This distinction, subtle, yet profound, reshapes our understanding of causality in dynamic systems. As we proceed, we will delve deeper into the theoretical underpinnings of this perspective, unpacking its implications and potential applications. In particular, this insight leads to the \emph{Convergent Cross Mapping} approach introduced by \cite{Sugihara}, which serves as both the motivational starting point and the culmination of the theoretical work based on Takens' theorem in this thesis. A detailed discussion of this approach is presented in Chapter \ref{chapTaken}.\\\\
 Yet, while the deterministic paradigm offers a fascinating lens through which to understand causality, there is an inherent limitation. Real-world systems, especially in fields like economics, biology, and climate science, are rife with unpredictable fluctuations. These fluctuations cannot always be attributed solely to the endogenous dynamics of the system. No matter how meticulously one captures the deterministic dynamics, there will always be elements of seeming randomness and external influences that a purely deterministic model would struggle to account for. We return thus to stochastic processes. By reintroducing a stochastic element into our models, we can more faithfully represent the unpredictability and variability inherent in real-world systems. Stochasticity provides a framework to account for the 'noise' that isn't explained by the deterministic components of a system. Moreover, it's a nod to the humility of our modelling efforts – recognizing that there are always aspects of complex systems that are beyond our current understanding or inherently random. 
 In the subsequent chapters, we will delve deeper into the fusion of deterministic dynamics with stochastic processes using  a mixture of simulation based methods and theoretical considerations seeking a harmonious balance that brings us closer to understanding the multifaceted nature of causality in dynamic systems.
 \newpage
-
-\section*{An Example}
-\addcontentsline{toc}{section}{An Example}
+\section{An Example}
 To illustrate the challenge of causal inference in complex dynamic systems, we will use a real-world example concerning interactions between anchovies, sardines and sea surface temperature in the California Current ecosystem. This example serves as a backdrop for the more theoretical nature of the rest of this thesis. In keeping with the analysis of \cite{Sugihara}, we aim to use the same data for our analysis but we do extend it by including data from the period 2012-2022 as well. The data consist of the following variables:
 \begin{itemize}
 \item Pacific sardine (\textit{Sardinops sagax}) California fish market catch landings recorded monthly in pounds in the period January 1928 up to and including December 2022. There are 12 months with redacted data.\footnote{\label{note1}Data from January 1928 up to and including December 2002 is obtained from from \textit{ERDDAP} at \cite{oldData}, and data from January 2003 up to and including December 2022 is obtained directly from \cite{newData}.}
@@ -213,6 +213,7 @@ $$X_t=A_1 X_{t-1}+A_2 X_{t-2}+\cdots + A_p X_{t-p}+u_t$$
 where $A_1,\ldots, A_p\in \mR^{3\times 3}$ are coefficient matrices and $u_t$ is a noise term. The coefficient matrices can be estimated with OLS (which is also the maximum likelihood estimator when assuming that $u_t$ is normally distributed and mean-zero), and we can get standard confidence intervals based on an assumption of asymptotic normality. We see that the matrices model the influence of past values of all variables on the present values of the variable in question. For now, we will cautiously endow this influence with a causal interpretation, although the nuances of this interpretation is yet to be made explicit. At the very least, we will take it as an indication of a possible causal link.\\\\ 
 We have to choose the parameter $p$ specifying the number of lags in the model. This can be done by choosing the model according to a minimal information criterion like AIC. Fitting a VAR(1) model with first-differenced temperature data to the data, yields an estimate of $-2.6$ of the coefficient from temperature to anchovies and an estimate of $17.9$ of the coefficient from temperature to sardines. The remaining coefficients for sardine and anchovy are all estimated to $0.0$. No coefficient is significant 95\% level, but this is expected due to the small sample size. However, this does indicate that temperature might positively influence the sardine population and negatively influence the anchovy population. We are looking at averages of temperature over a 10-year period; any window of averaging in the range from 5 to 10 years does not change the sign and size of the estimates significantly, but when looking at the yearly averages of temperature alone, we no longer get estimates that does not round to 0. This shows that the indication is not just a happy accident, although we lack power to say anything definitively.\\\\ 
 These results do not, however, exploit some of the properties of dynamic systems that we observed and discussed above, and the present approach does require some data manipulation in order to use standard econometric methods. Notice for instance, that a VAR($p$)-model under standard assumptions entail a stationary time series which means that we have to look for transformations of our time-series yielding this property or at least something that can reasonably me modelled with a stationary time series. Here, this is achieved by the standard transformation, but it is a model assumption that needs addressing. This is the inspiration for the work that we will now undertake.
+
 
 \chapter{Causal Models}
 In this chapter, we will introduce approaches to causal modelling and compare corresponding definitions of causation. In the process we will try to illuminate the underlying motivations. We rely on the fundamental understanding of causality as the characterization of the effect of interventions in a system of variables, and we shall build our models on the back of graphical models. We will also introduce the causal framework of structural causal models inspired by the account of \cite{Peters}. This framework not only offers a model for causal inference but also a guideline for formulating a causal language for models in a deterministic setting. Due to the inherent differences between the mathematical theory used to formulate models in stochastic and deterministic settings, we will aim to relate the underlying assumptions in each setting. However, we will inevitably encounter some conceptual problems, as any attempt to translate the philosophical concept of causality into mathematical terms will be endowed with non-trivial complications and notable exceptions. We will discuss these problems throughout as they arise and try to be explicit about the assumptions and potential problems of the causal framework chosen in this thesis. We will also briefly discuss alternative formulations less conducive to overly strong interpretations. In doing this, we follow the conventions of causal graphical  models as pioneered by \cite{Spirtes} and \cite{Pearl}, and, of course, inspired by the work of \cite{Steffen}.
@@ -550,7 +551,7 @@ A \emph{structural causal model} $\mathfrak{C}$ over a set of random variables $
 If $u\in \pa(v)$ for $u,v\in \mathcal{V}$, we call $X_u$ the \emph{cause} and $X_v$ the \emph{effect}. 
 \end{mydefinition}
 First of all, we see that the edges in the graph correspond exactly to whether a variable depends on another in its functional expression. This is exactly why a directed graph is natural for this kind of model, and ensuring it is acyclic removes any doubt on whether these models are well-defined: we can unravel this definition from the 'top', starting with a vertex without parents, for which the structural causal model then explicitly defines the distribution of the variable, and then successively move down the graph computing the exact distribution of a variable expressed via the noise terms of the preceding steps. In that light, the following result taken from \cite{Pearl} should not be surprising:
-\begin{thm}[Entailed Distributions from SCMs]
+\begin{thm}[Entailed Distributions from SCMs]\label{entail}
 Every structural causal model $\mathfrak{C}$ induces a unique distribution that satisfies the directed local Markov property.
 \end{thm}
 We see the directed local Markov property stems directly from conditioning on the parents in the functional expression for each variable, which leaves a term depending only on the noise. This is also the key when modelling interventions here, namely that the conditional distributions when conditioning on parents do not change for the rest of the variables when intervening on one variable. We did something similar when looking at interventions in causal graphical models, namely that the conditionals for the rest of the model remains unchanged despite the intervention. This leads us to one of a few very important assumptions that we have (somewhat) implicitly made here when working with structural causal models:
@@ -790,7 +791,7 @@ Let $M$ be a $C^1$-manifold of dimension $d$, and let $F:M\to TM$ be a $C^1$ vec
 \begin{enumerate}[label=(\roman*)]
 	\item for every $p\in M$, there exists a solution $x:I\to M$ to the equation \ref{diffeqmanif} with $0\in I$ and $x(0)=p$.
 	\item if $x_1:I_1\to M$ and $x_2:I_2\to M$ are solutions to equation \ref{diffeqmanif} with $0\in I_1\cap I_2$ and $x_1(0)=x_2(0)$, then $x_1(t)=x_2(t)$ for all $t\in I_1\cap I_2$.
-	\item The differential equation \ref{diffeqmanif} defines the flow $(f^t)_t$ with $f^t(p)=x(t)$ for all $p\in M$ with $x$ the unique solution going through $p$ at $0$.
+	\item The differential equation \ref{diffeqmanif} defines the flow $(f^t)_t$ with $f^t(p)=x(t)$ for all $p\in M$ and $x$ the unique solution going through $p$ at $0$.
 \end{enumerate}
 
 \end{thm}
@@ -798,8 +799,8 @@ Let $M$ be a $C^1$-manifold of dimension $d$, and let $F:M\to TM$ be a $C^1$ vec
 \section{Takens' Theorem}
 In the following, we will switch gears from the more welcoming realm of considering functions in $\mR^n$ and $\mR$ and move completely to the realm of differential topology, which is inhabited by manifolds, vector fields and tangent bundles as we have just defined. This is done, not for needless abstraction, but because the theory we shall be exploiting holds in this generality - and in fact as long as we consider compact manifolds, we might as well think of them in Euclidean spaces nonetheless. So in practice, we will always be able to envision our models living in our usual space $\mR^n$, but it is not in any way useful to restrict ourselves at this point.\\\\
 We will consider different set-ups, but the base model is systems modelled as vector fields on invariant compact manifolds, which can be generalized to cover vector fields with an attractor set, that need not in fact be a manifold, see \cite{Sauer1991}. As the theorem itself, this is formulated in the realm of differential topology and so the objects involved in the theorem and subsequent theory spring from there. The fundamental result we shall use, now known as Takens' theorem, was proved in 1981 by Floris Takens, \cite{Takens}, and states that one can reconstruct the manifold using only a univariate observation function; that is observing only one variable over time allows us to reconstruct the entire path of the dynamic system of all variables. The original theorem as stated by Takens is as follows:
-\begin{thm}[Takens, Version 1]
-Let M be a compact manifold of dimension $m$. For pairs $(\varphi,y)\in \text{Diff}^2(M)\times C^2(M,\mathbb{R})$, it is a generic property that the map $\Phi_{(\varphi,y)}:M\to \mathbb{R}^{2m+1}$, defined by
+\begin{thm}[Takens' Theorem, Version 1]
+Let M be a compact $C^2$ manifold of dimension $m$. For pairs $(\varphi,y)\in \text{Diff}^2(M)\times C^2(M,\mathbb{R})$, it is a generic property that the map $\Phi_{(\varphi,y)}:M\to \mathbb{R}^{2m+1}$, defined by
 $$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
 is an embedding. \cite{Takens}
 \end{thm}
@@ -811,41 +812,276 @@ for all $x\in h(K)$, $k=0,\ldots,r$, where $\norm{\cdot}$ is the usual Euclidean
 From this stems our second regularity assumption. For $\varphi$, we will be able to do some reasoning in practical cases, but for $y$ this will often be just another silent assumption. We shall be calling a map $y\in C^2(M,\mR)$, respectively $\varphi\in \text{Diff}^2(M)$, \textit{generic} if there exists $\varphi\in \text{Diff}^2(M)$, respectively $y\in C^2(M,\mR)$, such that the resulting delay embedding is indeed an embedding.
 We will now work towards a more explicit version of the theorem. First of all, the reasoning behind the naming of the delay embedding, comes from the following: we shall associate any given time point $t\in \mR_{\geqslant 0}$ with a position $x(t)\in M$ on the manifold. For a given delay length $\tau\in \mR_{>0}$, we may then define $\varphi_\tau: M\to M$ by $x(t)\mapsto x(t-\tau)$. This links this theorem to the dynamical systems, since these are exactly $-\tau$-time maps of the dynamical system. Substituting this into Takens' theorem reduces the delay embedding to
 $$\Phi(x(t))=(y(x(t)),y(x(t-\tau)),\ldots,y(x(t-2m\tau)))$$
-Takens' theorem thus states that the values of a single time series considered at different delays will reconstruct the manifold 'generically'. Now we will need to ensure that this choice of $\varphi$ is both twice continuously differentiable and is not of such a nature that it falls out of the set of generic functions. The differentiability constraint falls under the umbrella of regularity assumptions and is fulfilled for flows arising from autonomous differential equations of $C^2$ vector fields. Furthermore, we can guarantee that $\varphi_\tau$ will be generic for some choices of $\tau$ by the power of a restatement of Takens' theorem. It was in fact proved by Takens in \cite{Takens}, but not stated. We will follow the restatement of the theorem as well as the subsequent presentation of theory and definitions presented in \cite{Huke} for the rest of this section. We present the updated version of Takens' theorem:
-\begin{thm}[Takens, version 2]
-Let M be a compact manifold of dimension $m$. Let $\varphi\in\text{Diff}^2(M)$ satisfy
+Takens' theorem thus states that the values of a single time series considered at different delays will reconstruct the manifold 'generically'. Now we will need to ensure that this choice of $\varphi$ is both twice continuously differentiable and is not of such a nature that it falls out of the set of generic functions. The differentiability constraint falls under the umbrella of regularity assumptions and is fulfilled for flows arising from autonomous differential equations of $C^2$ vector fields. Furthermore, we can guarantee that $\varphi^\tau$ will be generic for some choices of $\tau$ by the power of a restatement of Takens' theorem. It was in fact proved by Takens in \cite{Takens}, but not stated. We will follow the restatement of the theorem as well as the subsequent presentation of theory and definitions presented in \cite{Huke} for the rest of this section. We present the updated version of Takens' theorem:
+\begin{thm}[Takens' Theorem, Version 2]\label{v2}
+Let M be a compact $C^2$ manifold of dimension $m$. Let $\varphi\in\text{Diff}^2(M)$ satisfy
 \begin{enumerate}[label=\arabic*)]
-	\item the periodic points of $\varphi$ with periods less than or equal to $2m$ are finite in number,
+	\item the periodic points of $\varphi$ with periods less than or equal to $2m+1$ are finite in number,
 	\item if $x$ is any such periodic point with period $k\leqslant 2m$, then the eigenvalues of $\varphi^k$ at $x$ are all distinct.
 \end{enumerate}
  Then it is a generic property for $y\in C^2(M,\mR)$ that the map $\Phi_{(\varphi,y)}:M\to \mathbb{R}^{2m+1}$, defined by
 $$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
 is an embedding. \cite{Huke}
 \end{thm}
-By periodic with period less than or equal to $2m$, we mean that $\varphi^{k}(x)=x$ for some $k\leqslant 2m$. If $\tau$ is chosen such that there are no periodic points of $\varphi_\tau$, or if we assume some structure on the periodic points, then we need only worry about whether $y$ is generic. In fact, if $\varphi_\tau$ is not generic for some choice of $\tau$, it will usually be after some small perturbation in $\tau$ (\textit{is it true, reference?}). Therefore in practice multiple lags can be tested, and we should thus be able to fairly easily sidestep this problem. Before moving on to definitions and technicalities, we will at this point however notice that we have a theorem that gives an explicit construction that will fairly generally allow us to completely recover the dynamics of a system from only a single variable observed over time. In contrast to the choice of $\tau$, we will however usually have in practice that the observation functions are fixed. So even if the same technique of small perturbations of a non-generic observation function produces a generic observation, we do not have access to it. Therefore we will usually have to assume a given observation function is generic, if there is no reason to believe otherwise. However, in some cases we can actually endow genericity with causal interpretation - we return to this in the next section. For now, we expand upon Takens' theorem.  We start of with the basic definitions needed following very closely the terminology and presentation from \cite{Huke2}. 
 
-
-Before moving on, we will outline the main stages in Takens' theorem just to get an understanding of the proof techniques. In the following, we will use the subspace topology on $C^2(M,\mR)$ inherited from $C^1(M,\mR)$ and likewise on $\text{Diff}^2(M)$. In all topological statements below, this is what is meant. We proceed by proving the 2nd version of Takens' theorem as follows:
+By periodic with period less than or equal to $2m$, we mean that $\varphi^{k}(x)=x$ for some $k\leqslant 2m$. The proof of the theorem is quite involved and a thorough treatment of the technicalities and details is perhaps worthy of a thesis of its own. We will still outline the proof to illuminate the machinery of this theory. In the following, we will use the subspace topology on $C^2(M,\mR)$ inherited from $C^1(M,\mR)$ and likewise on $\text{Diff}^2(M)$. In all topological statements below, this is what is meant. The proof of the 2nd version of Takens' theorem runs in the following stages:
 \begin{enumerate}[label=\roman*)]
-	\item The first stage hangs on using the following standard fact in differential topology:
-	\begin{thm}
-	Let $M$ be a compact manifold, and let $N$ be any manifold. The set of $C^r$ embeddings of $M$ in $N$ is open in $C^r(M,N)$. \cite{hirsch}
+	\item First we prove that the set of generic observation functions is open, and we basically just exploit the following standard fact in differential topology:
+	\begin{thm}\label{tool}
+	Let $M$ be a compact manifold, and let $N$ be any manifold. For $K\subset M$ a compact subset of $M$, the set of $C^r$ maps from $M$ to $N$ immersive on $K$ is open in $C^r(M,N)$. Moreover, the set of $C^r$ embeddings of $M$ in $N$ is open in $C^r(M,N)$. \cite{hirsch}
 	\end{thm}
 	Proving that the map $\mathcal{F}^2: C^2(M,\mR)\to C^2(M,\mR^{2m+1})$, defined by $$y\mapsto (y,y\circ\varphi,\ldots, y\circ \varphi^{2m}),$$ 
 	is continuous then immediately proves that the set of generic observation functions is open in $C^2(M,\mR)$. This is done in the following familiar set of steps: one proves $F: C^2(M,\mR)\to C^2(M,\mR)$ defined by $y\mapsto y\circ\varphi$, for $\varphi\in \text{Diff}^2(M)$, is in fact continuous.  This is simply a matter of unravelling the definition of the topology above, and requires only a slight bit of trickery. We skip the details of these derivations. By induction, it follows that $F_n:  C^2(M,\mR)\to C^2(M,\mR)$ defined by $y\mapsto y\circ\varphi^n$ is in fact continuous.  The final detail is to use that the product topology of $C^r(M,\mR)^{2m+1}$ coincides with that of $C^r(M,\mR^{2m+1})$. Worth remarking here is that we have made no assumptions on $\varphi$ yet, any embedding will do. Likewise, we have not used $m$ to do anything yet. 
 \end{enumerate}
-The following technical fact will prove fairly useful - and it is just a matter of exploiting the compactness of $M$ and using the definition of the topology. If $y\in C^2(M,\mR)$, and $\psi_i\in C^2(M,\mR)$, $i=1,\ldots,N$ for some $N\in \mN$. Then for every neighbourhood $\mathcal{N}$ of $y$, there exists $\delta$ such that
-$$y+\sum_{i=1}^N a_i\psi_i\in \mathcal{N}$$
-for all $a=(a_1,\ldots,a_n)$ with $\norm{a}< \delta$. 
+The rest of the stages is about proving that the set of generic observation functions is also dense. We start this process by picking any observation function $y$ and any neighbourhood $\mathcal{N}$ of our observation function. We then proceed to locate a generic observation function within this neighbourhood by iteratively adjusting the observation function to ensure the resulting delay embedding satisfies one more criterion for an embedding. In this pursuit, we will frequently use theorem \ref{tool} and the following technical fact: If $y\in C^2(M,\mR)$, and $\psi_i\in C^2(M,\mR)$, $i=1,\ldots,N$ for some $N\in \mN$. Then for every neighbourhood $\mathcal{N}$ of $y$, there exists $\delta$ such that
+\begin{equation}\label{tool2}
+\forall a=(a_1,\ldots,a_n),\norm{a}< \delta: y+\sum_{i=1}^N a_i\psi_i\in \mathcal{N}
+\end{equation}
+Proving this is only a matter of exploiting the compactness of $M$ and using the definition of the topology on our function space. We proceed as follows:
 \begin{enumerate}[label=\roman*)]
 	\setcounter{enumi}{1}
-	\item The following stages all revolve around exploiting this fact. To prove that the set of generic functions are dense, we consider an arbitrary $y\in C^2(M,\mR)$ and a neighbourhood $\mathcal{N}_y$ of $y$. Now we want to identify a generic observation function in $\mathcal{N}_y$. First, we return to the conditions of the 2nd version of Takens' theorem. Let us denote the points with period less than or equal to $2m$ by $P_{2m}$. Since $|P_{2m}|<\infty$, we know by the Hausdorff property of $M$, that we can find pairwise disjoint neighbourhoods of the elements in $P_{2m}$, and so by a fairly standard argument we can separate these points by observation functions, and we use the fact above. Now we have $y'\in\mathcal{N}_y$ that is injective on $P_{2m}$. Similarly, by doing some explicit calculations on the Jacobian, we can identify a function $y''$ not only injective but also immersive on $P_{2m}$. To be continued...
-	\item The proof of the 1st version of Takens' theorem from the 2nd version consists of utilising the Kupka-Smale theorem, namely that it is a generic property that for $\varphi\in \text{Diff}^2(M)$ and some integer $n\in \mN$, the number of periodic points, with period $n$ or less, is finite. There is a little in work in showing that this extends to cover the second condition of the 2nd version, and one also needs to use an argument similar to that in stage i) to prove the openness claim in $\text{Diff}^2(M)\times C^2(M,\mR)$ instead of just in $C^2(M,\mR)$. But the main component is the Kupka-Smale theorem.
+	\item The next step is locating an immersion on the set of points with period less than or equal to $2m$, let us denote it $P_{2m}$. In this stage, we use our assumptions on $P_{2m}$: Since $|P_{2m}|<\infty$, we know by the Hausdorff property of $M$, that we can find pairwise disjoint neighbourhoods of the elements in $P_{2m}$, and thus separate the different elements of $2m$. Now by a fairly standard construction, we can for any point and two nested neighbourhoods of it assume the existence of a 'bump functiom', i.e. a $C^2$ function taking a positive value in the point, having derivative 0 in the smaller neighbourhood and being 0 outside the larger neighbourhood. This allows us to manipulate each of these points separately. Using that the eigenvalues of $\varphi^k$ at each point are all distinct, we can manipulate the Jacobian of $\Phi_{\varphi,y}$ by means of the chain rule and pushing $y$ around with \ref{tool2} ensuring that it has full rank. The considerations in \ref{tool2} allows us to do this iteratively: if we find an immersion $y'$ of some subset $A\subset P_{2m}$, then we can find a neighborhood contained in $\mathcal{N}$ containing $y'$ where all elements are immersions of $A$. This is true by theorem \ref{tool} and stage i), since the set of such immersions is open. After carefully handling this manipulation in each step, we can guarantee the existence of an immersion $y'$ on $P_{2m}$ inside $\mathcal{N}$.
+	\item The next stage is to extend this procedure to an immersion on all of $M$. In this stage, we use the dimension of $m$: First we note, that by the inverse function theorem, $y'$ is an embedding of a neighbourhood of each point $p\in P_{2m}$ and thus an immersion of that neighbourhood. We then proceed to cover $M$ with charts:  We choose charts containing an element $p\in P_{2m}$ small enough to ensure that $y'$ is an immersion of its closure, and for an element $p\notin P_{2m}$, we have $p,\varphi(p),\ldots, \varphi^{2m}(p)$ are distinct, and thus we can choose a chart $U_p$ of $p$ such that $U_p,\varphi(U_p),\ldots, \varphi^{2m}(U_p)$ are disjoint. Furthermore, in each set we move to a smaller chart whose closure is contained in the larger chart. By compactness of $M$, this cover can be thinned to a finite number of charts. In this stage, our map is then iteratively extended to an immersion on the closure of such a chart not immersed already. Using a bump function on each chart and its image under $\varphi,\ldots,\varphi^k$ allows us once again to manipulate the Jacobian of $\Phi_{(\varphi,y)}$ by allowing us to push  each coordinate separately using \ref{tool2}. Using a standard argument, we can show that if the $s+1$'th column of the Jacobian is not linearly independent of the first $s$ linearly independent columns at any element of the chart, then this parametrizes a subspace of dimension $s+m$ of $\mR^{2m+1}$ for values of $a$.  The complement of this subspace is naturally open and dense, and thus we can find an element of any norm for which all columns are independent. This argument is in fact valid for only $2m$ coordinates of $\Phi$, we only need $2m+1$ for injectivity. Nonetheless, this identifies a perturbed observation function immersive on the closure of the entire chart - and by theorem \ref{tool} and stage i), this can be done iteratively to find $y''\in \mathcal{N}$ immersive on all of $M$.
+	\item The final stage of the proof of the 2nd version is to establish injectivity. By the Inverse Function Theorem, this is true locally, so we just have to ensure this holds globally as well. This is by far the most technical part of the proof. Proving that there exists $y'''\in \mathcal{N}$ such that $\Phi_{(\varphi,y''')}(x)\neq \Phi_{(\varphi, y''')}(\varphi^j(x))$ unless $x=\varphi^j(x)$ can be achieved with a similar construction as in iii) separating charts, on which $\Phi_{(\\varphi,y'')}$ is an embedding, such that the images under $\varphi^j$, $j=0,\ldots,m$, are disjoint and then thinning to a finite number of charts before adjusting. Since $\Phi_{(\varphi,y''')}$ is injective in small neighbourhoods around all points in $M$, we then have for any $x,x'\in M$, $x\neq x'$, that if $\varphi^i(x)$ and $\varphi^j(x)$ land in the same small neighbourhood for say $i,j\leqslant 2m$, then $\Phi_{(\varphi,y''')}(x)\neq \Phi _{(\varphi,y''')}(x')$. Thus being able to separate orbits close to each other, allows us to look at the subset of $M\times M$ where this phenomenon does not happen. Identifying once more a reasonable cover of charts of $M$ well-behaved under $\varphi$, one can choose a partition of unity subordinate to this cover, that is a map for each chart that is zero outside the chart such that the sum of all functions in each point is 1. Looking then at \ref{tool2} where we name the element $y_{\varepsilon}$ of the pertubation of $y'''$ with the $\psi$-functions the partitions of unity and coefficients $\varepsilon_1,\ldots,\varepsilon_N$. We need to show that these coefficients can be chosen such that $\Phi$ becomes injective while still being sufficiently small. This is done by checking the image of $\Psi:M\times M\times \mR^N\to\mR^{2m+1}$ given by
+	$$\Psi(x,x',\varepsilon_1,\ldots,\varepsilon_N)=\Phi_{(\varphi,y_{\varepsilon}})(x)-\Phi_{(\varphi,y_{\varepsilon}})(x')$$
+	We will not spend more time on this part of the proof, but this is the part where it becomes crucial to go to $\mR^{2m+1}$ and not $\mR^{2m}$ since the dimension of the domain of $\Psi$ is $2m+N$, and we need $\Psi|_{X}^{-1}(0)$ to be of lower dimension than $N$. This is what allows us to choose $\varepsilon$'s to satisfy the constraint and yield an embedding. 
+	\item The final stage is proving the 1st version of Takens' theorem from the 2nd version. It relies almost entirely on the the Kupka-Smale theorem:
+	\begin{thm}[Kupka-Smale Theorem]
+	If $M$ is a compact manifold, and $\varphi\in \text{Diff}^2(M)$, then it is a generic property that for some integer $n\in \mN$, that the number of periodic points with period $n$ or less is finite.
+	\end{thm}
+	There is a little in work in showing that one can extend this when incorporating the second condition of the 2nd version, and one also needs to use an argument similar to that in stage i) to prove the openness claim in the function space $\text{Diff}^2(M)\times C^2(M,\mR)$ instead of just in $C^2(M,\mR)$. But in essence, it is the Kupka-Smale theorem that links the two theorems.
 \end{enumerate}  
-Takens' theorem will allow us to do causal inference in the modelling framework introduced in this chapter. Below we give the theoretical details of this procedure.
+The theorem warrants a few comments. First, we see that in general we need to deal with periodic points quite explicitly. If we don't expect periodic points, then we come far quite quickly. And moreover, when working with flows the time lag could be varied a bit to yield a generic function. In principle, multiple lags can be tested, and we should thus be able to sidestep this problem. \\[5pt]
+In contrast to the choice of $\tau$, we will have less flexibility in the choice of observation functions. So even if the same technique of small perturbations of a non-generic observation function produces a generic observation, we do not have access to it. Therefore we will usually have to assume a given observation function is generic, if there is no reason to believe otherwise. However, in some cases we can actually endow genericity with causal interpretation - we return to this in the next section.\\[5pt]
+Even though Takens' theorem itself might appear somewhat magical, it should actually not be seen as too big of a surprise. As noted above, a property being generic is very analogous to an identity holding almost surely in probability theory. One problem is that the space of all differentiable functions is usually an infinite-dimensional space, which implies that a generalization of the Lebesgue measure to such a space is not straight-forward. However, it is possible to link the two concepts. To this end, we introduce the concept of prevalence:
+\begin{mydefinition}{Prevalence}
+Let $V$ be a normed vector space over $\mR$.\\[5pt]
+The $\sigma$-algebra $\mathcal{B}$ generated by all open sets in $V$ is called the \emph{Borel $\sigma$-algebra on V} and $S\in \mathcal{B}$ is called a \emph{Borel subset of $V$}. If $V$ is finite-dimensional of dimension $d$, $V\cong \mR^d$ in the sense of isometry and this map defines a (unique) Lebesgue measure $\lambda $on $V$.\\[5pt]
+We say that a Borel subset $S\subset V$ is \emph{prevalent} if there is a finite-dimensional subspace $E$ of $V$ such that for each $v\in V$, we have $v+e\in S$ for Lebesgue almost every $e\in E$, i.e.
+$$\lambda_E\left(\left\{e\in E\mid v+e\notin S\right\}\right)=0$$
+We then call $E$ a \emph{probe space of $S$}.\\[5pt]
+If $S$ is a prevalent subset of $V$, then we say that $v\in S$ for \emph{almost every $v\in V$}.
+\end{mydefinition}
+We see that a prevalent set satisfies that if we start at any point in the ambient space $V$, then any exploration according to the directions of the finite-dimensional probe space will end in $S$ almost surely. This captures the essence of $S$ inhabiting 'most of' $V$ in the 'directions of $E$'. This becomes immediately more appealing, once we realize that this is much more all-encompassing than what it seems at first glance: Assume that $E'\subset V$ is a finite-dimensional subspace containing a probe space $E$ of $V$. Let $v_1,\ldots,v_n$ be an orthonormal basis of $E'$, such that $v_1,\ldots,v_k$, $k<n$, spans $E$. By Fubini's theorem, we then realize
+\begin{align*}
+\lambda_{E'}\left(\left\{e'\in E':v+e\not\in S\right\}\right)&=\int 1_{\{e'\in E'\mid v\in e'\notin S\}}\ d\lambda_{E'}\\
+&=\int\int 1_{\{e'\in E'\mid  v\in e'\notin S\}}\ d\lambda_{E}\ d\lambda_{\langle v_{k+1},\ldots, v_n \rangle}\\
+&=0
+\end{align*}
+This means that we can arbitrarily extend a probe space, and so $S$ is really 'everywhere' in $V$ if $S$ is prevalent. This motivates the definition of 'almost every' as an extension of almost surely. Indeed, when $V$ is finite dimensional we recognize that the complement of a prevalent set has measure 0. This concept of prevalence is not one-to-one with the concept of genericity, but allows for similar embedding theorems. Quite importantly, we can formulate Takens' theorem with this concept instead:
+\begin{thm}[Takens' Theorem, Version 3]
+Let M be a compact $C^1$ manifold of dimension $m$. Let $\varphi\in\text{Diff}^1(M)$ satisfy
+\begin{enumerate}[label=\arabic*)]
+	\item the periodic points of $\varphi$ with periods less than or equal to $2m+1$ are finite in number,
+	\item if $x$ is any such periodic point with period $k\leqslant 2m$, then the eigenvalues of $\varphi^k$ at $x$ are all distinct.
+\end{enumerate}
+ Then for almost every $y\in C^1(M,\mR)$, the map $\Phi_{(\varphi,y)}:M\to \mathbb{R}^{2m+1}$ defined by
+$$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
+is an embedding. \cite{Sauer1991}
+\end{thm}
+We see this relaxes the $C^2$ assumption, but is otherwise identical. In fact, it turns out that Takens' embedding theorem is only a particular result of a quite general phenomenon. This is made explicit in a result of \cite{Sauer1991}, that restates the Whitney embedding theorem in the following way:
+\begin{thm}[Whitney Embedding Prevalence Theorem]
+Let $M$ be a compact $C^1$ manifold of dimension $d$. Almost every $C^1$ map $M\to \mR^{d+1}$ is an embedding of $M$.
+\end{thm}
+This shows that in reality, it is more a feature of manifolds than any special structure of the delay embedding, that allows us to reconstruct a manifold. The relevance of Takens' theorem thus stems more from its practicality compared to its  theoretical implications on the existence of embeddings. When working with time series, the delay map is a very natural construction and Takens' theorem gives theoretical backing on its usability. We end this section by stating a generalization of Takens' theorem proved in \cite{Sauer1991}. We need a little bit of additional terminology:
+\begin{mydefinition}{Box-Counting Dimension}
+Let $A\subset \mR^n$ be a compact set. Let $\norm{x}_{\infty}=\max_ i |x_i|$ for $x=(x_1,\ldots,x_n)\in \mR^n$. We then say that $B$ is a \emph{box} of length $\varepsilon>0$ if there exists $x_0\in \mR^n$ such that $$B=\{x\in \mR^n\mid \norm{x-x_0}_{\infty}\leqslant \varepsilon \}$$
+Let then $N(\varepsilon)$ be the minimum number $N$, satisfying that there exists $N$ boxes $B_1,\ldots,B_N$ of length $\varepsilon$ such that
+$$A\subset \bigcup_{m\in\{1,\ldots,N\}} B_m$$
+If $-\log(\varepsilon)^{-1}\log N(\varepsilon)$
+converges as $\varepsilon \to 0$, then we define the \emph{box-counting dimension} or the \emph{Minkowski-Bouligand dimension} as
+$$\dim_{\text{box}}\coloneqq \lim_{\varepsilon\to 0}\frac{\log N(\varepsilon)}{\log(1/\varepsilon)}$$
+\end{mydefinition}
+It takes quite a bit of work, but it is possible as a reality check to show that a manifold of dimension $d$ has box-counting dimension $d$, so this dimension is consistent with the natural one on manifolds. In general, the box-counting dimension is very useful when working with fractals and sets of which we do not require a significant amount of structure. However, it turns out that it is all we need. For more details on this construction, we refer to \cite{Fractals}. This allows for the following generalization of Takens' theorem in the prevalence theorem of \cite{Sauer1991}:
+\begin{thm}[Takens' Theorem, Version 4]
+Let $U\subset \mR^k$ be open, let $A\subset U$ be a compact subset of $U$ with $\dim_\text{box}(A)=d$ and let $n>2d$ be an integer. If $\varphi\in\text{Diff}^1(U)$ and
+\begin{enumerate}[label=\arabic*)]
+	\item for every positive integer $p\leqslant n$, the set $A_p$ of periodic points of period $p$, i.e.
+	$$A_p\coloneqq \left\{a\in A\mid \varphi^p(a)=a\right\}$$
+	satisfies $\dim_\text{box}(A)<p/2$,
+	\item if $a$ is any such periodic point with period $p\leqslant n$, then the eigenvalues of $\varphi^p$ at $a$ are all distinct.
+\end{enumerate}
+or if $(\varphi^t)_{t\in \mR}$ is a $C^1$ flow on U with $\varphi=\varphi^1$ and satisfy
+\begin{enumerate}[label=\arabic*)]
+	\item $A$ contains a finite number of equilibria, i.e.
+	$$\abs{\left\{a\in A\mid \forall
+	 t\in \mR: \varphi^t(a)=a\right\}}<\infty$$
+	 \item there are no periodic points of period $1$ or $2$ of $\varphi$,
+	\item for every positive integer $p\leqslant n$, the set $A_p$ of periodic points of period $p$ of $\varphi$ is finite,
+	\item if $a$ is any such periodic point with period $p\leqslant n$, then the eigenvalues of $\varphi^p$ at $a$ are all distinct.
+\end{enumerate}
+then for almost every $y\in C^1(U,\mR)$, the map $\Phi_{(\varphi,y)}:M\to \mathbb{R}^{2m+1}$ defined by
+$$\Phi_{(\varphi,y)}(x)=(y(x),y(\varphi(x)),...,y(\varphi^{2m}(x))),$$
+is
+\begin{enumerate}[label=\roman*)]
+	\item injective on $A$,
+	\item an immersion on each compact subset $C$ of a $C^1$ manifold contained in $A$.
+\end{enumerate}
+\end{thm} 
+This yields a link with the stable manifold theorem, in that the stable manifold theorem shows us that manifolds arise around equilibriums in the attracting and repelling sets, and this theorem then establishes an embedding of these manifolds on compact subsets. With this settled, we move to modelling causality in a dynamical setting.
+
 \section{Causal Inference with Takens' Theorem}
+In this section, we will exploit Takens' theorem for inference of a graph structure of a model. We define a dynamical system according to a graph structure to mirror the structural causal model:
+
+\begin{mydefinition}{Structural Dynamic Causal Model}
+A \emph{structural causal dynamic model (SDCM)} $\mathfrak{O}$ over a set of deterministic time series $(X_v)_\mathcal{V}\in \mR^\mathcal{V}$ with respect to a DAG $\mathcal{G}=(\mathcal{V},\mathcal{E})$ consists of a collection of deterministic functions $(f_v)_{v\in \mathcal{V}}$ satisfying that
+\begin{itemize}
+	\item the function $f_v$ depends on $\left(x_v,x_{\pa(v)} \right)$,
+	\item each variable satisfies
+	$$ X_v'(t)=f_v\left(\left(X_v,X_{\pa(v)}\right)(t)\right)$$
+	\item the intervention 
+	$$X_a'
+	(t)\coloneqq q\left(X_a,X_{\pa'(a)}\right)$$ 
+	for $a\in \mathcal{V}$ with respect to the DAG $\mathcal{G}'$ differing only from $\mathcal{G}$ by the parents of $a$, induces the \emph{postintervention SOM} with respect to $\mathcal{G}'$ obtained by replacing $f_a$ with $q$.
+\end{itemize}
+If $u\in \pa(v)$ for $u,v\in \mathcal{V}$, we call $X_u$ the \emph{cause} and $X_v$ the \emph{effect}. 
+\end{mydefinition}
+This definition runs parallel the definition of \emph{kinetic causal modes} in the work of \cite{KCM}, although our definition is slightly more general. The definition is heavily motivated by the SCM; compared to the multivariate SCM this differs due to the time dependence, which replaces the noise terms as the source of variability in the model. We expect time- and space-homogeneity here - namely that the 'update rule' is consistent across time and space of the model. The space-homogeneity is shared with the multivariate SCM, where the assignment functions are not allowed to depend on the outcome of the noise variables, while the time-homogeneity is built-in with the time series SCM. We do allow for lags in this model specification - so the model does not allow for memory of the past to influence the update rule of the system. This is reminiscent of a Markov property in this setting.\\[5pt]
+We could try to circumvent this problem, for instance by including a derivative as a variable or a lagged variable, but seeing as the relationship between a variable and its lagged version is not expressible with the functions of the SOM, it is not possible to model this directly with the framework above. We will try to accomodate this at the end of the section. It is however possible to model the relationship between a variable and its derivative, so this is doable, but requires care when considering interventions - it does not really make sense to intervene on the link between a variable and a derivative.\\[5pt]
+What we can do, is prove an equivalent of theorem \ref{entail} for SOMs guaranteeing a resulting flow satisfying a decomposition property according to the graph. The idea is to replace the object of interest from distribution to flow, and the Markov property to one that decomposes the flow instead of the density. As we have already seen, we can construct a flow from a differential equation as the one resulting from an SOM, and theorem \ref{ThmDiffEq} gives sufficient conditions for it to be complete and unique in terms of the update functions. The Markov property is replaced by the following property:
+\begin{prop}
+Given an SOM $\mathcal{D}$ over $\mathcal{G}=(\mathcal{V},\mathcal{E})$, and ancestral sets $U,V\subset \an(\mathcal{G})$ with $U\subset V$, the family of maps $\{\varphi^t_W\}_{W\in \an(\mathcal{G})}$, where $\varphi_U^t$ is defined on $\mR_U$ and given by the equation
+$$\varphi^t_U\circ\pi_U(x)=\pi_U\circ \varphi^t(x)$$
+for all $x\in \mR$, is well-defined, and the the collection $(\mR_U,\pi_{UV})_{d}$ of dynamical systems is consistent, meaning that they satisfy
+$$\pi_{VU}\circ \varphi_V^t(x)=\varphi_U^t(x)\circ\pi_{VU}(x)$$
+for all $x\in \mR_V$.
+\end{prop}
+\begin{proof}
+Suppose $\pi_U(x)=\pi_U(y)$ for $x,y\in \mR^n$. Hence $x,y$ differ in the variables $|\mathcal{V}_\varphi|\setminus |U|$, and since $U$ is an ancestral set, it follows that $\pi_U(\phi^t(x))=\pi_U(\phi^t(y))$, since the values of $\varphi^t$ on the variable set $|U|$ does not depend on the variables  among $|\mathcal{V}_\varphi|\setminus |U|$.\\
+Observe that since each $x\in \mR_V$ can be written as $\pi_V(x')$ for some $x'\in \mR$, and since we can rewrite
+\begin{align*}
+\pi_U\circ\varphi^t(x')
+&=\varphi_U^t(x)\circ\pi_U(x')=
+\varphi_U^t\circ\pi_{VU}\circ\pi_V(x')=\varphi_U^t\circ\pi_{VU}(x),\quad\quad \text{and}\\
+\pi_U\circ\varphi^t(x')&=\pi_{VU}\circ \pi_V\circ\varphi^t(x')=\pi_{VU}\circ \varphi_V^t\circ \pi_V(x')=\pi_{VU}\circ\varphi_V^t(x)
+\end{align*}
+by consistency of the projection mappings, we get consistency of the collection as desired.
+\end{proof}
+We will record this property as a definition in its own right, since it is instrumental in recovering some of the graph structure with Takens' theorem:
+\begin{mydefinition}{Takens Property}
+We say a flow $(\varphi^t)_{t\in \mR}$ satisfy \emph{Takens property} with respect to a graph $\mathcal{G}=(\mathcal{V},\mathcal{E})$ if there for every ancestral set $U$ exists a projection $\pi_{U}$ (surjective, continuous) such that there exists a unique flow $\varphi^t_U$ satisfying
+$$\varphi^t_{U}\circ \pi_{\mathcal{V}U}(x)=\pi_{\mathcal{V}U}\circ \varphi^t(x)$$
+and further, if there for every two ancestral sets $U,V$ with $U\subset V$ exists a projection $\pi_{VU}$ (surjective, continuous) such that
+$$\pi_{VU}\circ\varphi_V^t(x)=\varphi_U^t\circ \pi_{VU}(x)$$
+\end{mydefinition}
+With the theory that we have developed, the following result is immediate:
+\begin{thm}[Entailed Flows from SOMs]
+Every SOM $\mathfrak{O}$ induces a flow on $\mR^{\mathcal{V}}$ satisfying the Takens property. If the update functions are globally Lipschitz, then the flow is complete and unique.
+\end{thm}
+To use Takens' theorem, we need the state spaces of the flows to be well-behaved. The following proposition show that if the entire system has a nice phase space, then so does the flows on each subsystem:
+\begin{prop}
+Let $\varphi$ be a flow on some compact invariant set $A$ satisfying the Takens property. Then $A_U=\pi_U(A)$ is a compact invariant set under $\varphi_U$.\\[5pt]
+If further, $A$ satisfies that there exists an open set $\mathcal{O}\supset A$ of initial conditions, such that $\varphi^t(o)\to A$ as $t\in \infty$ for $o\in \mathcal{O}$, then $\mathcal{O}_U\coloneqq \pi_U(\mathcal{O})$ satisfies that $\varphi^t_U(o)\to A_U$ as $t\in \infty$ for $o\in \mathcal{O}_U$.\\[5pt]
+Finally, if further there exists no proper subset $B\subset A$ satisfying that there exists an open set $\mathcal{O}^B\supset B$ of initial conditions, such that $\varphi^t(o)\to B$ as $t\in \infty$ for $o\in \mathcal{O}^B$, then there exists no proper subset $B_U\subset A_U$ satisfying that there exists an open set $\mathcal{O}_U^B\supset B_U$ of initial conditions, such that $\varphi^t(o)\to B_U$ as $t\in \infty$ for $o\in \mathcal{O}^B_U$.
+\end{prop}
+This ensures that properties of a dynamical system satisfying the Takens property is automatically preserved when moving to the subflows induced by the graph. The proof is quite straight-forward, compactness is directly inherited by means of continuity, invariance by construction of the subflows $\pi_U$, and the remaining details on attraction is just a matter of unpacking continuity - we skip the topological details. This means that the phase space itself decomposes consistently according to the graph when fulfilling the Takens property. In particular, we have for all ancestral sets $U,V$ with $U\subset V$ that there exists a surjective continuous map from the state space $A_V$ to $A_U$ - but it is not given that such a map does not exist in the opposite direction. This is the analogue of the concept of faithfulness - we don't want to infer additional decompositions or identifications of the flow of a dynamical system. More serious, if $U$ and $V$ are incomparable, meaning that $U\not\subset V, V\not\subset U$, then we might encounter that there actually exists a continuous surjection from $A_U$ to $A_V$ although this is not what is implied by the Takens property. This will hinder inference, and we will try to assume this away:
+\begin{mydefinition}{Fully Resolved State Space}
+We say that the state space $A$ of flow $\varphi$ is \emph{fully resolved} with respect to a graph $\mathcal{G}$ if the following two conditions are met:
+\begin{enumerate}[label=\roman*)]
+	\item If $U,V$ are ancestral sets, with $U\subset V$, then the projection 
+	$$\pi_{VU}:A_V\to A_U$$
+	is non-injective.
+	\item If $U,V$ are ancestral sets, with $U\not\subset V, V\not\subset U$, then there exists no continuous surjections
+	$f:A_U\to A_V$ or $g:A_V\to A_U$.
+\end{enumerate}
+\end{mydefinition}
+Now a more pressing question, is whether Takens' theorem can actually be established when moving to the state space $A_U$ for an ancestral set $U$. First of all, we have to assume that the assumptions on the state space is once again fulfilled - for reasonable systems this is to be expected in the following sense: The stable manifold theorem holds also when moving to a subsystem not depending on the rest in the functional expression of the derivative. Since we have not been specific about the nature of the compact manifolds or attractor sets arising from our models, we will assume this problem away. It is however, inherently unrealistic: if we look at the solution to a one-dimensional stochastic differential equation, the state space of this function cannot reasonably be a compact smooth manifold - no such object exists in $\mR$. In general, the trajectories of a set of ordinary differential equations do not form a compact manifold, and thus it is even more of a stretch to assume that it can be decomposed into smaller compact manifolds. Since any graph contains a root node, we see that the problem is inescapable.\\[5pt]
+Another problem is that we now need it to be a generic property that each subflow is generic, and this is not a priori clear from our construction. This is however possible in the manifold case, as is shown by \cite{mathFound}:
+\begin{thm}[Genericity of Filtrations]
+For a $C^1$ compact manifold $M$ of dimension $m$ satisfying that $M_U$ is a $C^1$ manifold of dimension $m_U$ for all ancestral sets $U$, then it is a generic property for $\varphi\in C^2(M,M)$ that for each ancestral set $U$: 
+\begin{enumerate}[label=\arabic*)]
+	\item the periodic points of $\varphi_U$ with periods less than or equal to $2m_U+1$ are finite in number,
+	\item if $x$ is any such periodic point with period $k\leqslant 2m$, then the eigenvalues of $\varphi^k_U$ at $x$ are all distinct.
+\end{enumerate}
+\end{thm}
+The proof is very technical and would take up significant space. We refer to their proof, and use the result as a marker - and it is useful that we do not have to make assumptions on this part. In the attractor setting, a similar statement is conjectured by \cite{mathFound}, but not proven as of yet as far as the author is aware. This theorem combined with Takens theorem \ref{v2}, yields that it is a generic property for observation functions to give us an embedding of the manifold $M_U$. Now this allows us to formulate the main theorem in the manifold setting:
+\begin{thm}[Identifiability in dynamic systems]
+Let $M$ be a $C^1$ compact manifold of dimension $m$, let $\varphi$ be a generic flow on $M$ satisfying the Takens property with respect to a graph $\mathcal{G}$. Asume further that $M_U$ is a $C^1$ manifold for each ancestral set $U$, and $M$ is fully resolved.\\[5pt]
+Let now $U,V$ be ancestral sets, let $\varphi_1,\varphi_2$ be corresponding observation functions and let $M_i=\Phi_{\varphi^T,y_i,k_i}(M)$ be the reconstructions, where $k_1\geqslant 2n_U$ and $k_2\geqslant 2n_V$. It then holds that:
+\begin{enumerate}[label=\roman*.]
+	\item $U=V$ if and only if there exists a homeomorphism
+	$$\Psi_{1,2}:M_1\to M_2$$
+	\item $U<V$ if and only if there exists a continuous surjective, noninjective map
+	$$\Pi_{1,2}:M_2\to M_1$$ 
+\end{enumerate}
+\end{thm}
+\begin{proof}
+We proceed in the following steps:
+\begin{enumerate}[label=\roman*.]
+	\item \textit{Forward direction}: If $U=V$, then $\Psi_{1,2}=\Phi_{\varphi^T,y_2,k_2}\circ \Phi_{\varphi^T,y_1,k_1}^{-1}$ is a diffeomorphism of $M_1$ on $M_2$.\\[5pt]
+	\textit{Reverse direction}: Assume the existence of $\Psi_{1,2}$. Then
+	$$\Phi_{\varphi^T,y_2,k_2}^{-1}\circ \Psi_{1,2} \circ \Phi_{\varphi^T,y_1,k_1}$$
+	is a homeomorphism from $M_U$ to $M_V$. Since the manifold is fully resolved, this implies that either $U\subset V$ or $V\subset U$, and thus that $U=V$.
+	\item \textit{Forward direction}: If $U<V$, then there exists $\pi_{VU}:M_V\to M_U$ since $M$ is fully resolved. Then
+	$$\Pi_{2,1}=\Phi_{\varphi^T,y_1,k_1}^{-1}\circ\pi_{VU}\circ \Phi_{\varphi^T,y_2,k_2} $$ is a non-injective surjection of $M_2$ on $M_1$.\\[5pt]
+	\textit{Reverse direction}: Assume the existence of $\Pi_{2,1}$. Then
+	$$\Phi_{\varphi^T,y_1,k_1}^{-1} \circ\Pi_{VU}\circ  \Phi_{\varphi^T,y_2,k_2} $$
+	is a non-injective surjective from $M_V$ to $M_U$. Since the manifold is fully resolved, this implies that $U\subset V$.
+\end{enumerate}
+
+\end{proof}
+We have now proven that under conditions (I1)-(I4), it is actually possible to determine the causal directions in a dynamical system. The first condition is a regularity assumption that things are sufficiently well-behaved. We will give an alternative statement, where this condition is replaced, but in spirit this type of assumption is needed for any reconstruction to take place. It is the author's view that this is a reasonable assumption in most settings: although it might never actually be true that an observed system is restricted to a compact smooth manifold, we can think as we do in any kind of modelling as the imagined dynamic being a simplified representation of the system, and as far as the observed system behaves somewhat controlled locally, such a representation will probably be useful in capturing information about the system.\\\\ The second and third conditions are somewhat less reasonable in appearance; we are assuming the non-existence of mappings that if they existed would undermine the theoretical foundation of the theorem. This is undesirable. As is done in \cite{mathFound}, this is referred to the \textit{manifold being fully resolved}. An implied interpretation hereof is that it is simply matter of observing sufficient amounts of a data to separate different parts of the system - more on this later. This assumption is quite a standard one, and it is something that will appear in practical considerations nonetheless. A further comment on this, is that it corresponds somewhat to the faithfulness assumption often made when working with structural causal models.\\\\ The final assumption is entirely impossible to test as well, but we will interpret genericity in the same way as \textit{almost everywhere}, and assume that it is unlikely that we would ever get non-generic functions by accident. The almost everywhere interpretation is often a probabilistic one whereas this one is not, but as so often the difference is philosophical.\\\\
+We have to in
+\begin{cor}
+Let $\varphi$ be an SCDM, and let $UL_\varphi$ be the corresponding lattice. Assume that assumptions I1)-I4) are fulfilled for all elements in $UL_\varphi$. Then the following algorithm recovers the transitive closure of the component graph $CG_\varphi$:
+\begin{enumerate}[label=\roman*.]
+	\item Let the set of variables be the set of vertices in a graph we will call \emph{RG}.
+	\item For every variable $x$, build the reconstructed manifold $M_x\coloneqq \Phi	_{(\varphi^T,x,k)(M)}$.
+	\item For every pair $x$ and $y$, draw an edge $x\to y$ if there exists a continuous surjection $f:M_x\to M_y$.
+\end{enumerate}
+\end{cor}
+We remark the inherent simplicity of this approach as compared with Granger causality: in Granger causality, we have to account for all relevant information in order to allow for causal reasoning; here we need only consider the prints of the time series themselves. Of course, some potential problems may hide in our rather abstract set of assumptions I1)-I4). For instance, we cannot rule out a causal mirage due to synchronization: imagine a common causal confounder between two systems resulting in two heavily synchronized, but essentially 'independent' dynamic systems. This would result in erroneous causal interpretations, and so the problem of hidden confounders presents itself in this world as well. However, we would expect these mirages to occur only in the presence of heavy synchronization, so this potential undermining of causal inference may be less severe than in similar problems.\\\\ 
+We used the term independent before, which of course is not to be interpreted in the probabilistic sense, as this is entirely meaningless in our setup; all our objects are deterministic, and they are all trivially independent in a probabilistic model. It is not quite true in a literal way either, since we assume that they are linked by a common cause; so all  that is meant that any further dynamic not imposed by the cause must be inherent to the subsystem and thus 'independent' of other subsystems.\\[5pt]
+For completeness, we state the result in the attractor version as well, sensing that it might be less unrealistic when considering practical considerations.
+\begin{thm}[Identifiability in Dynamic Systems on Attractors]
+Let $\varphi$ be a flow on $\mR^n$. Assume that $A\subset \mR^n$ is compact, $\varphi^t(A)\subset A$ and satisfies that there exists an open set $\mathcal{O}\supset A$, such that $\varphi^{t}(o)\to A$ as $o\to\infty$. Assume further that $A$ is minimal, i.e. no subset of $A$ satisfies the same properties, that $\varphi$ satisfy Takens property and that $A$ is fully resolved.\\[5pt]
+Let now $U,V$ be ancestral sets, let $\varphi_1,\varphi_2$ be corresponding observation functions and let $A_i=\Phi_{\varphi^T,y_i,k_i}(A)$ be the reconstructions, where $k_1\geqslant 2\dim_\text{box}(A_U)$ and $k_2\geqslant 2\dim_\text{box}(A_V)$. It then holds that:
+\begin{enumerate}[label=\roman*.]
+	\item $U=V$ if and only if there exists an injective map
+	$$\Psi_{1,2}:A_1\to A_2$$
+	that is a bijection from the union of all smooth manifolds embedded in $A_1$, $\bigcup M_1\subset A_1$, to the union of all smooth manifolds embedded in $A_1$, $\bigcup M_2\subset A_2$ and a homeomorphism when restricted to a compact subset of a smooth manifold embedded in $A_1$.
+	\item $U<V$ if and only if there exists a noninjective map
+	$$\Pi_{1,2}:A_2\to A_1$$ 
+	that is a surjection from $\bigcup M_1\subset A_1$ to $\bigcup M_2\subset A_2$ and continuous when restricted to any compact subset of a smooth manifold embedded in $A_2$.
+\end{enumerate}
+\end{thm}
+The proof is very similar to the one we already covered. Now by the stable manifold theorem, we know that for each point $a$ in an attractor $A$ of a dynamical system generated by an autonomous differential equation, there is a stable manifold embedded in $A$. Let us denote this manifold by $W(a)$. Strengthening the 'faithfulness' assumptions on an attractor to the following:
+\begin{mydefinition}{Strongly Resolved Attractor}
+The dynamical system ($A,\varphi$) has a \emph{strongly resolved attractor filtration with respect to $\mathcal{G}$} if the following two conditions are met:
+\begin{enumerate}[label=\arabic*)]
+	\item If $U$, $V$ are ancestral sets, and $U\subset V$, then a projection $\pi_{UV}:A_V\to A_U$ is non-injective on $\bigcup_b W_V(b)\subset A_V$ to $\bigcup_a W_U(a)\subset A_U$.
+	\item If $U,V$ are ancestral sets and $U\not\subset V$, $V\not\subset U$, then there is no surjection $f:\bigcup_{a} W_U(a)\to\bigcup_b W_V(b)$ that is also continuous when restricted to any compact subset of $W_U(a)$ for some $a\in A_U$.
+\end{enumerate}
+\end{mydefinition}
+This allows for the following procedure:
+\begin{cor}
+Let $\varphi$ be an SCDM, and let $UL_\varphi$ be the corresponding lattice. Assume that assumptions I1)-I4) are fulfilled for all elements in $UL_\varphi$. Then the following algorithm recovers the transitive closure of the component graph $CG_\varphi$:
+\begin{enumerate}[label=\roman*.]
+	\item Let the set of variables be the set of vertices in a graph we will call \emph{RG}.
+	\item For every variable $x$, build the reconstructed attractor $A_x\coloneqq \Phi	_{(\varphi^T,x,k)(A)}$.
+	\item For every pair $x$ and $y$, draw an edge $x\to y$ if there exists a surjection
+	 $$f:\bigcup_a W_1(a) \to \bigcup_a W_2^u(b)$$ 
+	 that is continuous on any $C\subset W_1(a)$.
+\end{enumerate}
+Then this will recuperate the transitive closure of $\mathcal{G}$.
+\end{cor}
+This is the extent to which we will follow this theoretical trail. It does indeed become quite complicated, and in the lack of more specific theoretical results, we have to assume a lot of structure away. Nonetheless, it does provide a fairly general framework in the presence of attractor sets. There is only on piece of the puzzle missing. Usually, we will not get access to realizations of many different starting conditions, but only one trajectory. This is problematic in principle: if we are trying to infer from reconstructed manifolds, then we have problems.\\[20pt]
+
+\begin{mydefinition}{Graphical Dynamic Model}
+A \emph{graphical dynamic model} $\mathfrak{D}$ in a phase space $\mathcal{X}$ over a set of observation functions $(X_v)_\mathcal{V}$ with respect to a DAG $\mathcal{G}=(\mathcal{V},\mathcal{E})$ consists of a collection of deterministic functions $(f_v)_{\tau\in \mathcal{V}}$ and a flow $(\varphi_t)_{t\in \mR}$, satisfying that
+\begin{itemize}
+	\item the function $f_v$ depends on $\left(x_v,x_{\pa(v)} \right)$,
+	\item each variable satisfies
+	$$\forall x\in \mathcal{X}:\left. \frac{d}{dt}X_v\left(\varphi^t\right)\right|_{t=0}=f_v\left(\left(X_v,X_{\pa(v)}\right)(x)\right)$$
+	\item the intervention 
+	$$\forall x\in \mathcal{X}: \left.\frac{d}{dt} X_a(\varphi^t(x))\right|_{t=0}\coloneqq q\left(X_a,X_{\pa'(a)}\right)$$ 
+	for $a\in \mathcal{V}$ with respect to the DAG $\mathcal{G}'$ differing only from $\mathcal{G}$ by the parents of $a$ and the random variable $N'_a$ independent from $(N_v)_{v\in \mathcal{V}\setminus \{a\}}$, induces the \emph{postintervention SCM} with respect to $\mathcal{G}'$ obtained by replacing $f_a$ with $q$.
+\end{itemize}
+If $u\in \pa(v)$ for $u,v\in \mathcal{V}$, we call $X_u$ the \emph{cause} and $X_v$ the \emph{effect}. 
+\end{mydefinition}
+
 In this section, we will show that we can only hope to recover the component graph from data using Takens' theorem. We shall later discuss attempts to reason further about the causal structure, but the results below will show that without further assumptions, we cannot distinguish direct and indirect causal links.\\\\
-The aim of this section is to show that under suitable regularity assumptions, we can create a correspondence between strongly connected components and sub-manifolds, and that this correspondence is precisely fine-grained enough to allow us to determine whether any two variables belong to the same strongly connected component and further the direction of the causal link if they do not. To do this, we have to formalize this correspondence. First of all, as discussed the component graph $CG_\varphi$ is a directed acyclic graph, and so we can think of the graph structure as a partial order, where $x,y\in CG_\varphi$ satisfy $y\geqslant x$ if $y\to x$. Considering then the upper sets, we inherit an ordering of these, since they are exactly defined with respect to the partial order, and since we are dealing with sets, we can unproblematically consider the union and intersection of upper sets. This structure is that of a lattice:
+The aim of this section is to show that under suitable regularity assumptions, we can create a correspondence between strongly connected components and sub-manifolds, and tha	t this correspondence is precisely fine-grained enough to allow us to determine whether any two variables belong to the same strongly connected component and further the direction of the causal link if they do not. To do this, we have to formalize this correspondence. First of all, as discussed the component graph $CG_\varphi$ is a directed acyclic graph, and so we can think of the graph structure as a partial order, where $x,y\in CG_\varphi$ satisfy $y\geqslant x$ if $y\to x$. Considering then the upper sets, we inherit an ordering of these, since they are exactly defined with respect to the partial order, and since we are dealing with sets, we can unproblematically consider the union and intersection of upper sets. This structure is that of a lattice:
 
 \begin{defn}[Driver]
 Given a dynamical system $\varphi$, and two variables $x$ and $y$ of $\varphi$, the variable $x$ \emph{directly drives} $y$ if the dynamics of $y$ directly depend on $x$, that is $y_{t+1}=g(x,\cdot)$ for discrete systems and $\dot{y}=g(x,\cdot)$ for continuous.
@@ -877,24 +1113,7 @@ This allows us to consider the causal structure as an object, and we can now use
 \begin{defn}[Upper set filtration]
 Let $UL_\varphi$ be the lattice imposed by considering the upper sets of the component graph of a dynamical system $\varphi$. For $U\in UL_\varphi$, we define $|U|$ as the set of all variables contained the upper set $U$ and we will call it \textit{variable set} of $U$. Further, we let $\mR_U$ be the space spanned by $|U|$ of dimension $\#|U|$ and we call this the \textit{phase space} of $U$. We see now that for $U,V\in UL_\varphi$, we have $U\leqslant V$ if and only if $|U|\subset |V|$, which in turn is equivalent with $\mR_U\subset \mR_V$. We thus get a natural projection $\pi_{VU}:\mR_V\to\mR_U$. We further define $\pi_U$ as the natural projection $\mR^n\to \mR_U$. We see that this defines a descending filtration, and we call $(\mR_U,\pi_{UV})_{UL_\varphi}$ the \emph{upper set filtration of the phase space}.
 \end{defn} 
-\begin{prop}
-Given a causal (\textit{definition!!}) dynamical system $\varphi$, and upper sets $U,V\in UL_\varphi$ with $U\leqslant V$, the family of maps $\{\varphi^t_W\}_{W\in UL_\varphi}$, where $\varphi_U^t$ is defined on $\mR_U$ and given by the equation
-$$\varphi^t_U\circ\pi_U(x)=\pi_U\circ \varphi^t(x)$$
-for all $x\in \mR$, is well-defined, and the the collection $(\mR_U,\pi_{UV})_{UL_\varphi}$ of dynamical systems is consistent, meaning that they satisfy
-$$\pi_{VU}\circ \varphi_V^t(x)=\varphi_U^t(x)\circ\pi_{VU}(x)$$
-for all $x\in \mR_V$.
-\end{prop}
-\begin{proof}
-Suppose $\pi_U(x)=\pi_U(y)$ for $x,y\in \mR^n$. Hence $x,y$ differ in the variables $|\mathcal{V}_\varphi|\setminus |U|$, and since $U$ is an upper set, it follows that $\pi_U(\phi^t(x))=\pi_U(\phi^t(y))$, since the values of $\varphi^t$ on the variable set $|U|$ does not depend on the variables  among $|\mathcal{V}_\varphi|\setminus |U|$.\\
-Observe that since each $x\in \mR_V$ can be written as $\pi_V(x')$ for some $x'\in \mR$, and since we can rewrite
-\begin{align*}
-\pi_U\circ\varphi^t(x')
-&=\varphi_U^t(x)\circ\pi_U(x')=
-\varphi_U^t\circ\pi_{VU}\circ\pi_V(x')=\varphi_U^t\circ\pi_VU(x),\quad\quad \text{and}\\
-\pi_U\circ\varphi^t(x')&=\pi_{VU}\circ \pi_V\circ\varphi^t(x')=\pi_{VU}\circ \varphi_V^t\circ \pi_V(x')=\pi_VU\circ\varphi_V^t(x)
-\end{align*}
-by consistency of the upper set filtration, we get consistency of the collection as desired.
-\end{proof}
+
 This allows us to introduce a filtration of the manifolds on which our models live:
 \begin{defn}
 Let $\varphi$ be a dynamical system restricted to a compact invariant manifold. Then we will call the descending filtration $\{M_U\}_{U\in UL_\varphi}$, with $M_U$ defined by $M_U\coloneqq \pi_U(M)$, equipped with the family of maps $\pi_{VU}$, for the \emph{invariant set filtration} $\mathbb{M}$.
@@ -903,39 +1122,27 @@ We notice immediately that for any $U\in UL_\varphi$, then $M_U$ is a compact in
 \begin{defn}[Filtration of observation functions]
 For $U\in UL_\varphi$, let $Y_U\coloneqq C^2(M_U,\mR)$ denote the set of observation functions on $M_U$, and define $\iota_{UV}:Y_U\to Y_V$ by $\iota_UV(\varphi)=\varphi\circ \pi_{VU}:M_V\to \mR$. We call this the \emph{filtration of observation functions} and denote it $\mathbb{Y}$.
 \end{defn}
-To complete the journey towards the main theorem of this chapter, we need some technical results to allow us to use Takens' theorem repeatedly for each manifold in the filtration. This is not of particular interest for the
-\begin{prop}
-The set of generic functions is open and dense bla bla
-\end{prop}
-We are approaching the full-fleshed formulation of our theorem now. We can now state the assumptions in full detail and the statement that allows us to identify causal statements
-\begin{thm}[Identifiability in dynamic systems]
-We assume the following of our dynamic system
-\begin{enumerate}[label=(I\arabic*)]
-	\item The elements $M_W$ of the invariant set filtration $\mathbb{M}$ are compact, invariant \emph{smooth} manifolds. 
-	\item Given comparable $U,V$ in the lattice $UL_\varphi$ with $U<V$, the corresponding projection $\pi_{VU}:M_V\to M_U$ is non-injective.
-	\item Given non-comparable $U,V$ in the lattice $UL_\varphi$, there exist no continuous surjections $f:M_U\to M_V$ or $g:M_V\to M_U$.
-	\item We assume that $\varphi^T$ be generic for fixed $T$, and that $s$
-\end{enumerate}
-Let now $U,V$ be upper sets, let $\varphi_1,\varphi_2$ be corresponding observation functions and let $M_i=\Phi_{\varphi^T,y_i,k_i}(M)$ be the reconstructions, where $k_1\geqslant 2n_U$ and $k_2\geqslant 2n_V$. It then holds that:
-\begin{enumerate}[label=\roman*.]
-	\item $U=V$ if and only if there exists a homeomorphism
-	$$\Psi_{1,2}:M_1\to M_2$$
-	\item $U<V$ if and only if there exists a continuous surjective, noninjective map
-	$$\Pi_{1,2}:M_2\to M_1$$ 
-\end{enumerate}
+
+\section{Ergodic Theory}
+If we want to talk about the behaviour of a single trajectory in the state space, we have to introduce some ergodic theory. The anchor is the following definition:
+\begin{mydefinition}{Invariant and Ergodic Measures}
+If $f:X\to X$ is a homeomorphism, $\mu$ is an \emph{invariant $f$-measure} if for all $A\subset X$ $\mu(f(A))=\mu(A)$.\\[5pt]
+An invariant measure $\mu$ is called \emph{ergodic with respect to $f$}, if it is true for all $f$-invariant sets $A\subset X$ that either $\mu(A)=0$ or $\mu(X\setminus A)=0$.\\[5pt]
+We define the \emph{support} of a Borel measure $\mu$ as:
+$$\supp \mu=\{x\in X\mid \mu(U)>0 \text{ for } x\in U, U \text{ open }\}$$
+\end{mydefinition}
+There are two key results of this theory that we record here:
+\begin{thm}[Krylov-Bogolubov Theorem]
+Any continuous map $f$ on a metrizable compact space has an ergodic invariant Borel probability measure.
 \end{thm}
-We have now proven that under conditions (I1)-(I4), it is actually possible to determine the causal directions in a dynamical system. The first condition is a regularity assumption that things are sufficiently well-behaved. We will give an alternative statement, where this condition is replaced, but in spirit this type of assumption is needed for any reconstruction to take place. It is the author's view that this is a reasonable assumption in most settings: although it might never actually be true that an observed system is restricted to a compact smooth manifold, we can think as we do in any kind of modelling as the imagined dynamic being a simplified representation of the system, and as far as the observed system behaves somewhat controlled locally, such a representation will probably be useful in capturing information about the system.\\\\ The second and third conditions are somewhat less reasonable in appearance; we are assuming the non-existence of mappings that if they existed would undermine the theoretical foundation of the theorem. This is undesirable. As is done in \cite{mathFound}, this is referred to the \textit{manifold being fully resolved}. An implied interpretation hereof is that it is simply matter of observing sufficient amounts of a data to separate different parts of the system - more on this later. This assumption is quite a standard one, and it is something that will appear in practical considerations nonetheless. A further comment on this, is that it corresponds somewhat to the faithfulness assumption often made when working with structural causal models.\\\\ The final assumption is entirely impossible to test as well, but we will interpret genericity in the same way as \textit{almost everywhere}, and assume that it is unlikely that we would ever get non-generic functions by accident. The almost everywhere interpretation is often a probabilistic one whereas this one is not, but as so often the difference is philosophical.\\\\
-We have to in
-\begin{cor}
-Let $\varphi$ be a causal dynamical system, and let $UL_\varphi$ be the corresponding lattice. Assume that assumptions I1)-I4) are fulfilled for all elements in $UL_\varphi$. Then the following algorithm recovers the transitive closure of the component graph $CG_\varphi$:
-\begin{enumerate}[label=\roman*.]
-	\item Let the set of variables be the set of vertices in a graph we will call \emph{RG}.
-	\item For every variable $x$, build the reconstructed manifold $M_x\coloneqq \Phi	_{(\varphi^T,x,k)(M)}$.
-	\item For every pair $x$ and $y$, draw an edge $x\to y$ if there exists a continuous surjection $f:M_x\to M_y$ and draw an edge $y\to x$ if $g:M_y\to M_x$.
-\end{enumerate}
-\end{cor}
-We remark the inherent simplicity of this approach as compared with Granger causality: in Granger causality, we have to account for all relevant information in order to allow for causal reasoning; here we need only consider the prints of the time series themselves. Of course, some potential problems may hide in our rather abstract set of assumptions I1)-I4). For instance, we cannot rule out a causal mirage due to synchronization: imagine a common causal confounder between two systems resulting in two heavily synchronized, but essentially 'independent' dynamic systems. This would result in erroneous causal interpretations, and so the problem of hidden confounders presents itself in this world as well. However, we would expect these mirages to occur only in the presence of heavy synchronization, so this potential undermining of causal inference may be less severe than in similar problems.\\\\ 
-We used the term independent before, which of course is not to be interpreted in the probabilistic sense, as this is entirely meaningless in our setup; all our objects are deterministic, and they are all trivially independent in a probabilistic model. It is not quite true in a literal way either, since we assume that they are linked by a common cause; so all  that is meant that any further dynamic not imposed by the cause must be inherent to the subsystem and thus 'independent' of other subsystems.
+\begin{thm}[Birkhoff Ergodic Theorem]
+Let $T:(X,\mu)\to (X,\mu)$ be a measure preserving transformation, and let $\varphi\in L^1(T,\mu)$. Then for $\mu$-almost $x\in X$ the following time-average exists:
+$$\lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}\varphi(T^k(x))$$
+and we denote it $\varphi_T(x)$. In particular, if $A\subset X$ is measurable, with $\mu(A)<\infty$, and $1_A$ is the indicator function of $A$, then
+$$\lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}1_A(T^k(x))=\mu(A)$$
+\end{thm}
+For proofs, we refer to \cite{Katok}. It thus follows that for any flow on a manifold, then on the support of an ergodic invariant Borel probability measure, all orbits of $f$ are dense in this space. If we thus assume our objects to be reasonably well-behaved on the support of a ergodic invariant Borel probability measure, then we would in principle use a single observation when having sufficient amounts of data. In particular, if a flow arises from a gradient field, that is the vector field $F$ is the gradient of scalar function $\varphi: \mathcal{U}\subset \mR^n\to \mR$, then the corresponding measure $\mu$ of a time $t$-map has support on the entirety of $\mathcal{U}$. In general, the torus is the only compact surface free of fixed-points of a $C^2$ flow - and thereby the only compact manifold where every orbit is dense. This illustrates the need to move to attractor sets. (Theorem 14.3.1 \cite{Katok}). On the other hand, under some fairly general assumptions it is possible to prove the existence of a global attractor.
+
 
 \chapter{Convergent Cross Mapping}\label{chapTaken}
 In this chapter, we present a thorough account of the Convergent Cross Mapping (CCM) approach of \cite{Sugihara} and its alternatives and extensions. Notably, we discuss the methods suggested by \cite{Ye2015} and \cite{Leng2020}, which address problems not resolved by CCM, respectively that of distinguishing bidirectional causality and unidirectional causality in systems with some degree of synchronicity; and that of identifying the causal chain in a system knowing the causal directions between causally related variables. We will also cover some related methods that are more rooted in machine learning but still use state space reconstruction for causal inference, albeit with less explicit theoretical foundation. We will then revisit the California Current example from the beginning and analyse it using the developed theory. However, it is crucial to remember that that the theory of this chapter applies only to purely deterministic systems, and real-world examples often have a mix of deterministic and stochastic structures. We will address this limitation in subsequent chapters, by considering a set-up replacing systems of differential equations with systems of stochastic differential equations, and analysing the effect of measurement noise or stochastic influences on the effectiveness of our methodology.
@@ -943,9 +1150,24 @@ Meanwhile we can exploit this idea of information being encoded in effect variab
 \url{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13150}
 
 \section{Implementation}
-Takens' theorem implies that you can reconstruct the manifold by the map
-$t\mapsto (y(t),y(t-\tau),...,y(t-L\tau))$
-Using practical  
+We will cover different approaches to implementation of the algorithms in practice. Consider two time series of length $L$:
+$$X=(X(1),\ldots, X(L)), Y=(Y(1),\ldots, Y(L))$$
+For a fixed embedding dimension $E$, we form the lagged coordinate vectors of $x$:
+$$x(t)=(X(t), X(t-\tau),X(t-2\tau),\ldots, X(t-(E-1)\tau))$$
+for $t=1+(E-1)\tau$ to $t=L$. We denote by
+$$M_X\coloneqq\{x(t)\mid t\in \{1+(E-1)\tau,\ldots,L\}\}$$
+the \emph{shadow manifold of $X$}. We then move to the prediction of $Y(t)$ for $t\geqslant 1+(E-1)\tau$:
+\begin{enumerate}[label=\arabic*.]
+	\item First we take $t_1,\ldots,t_{E+1}$ to be the $E+1$ numbers in succession (closest to farthest) for which $\norm{x(t)-x(t_{i})}$ is minimized (randomized order in case of a tie).
+	\item We then compute the score of each chosen element
+	$$u_i=\exp\left(-\frac{\norm{x(t)-x(t_i)}}{\norm{x(t)-x(t_1)}}\right)$$
+	\item We then compute the weight of the $t_i$'th observation
+	$$w_i=\frac{u_i}{\sum_{j=1}^{E+1} u_j}$$
+	\item We then compute the estimate
+	$$\hat{Y}(t)|M_X=\sum_{i=1}^{E+1} w_i Y(t_i)$$
+\end{enumerate}
+We then measure the cross-map skill as the correlation between the estimates of $Y$ and the actual values.\\[5pt]
+The reasoning here is that if $X$ contains the dynamics of $Y$, the the value at time point $t$ must be revealed by the position on the manifold. This can be estimated by the $k$-nearest neighbours when the attractor is sufficiently filled in - and this has the added advantage of dealing with observational noise. This is also what is suggested by \cite{Casdagli}. As the time-series length increases, we should observe converge towards the true value. There are two heuristics to consider: the choice of embedding dimension and time lag. For the embedding dimension, we can use a similar heuristic. Instead of predicting $Y(t)$, we can instead try to predict $X(t+1)$ in the exact same manner and look at the prediction skill as a function of the embedding in dimension. 
 \subsection*{Reference Model}
 We will use the following model built on a multivariate Ornstein-Uhlenbeck process as a reference. More specifically, we will consider the following setup. Let the $d$-dimensional stochastic process $X_t$, $t\geqslant 0$, be given by the following stochastic differential equation
 $$dX_t=M X_t\ dt+\rho I_d\ dW_t$$
@@ -963,7 +1185,7 @@ where $\xi_i$ is iid with $\mathbb{E} \xi_i=0$ and $V(\xi_i)=\sigma^2$ for some 
 \section{Dynamic Systems under Noise}
 Consider the following generalization of the Ornstein-Uhlenbeck process:
 $$du(t)=-Au(t)\ dt+F(u(t))\ dt+B u(t)\ dW_t,\quad t\geqslant 0$$
-with the following assumption on $F:H\to H$
+with the following assumption on $F:H\to H$. We can then do a stable manifold theorem for this setting as well.
 \cite{StableManifoldStoc} 
 
 \section{Simulation Study}

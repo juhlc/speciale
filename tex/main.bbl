@@ -52,6 +52,11 @@ Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
   causality.
 \newblock {\em SIAM Journal on Applied Dynamical Systems}, 14(1), 335--381.
 
+\bibitem[Falconer, 2014]{Fractals}
+Falconer, K. (2014).
+\newblock {\em Fractal Geometry : Mathematical Foundations and Applications}.
+\newblock Newark, UNITED STATES: John Wiley {\&} Sons, Incorporated.
+
 \bibitem[Frydenberg, 1990]{Frydenberg}
 Frydenberg, M. (1990).
 \newblock The chain graph markov property.
@@ -80,17 +85,16 @@ Hoyer, P., Janzing, D., Mooij, J.~M., Peters, J., \& Sch\"{o}lkopf, B. (2008).
   Advances in Neural Information Processing Systems}, volume~21: Curran
   Associates, Inc.
 
-\bibitem[Huke, 2006]{Huke2}
-Huke, J.~P. (2006).
-\newblock {Embedding Nonlinear Dynamical Systems: A Guide to Takens’
-  Theorem}.
-\newblock MIMS EPrint: Available at
-  \url{http://eprints.maths.manchester.ac.uk/} (\today).
-
 \bibitem[Huke \& Broomhead, 2007]{Huke}
 Huke, J.~P. \& Broomhead, D.~S. (2007).
 \newblock Embedding theorems for non-uniformly sampled dynamical systems.
 \newblock {\em Nonlinearity}, 20(9), 2205.
+
+\bibitem[Katok \& Hasselblatt, 1995]{Katok}
+Katok, A. \& Hasselblatt, B. (1995).
+\newblock {\em Introduction to the Modern Theory of Dynamical Systems}.
+\newblock Encyclopedia of Mathematics and its Applications. Cambridge
+  University Press.
 
 \bibitem[Lauritzen, 1996]{Steffen}
 Lauritzen, S.~L. (1996).
@@ -119,6 +123,11 @@ Mohammed, S.-E.~A., Zhang, T., \& Zhao, H. (2008).
 Pearl, J. (2009).
 \newblock {\em Causality}.
 \newblock Cambridge University Press, 2 edition.
+
+\bibitem[Peters et~al., 2022]{KCM}
+Peters, J., Bauer, S., \& Pfister, N. (2022).
+\newblock {\em Causal Models for Dynamical Systems}, (pp.\ 671–690).
+\newblock Association for Computing Machinery: New York, NY, USA, 1 edition.
 
 \bibitem[Peters et~al., 2011]{ANM2}
 Peters, J., Janzing, D., \& Sch{\"o}lkopf, B. (2011).
@@ -155,6 +164,7 @@ Schwartzlose, R.~A., Alheit, J., Bakun, A., Baumgartner, T.~R., Cloete, R.,
 Shah, R.~D. \& Peters, J. (2020).
 \newblock The hardness of conditional independence testing and the generalised
   covariance measure.
+\newblock {\em The Annals of Statistics}, 48(3), 1514--1538.
 
 \bibitem[Sokol \& Hansen, 2014]{sokol2014}
 Sokol, A. \& Hansen, N.~R. (2014).
@@ -187,8 +197,9 @@ Takens, F. (1981).
 
 \bibitem[Valjarević \& Merkle, 2021]{Sepa}
 Valjarević, D. \& Merkle, A. (2021).
-\newblock Statistical causality and measurable separability of σ-algebras.
-\newblock {\em Statistics & Probability Letters}, 177, 109166.
+\newblock Statistical causality and measurable separability of
+  $\sigma$-algebras.
+\newblock {\em Statistics \& Probability Letters}, 177, 109166.
 
 \bibitem[Viana \& Espinar, 2021]{Dynamics}
 Viana, M. \& Espinar, J.~M. (2021).
