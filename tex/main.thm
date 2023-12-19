@@ -1,40 +1,29 @@
-\contentsline {thm}{{Theorem}{1}{Non-uniqueness of graph stuctures}}{15}{thm.1}%
-\contentsline {thm}{{Theorem}{2}{Identifiability in bivariate systems with additive noise}}{15}{thm.2}%
-\contentsline {inneralg}{{Algorithm}{1}{}}{20}{inneralg.1}%
-\contentsline {thm}{{Theorem}{3}{Equivalency of Markov Properties}}{23}{thm.3}%
-\contentsline {thm}{{Theorem}{4}{Strong Completeness of Separation Criteria}}{24}{thm.4}%
-\contentsline {thm}{{Theorem}{5}{Markov Equivalence of Graphs}}{24}{thm.5}%
-\contentsline {thm}{{Theorem}{6}{Entailed Distributions from SCMs}}{29}{thm.6}%
-\contentsline {thm}{{Theorem}{7}{No Free Lunch for Conditional Independence Testing}}{31}{thm.7}%
-\contentsline {thm}{{Theorem}{8}{Granger Causality}}{33}{thm.8}%
-\contentsline {thm}{{Theorem}{9}{Existence and Uniqueness Theorem}}{38}{thm.9}%
-\contentsline {thm}{{Theorem}{10}{Grobman-Hartman Theorem for Flows}}{43}{thm.10}%
-\contentsline {thm}{{Theorem}{11}{Stable Manifold Theorem}}{43}{thm.11}%
-\contentsline {thm}{{Theorem}{12}{Solutions to Differential Equations on Manifolds}}{47}{thm.12}%
-\contentsline {thm}{{Theorem}{13}{Takens' Theorem, Version 1}}{47}{thm.13}%
-\contentsline {thm}{{Theorem}{14}{Takens' Theorem, Version 2}}{49}{thm.14}%
-\contentsline {thm}{{Theorem}{15}{}}{50}{thm.15}%
-\contentsline {thm}{{Theorem}{16}{Kupka-Smale Theorem}}{52}{thm.16}%
-\contentsline {thm}{{Theorem}{17}{Takens' Theorem, Version 3}}{54}{thm.17}%
-\contentsline {thm}{{Theorem}{18}{Whitney Embedding Prevalence Theorem}}{54}{thm.18}%
-\contentsline {thm}{{Theorem}{19}{Takens' Theorem, Version 4}}{55}{thm.19}%
-\contentsline {prop}{{Proposition}{1}{}}{58}{prop.1}%
-\contentsline {proof}{{Proof}{1}{}}{58}{proof.1}%
-\contentsline {thm}{{Theorem}{20}{Entailed Flows from SOMs}}{59}{thm.20}%
-\contentsline {prop}{{Proposition}{2}{}}{59}{prop.2}%
-\contentsline {thm}{{Theorem}{21}{Genericity of Filtrations}}{60}{thm.21}%
-\contentsline {thm}{{Theorem}{22}{Identifiability in dynamic systems}}{61}{thm.22}%
-\contentsline {proof}{{Proof}{2}{}}{61}{proof.2}%
-\contentsline {cor}{{Corollary}{1}{}}{62}{cor.1}%
-\contentsline {thm}{{Theorem}{23}{Identifiability in Dynamic Systems on Attractors}}{63}{thm.23}%
-\contentsline {cor}{{Corollary}{2}{}}{64}{cor.2}%
-\contentsline {innerdefn}{{Definition}{1}{Driver}}{66}{innerdefn.1}%
-\contentsline {innerdefn}{{Definition}{2}{Component graph}}{66}{innerdefn.2}%
-\contentsline {innerdefn}{{Definition}{3}{Transitive closure}}{66}{innerdefn.3}%
-\contentsline {innerdefn}{{Definition}{4}{Lattice}}{66}{innerdefn.4}%
-\contentsline {innerdefn}{{Definition}{5}{Filtration}}{67}{innerdefn.5}%
-\contentsline {innerdefn}{{Definition}{6}{Upper set filtration}}{67}{innerdefn.6}%
-\contentsline {innerdefn}{{Definition}{7}{}}{68}{innerdefn.7}%
-\contentsline {innerdefn}{{Definition}{8}{Filtration of observation functions}}{68}{innerdefn.8}%
-\contentsline {thm}{{Theorem}{24}{Krylov-Bogolubov Theorem}}{68}{thm.24}%
-\contentsline {thm}{{Theorem}{25}{Birkhoff Ergodic Theorem}}{68}{thm.25}%
+\contentsline {thm}{{Theorem}{1}{Non-Uniqueness of Causal Directness}}{12}{thm.1}%
+\contentsline {inneralg}{{Algorithm}{1}{}}{18}{inneralg.1}%
+\contentsline {thm}{{Theorem}{2}{Equivalency of Markov Properties}}{21}{thm.2}%
+\contentsline {thm}{{Theorem}{3}{Strong Completeness of Separation Criteria}}{22}{thm.3}%
+\contentsline {thm}{{Theorem}{4}{Markov Equivalence of Graphs}}{22}{thm.4}%
+\contentsline {thm}{{Theorem}{5}{Entailed Distributions from SCMs}}{24}{thm.5}%
+\contentsline {thm}{{Theorem}{6}{Granger Causality}}{27}{thm.6}%
+\contentsline {thm}{{Theorem}{7}{Discretization of Continuous SCM}}{34}{thm.7}%
+\contentsline {thm}{{Theorem}{8}{Existence and Uniqueness Theorem}}{42}{thm.8}%
+\contentsline {thm}{{Theorem}{9}{Entailed Flows from DCMs}}{48}{thm.9}%
+\contentsline {thm}{{Theorem}{10}{Grobman-Hartman Theorem for Flows}}{50}{thm.10}%
+\contentsline {thm}{{Theorem}{11}{Stable Manifold Theorem}}{50}{thm.11}%
+\contentsline {thm}{{Theorem}{12}{Solutions to Differential Equations on Manifolds}}{54}{thm.12}%
+\contentsline {thm}{{Theorem}{13}{Takens' Theorem, Version 1}}{55}{thm.13}%
+\contentsline {thm}{{Theorem}{14}{Takens' Theorem, Version 2}}{56}{thm.14}%
+\contentsline {thm}{{Theorem}{15}{}}{57}{thm.15}%
+\contentsline {thm}{{Theorem}{16}{Kupka-Smale Theorem}}{60}{thm.16}%
+\contentsline {thm}{{Theorem}{17}{Takens' Theorem, Version 3}}{61}{thm.17}%
+\contentsline {thm}{{Theorem}{18}{Whitney Embedding Prevalence Theorem}}{62}{thm.18}%
+\contentsline {thm}{{Theorem}{19}{Genericity over Filtrations}}{63}{thm.19}%
+\contentsline {thm}{{Theorem}{20}{Identifiability in Dynamical Systems on Manifolds}}{64}{thm.20}%
+\contentsline {proof}{{Proof}{1}{}}{65}{proof.1}%
+\contentsline {inneralg}{{Algorithm}{2}{}}{66}{inneralg.2}%
+\contentsline {thm}{{Theorem}{21}{Filtrations of Attractors}}{71}{thm.21}%
+\contentsline {thm}{{Theorem}{22}{Takens' Theorem, Version 4}}{72}{thm.22}%
+\contentsline {thm}{{Theorem}{23}{Identifiability in Dynamical Systems on Attractors}}{73}{thm.23}%
+\contentsline {cor}{{Corollary}{1}{}}{74}{cor.1}%
+\contentsline {thm}{{Theorem}{24}{Krylov-Bogolubov Theorem}}{75}{thm.24}%
+\contentsline {thm}{{Theorem}{25}{Birkhoff Ergodic Theorem}}{75}{thm.25}%

@@ -5,6 +5,16 @@ Andersson, S.~A., Madigan, D., \& Perlman, M.~D. (2001).
 \newblock Alternative markov properties for chain graphs.
 \newblock {\em Scandinavian Journal of Statistics}, 28(1), 33--85.
 
+\bibitem[Bongers et~al., 2022]{Bongers}
+Bongers, S., Blom, T., \& Mooij, J.~M. (2022).
+\newblock Causal modeling of dynamical systems.
+
+\bibitem[Bongers et~al., 2021]{SCMGen}
+Bongers, S., Forr{\'e}, P., Peters, J., \& Mooij, J. (2021).
+\newblock Foundations of structural causal models with cycles and latent
+  variables.
+\newblock {\em Annals of Statistics}, 49(5), 2885--2915.
+
 \bibitem[Butterworth, 1983]{Compete}
 Butterworth, D.~S. (1983).
 \newblock {Assessment and Management of Pelagic Stocks in the Southern Benguela
@@ -46,11 +56,21 @@ Carter, M.~L., Flick, R.~E., Terrill, E., Beckhaus, E.~C., Martin, K., Fey,
   Coastal Ocean Temperature and Salinity Measurements from California Stations.
   \url{https://doi.org/10.6075/J0GX4BCP}.
 
+\bibitem[Casdagli et~al., 1991]{Casdagli}
+Casdagli, M., Eubank, S., Farmer, J., \& Gibson, J. (1991).
+\newblock State space reconstruction in the presence of noise.
+\newblock {\em Physica D: Nonlinear Phenomena}, 51(1), 52--98.
+
 \bibitem[Cummins et~al., 2015]{mathFound}
 Cummins, B., Gedeon, T., \& Spendlove, K. (2015).
 \newblock On the efficacy of state space reconstruction methods in determining
   causality.
 \newblock {\em SIAM Journal on Applied Dynamical Systems}, 14(1), 335--381.
+
+\bibitem[Engle et~al., 1983]{Engle}
+Engle, R.~F., Hendry, D.~F., \& Richard, J.-F. (1983).
+\newblock Exogeneity.
+\newblock {\em Econometrica}, 51(2), 277--304.
 
 \bibitem[Falconer, 2014]{Fractals}
 Falconer, K. (2014).
@@ -64,14 +84,23 @@ Frydenberg, M. (1990).
 
 \bibitem[Giunti \& Mazzola, 2012]{inbook}
 Giunti, M. \& Mazzola, C. (2012).
-\newblock {\em Dynamical Systems on Monoids: Toward a General Theory of
-  Deterministic Systems and Motion}, (pp.\ 173--185).
+\newblock Dynamical systems on monoids. toward a general theory of
+  deterministic systems and motion.
+\newblock In G. Minati, M. Abram, \& E. Pessa (Eds.), {\em Methods, Models,
+  Simulations and Approaches towards a General Theory of Change}  (pp.\
+  173--186). World Scientific.
 
 \bibitem[Granger, 1969]{Granger}
 Granger, C. W.~J. (1969).
 \newblock Investigating causal relations by econometric models and
   cross-spectral methods.
 \newblock {\em Econometrica}, 37(3), 424--438.
+
+\bibitem[Hilborn, 2000]{Hilborn}
+Hilborn, R.~C. (2000).
+\newblock {\em {Chaos and Nonlinear Dynamics: An Introduction for Scientists
+  and Engineers}}.
+\newblock Oxford University Press.
 
 \bibitem[Hirsch, 1976]{hirsch}
 Hirsch, M. (1976).
@@ -112,6 +141,18 @@ Leng, S., Ma, H., Kurths, J., Lai, Y.-C., Lin, W., Aihara, K., \& Chen, L.
   (2020).
 \newblock Partial cross mapping eliminates indirect causal influences.
 \newblock {\em Nature Communications}, 11(1), 2632.
+
+\bibitem[Lorenz, 1963]{Lorenz}
+Lorenz, E.~N. (1963).
+\newblock Deterministic nonperiodic flow.
+\newblock {\em Journal of Atmospheric Sciences}, 20(2), 130 -- 141.
+
+\bibitem[Meek, 1995]{Faithful1}
+Meek, C. (1995).
+\newblock Strong completeness and faithfulness in {Bayesian} networks.
+\newblock In {\em Proceedings of the Eleventh Conference on Uncertainty in
+  Artificial Intelligence}, UAI'95  (pp.\ 411–418).: Morgan Kaufmann
+  Publishers Inc.
 
 \bibitem[Mohammed et~al., 2008]{StableManifoldStoc}
 Mohammed, S.-E.~A., Zhang, T., \& Zhao, H. (2008).
@@ -166,16 +207,31 @@ Shah, R.~D. \& Peters, J. (2020).
   covariance measure.
 \newblock {\em The Annals of Statistics}, 48(3), 1514--1538.
 
+\bibitem[Smale, 1998]{Smale1998}
+Smale, S. (1998).
+\newblock Mathematical problems for the next century.
+\newblock {\em The Mathematical Intelligencer}, 20(2), 7--15.
+
 \bibitem[Sokol \& Hansen, 2014]{sokol2014}
 Sokol, A. \& Hansen, N.~R. (2014).
 \newblock Causal interpretation of stochastic differential equations.
 \newblock {\em Electron. J. Probab.}, 19(100), 1--24.
+
+\bibitem[Spirtes \& Glymour, 1991]{PC}
+Spirtes, P. \& Glymour, C. (1991).
+\newblock An algorithm for fast recovery of sparse causal graphs.
+\newblock {\em Social Science Computer Review}, 9(1), 62--72.
 
 \bibitem[Spirtes \& Scheines, 1993]{Spirtes}
 Spirtes, P. \& Scheines, R. (1993).
 \newblock {\em Lecture Notes in Statistics: Causation, Prediction, and Search},
   volume~81.
 \newblock Springer-Verlag New York.
+
+\bibitem[Sprott, 2010]{Sprott}
+Sprott, J.~C. (2010).
+\newblock {\em Elegant Chaos: Algebraically Simple Chaotic Flows}.
+\newblock Singapore, SINGAPORE: World Scientific Publishing Company.
 
 \bibitem[Studeny \& Bouckaert, 1998]{Remco}
 Studeny, M. \& Bouckaert, R.~R. (1998).
@@ -195,6 +251,11 @@ Takens, F. (1981).
   Mathematics}, volume 898, (pp.\ 366--381).
 \newblock Springer New York.
 
+\bibitem[Tucker, 2002]{Tucker2002}
+Tucker, W. (2002).
+\newblock A rigorous ode solver and smale's 14th problem.
+\newblock {\em Foundations of Computational Mathematics}, 2(1), 53--117.
+
 \bibitem[Valjarević \& Merkle, 2021]{Sepa}
 Valjarević, D. \& Merkle, A. (2021).
 \newblock Statistical causality and measurable separability of
@@ -212,5 +273,11 @@ Ye, H., Deyle, E.~R., Gilarranz, L.~J., \& Sugihara, G. (2015).
 \newblock Distinguishing time-delayed causal interactions using convergent
   cross mapping.
 \newblock {\em Scientific Reports}, 5(1), 14750.
+
+\bibitem[Zarin et~al., 2022]{finance}
+Zarin, R., Bonyah, E., \& Alam, M.~N. (2022).
+\newblock {\em Chaos and Multiple Attractors in the Fractional Financial
+  Model}, (pp.\ 1--30).
+\newblock CRC Press, Taylor \& Francis Group.
 
 \end{thebibliography}
