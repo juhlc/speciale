@@ -12,18 +12,18 @@
 \contentsline {thm}{{Theorem}{11}{Stable Manifold Theorem}}{50}{thm.11}%
 \contentsline {thm}{{Theorem}{12}{Solutions to Differential Equations on Manifolds}}{54}{thm.12}%
 \contentsline {thm}{{Theorem}{13}{Takens' Theorem, Version 1}}{55}{thm.13}%
-\contentsline {thm}{{Theorem}{14}{Takens' Theorem, Version 2}}{56}{thm.14}%
+\contentsline {thm}{{Theorem}{14}{Takens' Theorem, Version 2}}{57}{thm.14}%
 \contentsline {thm}{{Theorem}{15}{}}{57}{thm.15}%
 \contentsline {thm}{{Theorem}{16}{Kupka-Smale Theorem}}{60}{thm.16}%
-\contentsline {thm}{{Theorem}{17}{Takens' Theorem, Version 3}}{61}{thm.17}%
+\contentsline {thm}{{Theorem}{17}{Takens' Theorem, Version 3}}{62}{thm.17}%
 \contentsline {thm}{{Theorem}{18}{Whitney Embedding Prevalence Theorem}}{62}{thm.18}%
 \contentsline {thm}{{Theorem}{19}{Genericity over Filtrations}}{63}{thm.19}%
-\contentsline {thm}{{Theorem}{20}{Identifiability in Dynamical Systems on Manifolds}}{64}{thm.20}%
+\contentsline {thm}{{Theorem}{20}{Identifiability in Dynamical Systems on Manifolds}}{65}{thm.20}%
 \contentsline {proof}{{Proof}{1}{}}{65}{proof.1}%
-\contentsline {inneralg}{{Algorithm}{2}{}}{66}{inneralg.2}%
+\contentsline {inneralg}{{Algorithm}{2}{}}{67}{inneralg.2}%
 \contentsline {thm}{{Theorem}{21}{Filtrations of Attractors}}{71}{thm.21}%
 \contentsline {thm}{{Theorem}{22}{Takens' Theorem, Version 4}}{72}{thm.22}%
 \contentsline {thm}{{Theorem}{23}{Identifiability in Dynamical Systems on Attractors}}{73}{thm.23}%
-\contentsline {cor}{{Corollary}{1}{}}{74}{cor.1}%
-\contentsline {thm}{{Theorem}{24}{Krylov-Bogolubov Theorem}}{75}{thm.24}%
-\contentsline {thm}{{Theorem}{25}{Birkhoff Ergodic Theorem}}{75}{thm.25}%
+\contentsline {inneralg}{{Algorithm}{3}{}}{75}{inneralg.3}%
+\contentsline {thm}{{Theorem}{24}{Krylov-Bogolubov Theorem}}{82}{thm.24}%
+\contentsline {thm}{{Theorem}{25}{Birkhoff Ergodic Theorem}}{83}{thm.25}%

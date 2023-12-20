@@ -38,6 +38,12 @@ Butterworth, D.~S. (1983).
   Department of Fish and Wildlife, accessed 2023-09-26 at
   \url{https://wildlife.ca.gov/Conservation/Marine/Data-Management-Research/MFDE}.
 
+\bibitem[Caraballo et~al., 2001]{delayEq}
+Caraballo, T., Langa, J.~A., \& Robinson, J.~C. (2001).
+\newblock Attractors for differential equations with variable delays.
+\newblock {\em Journal of Mathematical Analysis and Applications}, 260(2),
+  421--438.
+
 \bibitem[Carter et~al., 2023a]{Scripps}
 Carter, M.~L., Flick, R.~E., Terrill, E., Beckhaus, E.~C., Martin, K., Fey,
   C.~L., Walker, P.~W., Largier, J.~L., \& McGowan, J.~A. (2023a).
@@ -231,7 +237,7 @@ Spirtes, P. \& Scheines, R. (1993).
 \bibitem[Sprott, 2010]{Sprott}
 Sprott, J.~C. (2010).
 \newblock {\em Elegant Chaos: Algebraically Simple Chaotic Flows}.
-\newblock Singapore, SINGAPORE: World Scientific Publishing Company.
+\newblock Singapore, Singapore: World Scientific Publishing Company.
 
 \bibitem[Studeny \& Bouckaert, 1998]{Remco}
 Studeny, M. \& Bouckaert, R.~R. (1998).
@@ -239,9 +245,16 @@ Studeny, M. \& Bouckaert, R.~R. (1998).
   structures.
 \newblock {\em The Annals of Statistics}, 26(4), 1434--1495.
 
+\bibitem[{Sugihara}, 1994]{SMap}
+{Sugihara}, G. (1994).
+\newblock {Nonlinear Forecasting for the Classification of Natural Time
+  Series}.
+\newblock {\em Philosophical Transactions of the Royal Society of London Series
+  A}, 348(1688), 477--495.
+
 \bibitem[Sugihara et~al., 2012]{Sugihara}
-Sugihara, G., May, R., Ye, H., hao Hsieh, C., Deyle, E., Fogarty, M., \& Munch,
-  S. (2012).
+Sugihara, G., May, R., Ye, H., Hsieh, C., Deyle, E., Fogarty, M., \& Munch, S.
+  (2012).
 \newblock Detecting causality in complex ecosystems.
 \newblock {\em Science}, 338(6106), 496--500.
 
@@ -253,7 +266,7 @@ Takens, F. (1981).
 
 \bibitem[Tucker, 2002]{Tucker2002}
 Tucker, W. (2002).
-\newblock A rigorous ode solver and smale's 14th problem.
+\newblock A rigorous {ODE} solver and {Smale's} 14th problem.
 \newblock {\em Foundations of Computational Mathematics}, 2(1), 53--117.
 
 \bibitem[Valjarević \& Merkle, 2021]{Sepa}
