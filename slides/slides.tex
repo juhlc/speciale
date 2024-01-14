@@ -1,0 +1,159 @@
+\documentclass[11pt,reqno]{beamer}
+
+\usepackage[a4paper, hmargin={2.75cm, 2.75cm}, vmargin={2.5cm, 2.5cm}]{geometry}
+\usepackage{lipsum}
+\usepackage{stmaryrd}
+\usepackage{tikz-cd}
+\usepackage{rotating}
+\usepackage{tcolorbox}
+\newcommand*{\isoarrow}[1]{\arrow[#1,"\rotatebox{90}{\(\sim\)}"
+]}
+\usepackage[utf8]{inputenc} % til at skrive æÆøØåÅ.
+\usepackage{amsmath,amssymb,amsfonts,mathrsfs,latexsym,mathtools}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage[toc,page]{appendix}
+\usepackage{enumitem}
+\usepackage[matrix,arrow,ps]{xy}
+\usepackage{subfiles}
+\usepackage{apptools}%Appendix
+\usepackage{chngcntr}%Appendix
+\usepackage{float}
+\usepackage[colorlinks = true,
+            linkcolor = black,
+            urlcolor  = blue,
+            citecolor = black,
+            anchorcolor = black]{hyperref}
+\usepackage{framed,color}
+\usepackage[amsmath,thmmarks]{ntheorem} %pakke til at lave sætningsenvorinmets (kan ikke loades sammen med amsthm)
+\usepackage{mathptmx}
+\usepackage{lmodern}
+\usepackage{titlesec}
+\numberwithin{equation}{section}
+\usepackage{tikz}
+\usetikzlibrary{decorations.markings}
+\usepackage{scrextend} % add margin environment
+
+
+\AtAppendix{\counterwithin{thm}{section}}
+\AtAppendix{\counterwithin{equation}{section}}
+
+%opretter environmets til sætningsstrukturen 
+	\theorembodyfont{\normalfont}
+	\theoremstyle{break}
+
+	%sætnings environment	
+	\newtheorem{thm}{Theorem}
+
+	%proposition environment	
+	\newtheorem{prop}[thm]{Proposition}
+
+	%Korrolar environment
+	\newtheorem{cor}[thm]{Corollary}	
+
+	%Lemma environment	
+	\newtheorem{lem}[thm]{Lemma}
+	
+	%Conjecture environment	
+	\newtheorem{conj}[thm]{Conjecture}
+	
+	
+	%Lemma environment	
+	\newtheorem{nota}[thm]{Notation}
+	
+	
+
+	%Lemma environment	
+	\newtheorem{ove}[thm]{Øvelse}
+
+	%Lemma environment	
+	\newtheorem{prob}[thm]{Opgave}
+
+	\theoremsymbol{\ensuremath{\circ}}	
+
+	%definition environment	
+	\newtheorem{definition}[thm]{Definition}
+	
+	
+	%Lemma environment	
+	\newtheorem{app}[thm]{Application}
+
+	%eksempel environment	
+	\newtheorem{ex}[thm]{Example}
+	
+	\newtheorem{rmk}[thm]{Remark}
+
+
+	%Bevis environment
+	\theoremstyle{nonumberplain}
+	\theoremheaderfont{%
+	\normalfont\itshape}
+	\theorembodyfont{\normalfont}
+	\theoremseparator{.}
+
+	\theoremsymbol{\ensuremath{\square}}
+	\newtheorem{proof}{Proof}
+  	\newtheorem{sol}{Solution}
+  	\numberwithin{thm}{section}
+  	\numberwithin{equation}{section}
+
+\setlength\parindent{6pt}
+\setlist[enumerate]{label=(\alph*)}
+
+\usepackage{url}
+\usepackage{sagetex}
+\usepackage{csquotes}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+
+
+\newcommand{\mN}{\mathbb{N}}
+\newcommand{\mZ}{\mathbb{Z}}
+\newcommand{\mQ}{\mathbb{Q}}
+\newcommand{\mR}{\mathbb{R}}
+\newcommand{\mD}{\mathbb{D}}
+\newcommand{\mH}{\mathbb{H}}
+\newcommand{\mC}{\mathbb{C}}
+\newcommand{\mP}{\mathbb{P}}
+\newcommand{\mF}{\mathbb{F}}
+\newcommand{\mA}{\mathbb{A}}
+\newcommand{\p}{\partial}
+\newcommand{\lp}{\left(}
+\newcommand{\rp}{\right)}
+
+\DeclareMathOperator{\Ima}{Im}
+\DeclareMathOperator{\chara}{char}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Emb}{Emb}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\PGL}{PGL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\Div}{Div}
+\DeclareMathOperator{\divi}{div}
+\DeclareMathOperator{\disco}{disc}
+\DeclareMathOperator{\Tr}{Tr}
+
+
+\titel{Elliptic Curves and Galois Representations} 
+\undertitel{} 
+\opgave{Bachelor thesis} 
+\forfatter{by Rasmus Juhl Christensen}
+\dato{Department of Mathematical Sciences. } 
+\vejleder{Supervisor: Francesco Campagna}
+
+\begin{document}
+\begin{frame}
+j
+\end{frame}
+
+\end{document}

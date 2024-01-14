@@ -38,6 +38,12 @@ Butterworth, D.~S. (1983).
   Department of Fish and Wildlife, accessed 2023-09-26 at
   \url{https://wildlife.ca.gov/Conservation/Marine/Data-Management-Research/MFDE}.
 
+\bibitem[Cao, 1997]{cao}
+Cao, L. (1997).
+\newblock Practical method for determining the minimum embedding dimension of a
+  scalar time series.
+\newblock {\em Physica D: Nonlinear Phenomena}, 110(1), 43--50.
+
 \bibitem[Caraballo et~al., 2001]{delayEq}
 Caraballo, T., Langa, J.~A., \& Robinson, J.~C. (2001).
 \newblock Attractors for differential equations with variable delays.
@@ -268,6 +274,12 @@ Takens, F. (1981).
 Tucker, W. (2002).
 \newblock A rigorous {ODE} solver and {Smale's} 14th problem.
 \newblock {\em Foundations of Computational Mathematics}, 2(1), 53--117.
+
+\bibitem[Ushio \& Kawatsu, 2020]{EDM}
+Ushio, M. \& Kawatsu, K. (2020).
+\newblock {\em Forecasting Ecological Time Series Using Empirical Dynamic
+  Modeling: A Tutorial for Simplex Projection and S-map}, (pp.\ 193--213).
+\newblock Springer Singapore: Singapore.
 
 \bibitem[Valjarević \& Merkle, 2021]{Sepa}
 Valjarević, D. \& Merkle, A. (2021).

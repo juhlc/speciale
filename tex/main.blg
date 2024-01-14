@@ -5,44 +5,46 @@ Reallocating 'name_of_file' (item size: 1) to 9 items.
 The style file: apalike2.bst
 Reallocating 'name_of_file' (item size: 1) to 7 items.
 Database file #1: kilder.bib
-You've used 49 entries,
+Warning--can't use both author and editor fields in EDM
+You've used 51 entries,
             2229 wiz_defined-function locations,
-            856 strings with 13263 characters,
-and the built_in function-call counts, 19848 in all, are:
-= -- 1901
-> -- 885
-< -- 36
-+ -- 308
-- -- 299
-* -- 1704
-:= -- 3472
-add.period$ -- 149
-call.type$ -- 49
-change.case$ -- 380
-chr.to.int$ -- 48
-cite$ -- 49
-duplicate$ -- 742
-empty$ -- 1350
-format.name$ -- 370
-if$ -- 3901
+            871 strings with 13665 characters,
+and the built_in function-call counts, 20697 in all, are:
+= -- 1988
+> -- 905
+< -- 39
++ -- 314
+- -- 305
+* -- 1771
+:= -- 3606
+add.period$ -- 155
+call.type$ -- 51
+change.case$ -- 392
+chr.to.int$ -- 50
+cite$ -- 52
+duplicate$ -- 780
+empty$ -- 1417
+format.name$ -- 380
+if$ -- 4081
 int.to.chr$ -- 2
 int.to.str$ -- 0
-missing$ -- 58
-newline$ -- 247
-num.names$ -- 151
-pop$ -- 343
+missing$ -- 61
+newline$ -- 257
+num.names$ -- 157
+pop$ -- 355
 preamble$ -- 1
-purify$ -- 391
+purify$ -- 404
 quote$ -- 0
-skip$ -- 573
+skip$ -- 605
 stack$ -- 0
-substring$ -- 1276
-swap$ -- 108
-text.length$ -- 8
+substring$ -- 1347
+swap$ -- 120
+text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 266
-warning$ -- 0
-while$ -- 144
+type$ -- 276
+warning$ -- 1
+while$ -- 152
 width$ -- 0
-write$ -- 637
+write$ -- 664
+(There was 1 warning)

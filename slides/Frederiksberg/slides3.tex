@@ -1,0 +1,365 @@
+\documentclass[10pt]{beamer}
+\usepackage[danish]{babel}
+ \usepackage[utf8]{inputenc} % til at skrive æÆøØåÅ.
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathrsfs,latexsym}
+\usepackage{tikz,tikz-cd}
+\usepackage{diagbox} % til at lave diagonal i tabelcelle
+\usepackage{graphicx}% til at rette størrelsen af tabel
+\usepackage{mathtools}
+\usepackage{rotating}
+\usepackage[matrix,arrow,ps]{xy}
+\usepackage{stmaryrd}
+\usepackage{tcolorbox}
+\newcommand*{\isoarrow}[1]{\arrow[#1,"\rotatebox{90}{\(\sim\)}"
+]}
+\usepackage[normalem]{ulem} % strikethrough on text: command \sout{text}
+
+% Beamer setup
+\usetheme[style=alternative,TPlrimage=kumat2
+,ku]{Frederiksberg}
+
+% Titlepage
+\title{Elliptic Curves and Galois Representations}
+\subtitle{Bachelor Defense}
+
+\author[]{Rasmus Juhl Christensen\\
+stud.scient.}
+\institute[Faculty of Science]{Department of Mathematical Sciences}
+\date[]{June 21st, 2021}
+
+% Commands
+\newcommand{\cupdot}{\mathbin{\mathaccent\cdot\cup}}
+
+\newcommand{\mN}{\mathbb{N}}
+\newcommand{\mZ}{\mathbb{Z}}
+\newcommand{\mQ}{\mathbb{Q}}
+\newcommand{\mR}{\mathbb{R}}
+\newcommand{\mC}{\mathbb{C}}
+\newcommand{\mP}{\mathbb{P}}
+\newcommand{\mA}{\mathbb{A}}
+
+\newcommand{\mF}{\mathbb{F}}
+
+\newcommand{\mH}{\mathbb{H}}
+\newcommand{\mD}{\mathbb{D}}
+
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cSH}{\mathcal{SH}}
+
+\newcommand{\M}{\text{M}}
+\newcommand{\SL}{\text{SL}}
+\newcommand{\GL}{\text{GL}}
+\newcommand{\SO}{\text{SO}}
+\newcommand{\PSL}{\text{PSL}}
+\renewcommand{\d}{\hspace{1mm}d}
+\newcommand{\p}{\partial}
+
+
+\newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
+\newcommand{\leg}[2]{\left(\frac{#1}{#2}\right)}
+
+\newcommand{\ths}{\hspace{0.5mm}}
+\newcommand{\hs}{\hspace{1mm}}
+\newcommand{\Hs}{\hspace{4mm}}
+\newcommand{\HS}{\hspace{8mm}}
+
+\newcommand{\abs}[1]{\left| #1\right|}
+\newcommand{\pare}[1]{\left( #1\right)}
+\newcommand{\bigPare}[1]{\bigg( #1\bigg)}
+\newcommand{\cbrac}[1]{\left\{ #1\right\}}
+\newcommand{\setBrac}[2]{\left\{ #1 \hs\middle|\hs #2 \right\}}
+\newcommand{\brac}[1]{\left[ #1\right]}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\inProd}[1]{\left\langle#1\right\rangle}
+
+\renewcommand{\Im}{\text{Im}\hs}
+\renewcommand{\Re}{\text{Re}\hs}
+\renewcommand{\phi}{\varphi}
+\newcommand{\ord}{\text{ord}}
+\newcommand{\supp}{\text{supp}\hs}
+\newcommand{\Aut}[1]{\text{Aut}(#1)}
+\newcommand{\stab}[2]{\text{Stab}_{#1}\pare{#2}}
+\newcommand{\cusp}[1]{\text{Cusps}\pare{#1}}
+\newcommand{\dist}[1]{\text{dist}\pare{#1}}
+
+\newcommand{\nl}{\newline \\}
+\DeclareMathOperator{\chara}{char}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\End}{End}
+
+\DeclareMathOperator{\Tr}{Tr}
+
+\begin{document}
+\frame[plain]{\titlepage}
+
+
+\begin{frame}{Program}
+\onslide<1->{
+9.00-9.20: A presentation on the following topics:
+\begin{enumerate}
+	\item Central definitions: Elliptic curves and Galois representations
+	\item Galois representations attached to elliptic curves
+	\item Elliptic curves with complex multiplication
+	\item Serre's open image theorem
+	\item Elliptic curves defined over $\mQ$
+	\item A criterion for surjectivity of adelic Galois representations attached to elliptic curves
+	\item An example: \\
+	A method to prove surjectivity of some $\ell$-adic Galois representations attached to elliptic curves
+\end{enumerate}}
+9.20: Questions.
+\end{frame}
+
+\begin{frame}{Elliptic curves}
+Let $K$ be a perfect field. We define an elliptic curve in the following way:
+\onslide<1->{
+\begin{definition}[Elliptic curve]
+Let $f(x,y)=y^2+a_1xy+a_3y-x^3-a_2x^2-a_4x-a_6\in K[x,y]$ satisfy that there exists no $P\in \bar{K}^2$, such that $f(P)=\frac{\partial f}{\partial x}(P)=\frac{\partial f}{\partial y}(P)= 0$. Then we say $f$ defines the affine elliptic curve $E/K$ by
+$$E(\bar{K)}=\{P\in \bar{K}^2\mid f(P)=0\}$$
+Let $F(X,Y,Z)=Z^3\cdot f(X/Z,Y/Z)\in K[X,Y,Z]$. Then the set 
+\begin{align*}
+&\{P\in \mP^2(\bar{K})\mid F(P)=0\}\\
+=&\{[x_0:y_0:1]\in \mP^2(\bar{K})\mid (x_0,y_0)\in E(\bar{K})\}\cup \{[0:1:0]\}
+\end{align*}
+is the projective elliptic curve $E/K$. We define $\mathcal{O}\coloneqq [0:1:0]$
+\end{definition}
+}
+
+
+
+\end{frame}
+
+
+
+
+\begin{frame}{The group law}
+Then we define the group law on elliptic curves:
+\onslide<1->{\begin{theorem}
+Let $E/K$ be an elliptic curve, $P=(x_1,y_1),Q=(x_2,y_2)\in E(K)$. 
+If $x_1\neq x_2$, define $\lambda\coloneqq \frac{y_2-y_1}{x_2-x_1}$ and $\nu\coloneqq \frac{y_1x_2-y_2x_1}{x_2-x_1}$. If $P=Q$ and $\frac{\p f}{\p y}(P)\neq 0$, define $$\lambda\coloneqq -\frac{\frac{\p f}{\p x}(P)}{\frac{\p f}{\p y}(P)},\quad \nu\coloneqq y_1-\lambda x_1 $$ Then we let:
+	\begin{align*}
+	P+Q\coloneqq\big(&\lambda^2+a_1\lambda-a_2-2x_1,\\
+	&-(\lambda+a_1)(\lambda^2+a_1\lambda-a_2-2x_1)-\nu-a_3\big)
+\end{align*}
+Else let $P+Q=\mathcal{O}$. Then $(E(K)\cup\{\mathcal{O}\},+)$ is an abelian group with $\mathcal{O}$ as the identity.
+\end{theorem}
+}
+
+\end{frame}
+
+\begin{frame}{Torsion points}
+\onslide<1->{
+\begin{definition}
+Let $E/K$ be an elliptic curve, and let $n\in \mN$. Then for $P\in E(\bar{K})$, we define
+$$nP\coloneqq \underbrace{P+\cdots +P}_{n\text{ times}}$$
+and we define
+$$E[n]\coloneqq \{P\in E(\bar{K})\mid nP=\mathcal{O}\}$$
+\end{definition}}
+\onslide<2->{
+\begin{theorem}
+Let $E/K$ be an elliptic curve, $n\in \mN$ coprime with $\chara K$ if $\chara K\neq 0$. Then
+$$E[n]\cong(\mZ/n\mZ)^2$$
+\end{theorem}
+}
+\end{frame}
+
+\begin{frame}{Galois representations}
+\onslide<1->{
+\begin{definition}
+Let $E/F$ be Galois with Galois group $\Gal(E/F)$, let $R$ be a topological ring and let $n\in \mN$. Then a Galois representation is  a continuous homomorphism $$\rho:\Gal(E/F)\to \GL_n(R)$$
+\end{definition}
+}
+
+\onslide<2->{
+
+\begin{definition}[Serre, McGill: Abelian $\ell$-adic Representations and Elliptic curves]
+Let $\ell$ be a prime. If $V$ is a vector space over $\mQ_\ell$ of degree $n$, and $K$ is a field with separable algebraic closure $K_s$, then an $\ell$-adic representation of $G\coloneqq\Gal(K_s/K)$ is a continuous homomorphism
+$$\rho : G\to \Aut{V}\left(\cong \GL_n(\mQ_\ell)\right)$$
+\end{definition}
+}
+
+\end{frame}
+
+
+\begin{frame}{Galois representations attached to elliptic curves}
+Let $K$ be a perfect field, let $G_L=\Gal(\bar{K}/L)$ for $L/K$ an algebraic extension. Let $E/K$ be an elliptic curve and let $n\in \mN$ be coprime with $\chara K$ if $\chara K\neq 0$.\nl
+\onslide<2->{ Now let $g\in G_K$ act on $P=(x_0,y_0)$ by $gP=(gx_0,gy_0)$, $g\mathcal{O}=\mathcal{O}$. From the group law, we get $g(mP)=mg(P)$, and so we get
+$$\rho_{E,n}': G_K\to \Aut{E[n]}$$}
+\onslide<3->{
+Recall $E[n]\cong (\mZ/n\mZ)^2$. Hence, we can pick a basis $(P,Q)$ of $E[n]$ and get a mod $n$ Galois representation:
+$$\rho_{E,n}: G_K\to \GL_2(\mZ/n\mZ)$$
+}
+\end{frame}
+
+\begin{frame}Now fix a prime $\ell\neq \chara K$ if $\chara K\neq 0$. Picking a compatible system of bases, we can then draw the commutative diagram
+\only<2-3>{
+\begin{center}
+\begin{tikzcd}[ampersand replacement=\&]
+{}\&\Gal(\bar{K}/K) \arrow[two heads]{dl}{\rho_{E,\ell}'}\arrow[two heads]{d}{\rho_{E,\ell^2}'}\arrow[two heads]{dr}\& {}\& {}\\ 
+\Aut{E[\ell]}\isoarrow{d} \&\Aut{E[\ell^2]} \arrow{l}{\mathrm{res}}\isoarrow{d}\& \cdots\arrow{l}\isoarrow{d} \& {}\\
+\GL_2(\mZ/\ell\mZ) \&\GL_2(\mZ/\ell^2\mZ)\arrow{l}{\pmod{\ell}}\& \cdots\arrow{l}\& {}
+\end{tikzcd}
+\end{center}
+}
+\only<4->{
+\begin{center}
+\begin{tikzcd}[ampersand replacement=\&]
+{}\&\Gal(\bar{K}/K) \arrow[two heads]{dl}{\rho_{E,\ell}'}\arrow[two heads]{d}{\rho_{E,\ell^2}'}\arrow[two heads]{dr} \arrow[two heads]{drr}{\rho_{E,\ell^\infty}'}\& {}\&{}\\ 
+\Aut{E[\ell]}\isoarrow{d} \&\Aut{E[\ell^2]} \arrow{l}{\mathrm{res}}\isoarrow{d}\& \cdots\arrow{l}\isoarrow{d} \& \Aut{T_\ell[E]}\isoarrow{d}\\
+\GL_2(\mZ/\ell\mZ) \&\GL_2(\mZ/\ell^2\mZ)\arrow{l}{\pmod{\ell}}\& \cdots\arrow{l}\&\GL_2(\mZ_\ell)
+\end{tikzcd}
+\end{center}
+}
+\onslide<3->{Taking inverse limits and defining $T_\ell[E]=\varprojlim_{n\in \mN}E[\ell^n]$, we get a $\ell$-adic Galois representation.}
+\onslide<5->{If $\chara K=0$, then for a compatible system of bases, we may pack the $\ell$-adic Galois representations for all primes $\ell$ into a single adelic Galois representation via $\Aut{\prod_{p}T_p[E]}$:
+$$\rho_{E}: G_K\to \GL_2(\hat{\mZ})$$}
+\onslide<6->{These representations are only defined up to conjugation. Also, we can recover the mod $m$ and the $\ell$-adic Galois representation via projections $r_m:\GL_2(\hat{\mZ})\to \GL_2(\mZ/m\mZ)$, $\pi_{\ell}:\GL_2(\hat{\mZ})\to \GL_2(\mZ_\ell)$.}
+
+\end{frame}
+\begin{frame}{Complex multiplication}
+Let $K$ be a perfect field, let $\ell$ be a prime such that $\ell\neq \chara K$ if $\chara K\neq 0$.
+\onslide<2->{
+\begin{definition}
+Let $E/K$ be an elliptic curve. Then $\psi: E(\bar{K})\to E(\bar{K})$ is an endomorphism over $K$ if $\psi=[g_0:g_1:g_2]$ with $g_0,g_1,g_2\in K(E)$ regular (defined at each $P\in E(\bar{K})$) and $\psi(\mathcal{O})=\mathcal{O}$.
+\end{definition}}
+\onslide<3->{Any endomorphism $\psi$ of $E/K$ satisfies $$\psi(P+Q)=\psi(P)+\psi(Q)$$
+for all $P,Q\in E(\bar{K})$.\\}
+\onslide<4->{
+An endomorphism over $K$ of an elliptic curve $E/K$ induces an endomorphism of $T_\ell[E]$ commuting with the endomorphisms induced by $G_K$. We have $\End(T_\ell[E])\cong M_2(\mZ_\ell)$, and so multiplication by $m$ maps for $m\in \mN$ are endomorphisms with action on $T_\ell[E]$ represented by $$\begin{pmatrix}
+m&0\\0&m
+\end{pmatrix}$$}
+
+
+\end{frame}
+
+\begin{frame}
+\onslide<1->{
+\begin{definition}
+Let $E/K$ be an elliptic curve. If there exists an endomorphism of $E$ over $K$ that is not a multiplication by $m$ map, then we shall say $E$ has complex multiplication.
+
+\end{definition}}
+
+
+\onslide<2->{The following statements are then true:}
+\onslide<3->{
+\begin{theorem} If $E/K$ has complex multiplication, there exists a non-scalar matrix that commutes with $\rho_{E,\ell^\infty}(G_K)$ and $\rho_{E,\ell^\infty}(G_K)$ is abelian. Hence $\rho_{E,\ell^\infty}(G_K)$ is of infinite index in $\GL_2(\mZ_\ell)$ and in particular $\rho_{E,\ell^\infty}$ is not surjective.\nl}
+\onslide<4->{If $E/K$ has complex multiplication over any field $L$ with $L/K$ a finite extension, then $\rho_{E,\ell^\infty}$ is then not surjective.\nl}
+\onslide<5->{If $\chara K=0$, and $E/K$ has complex multiplication over any field $L$ with $L/K$ an algebraic extension, then $\rho_{E}$ is not surjective. Also, $\rho_E(G_K)$ is not open in $\GL_2(\hat{\mZ})$}
+\end{theorem}
+\end{frame}
+
+
+\begin{frame}{Serre's open image theorem}
+Let $K$ be a number field, $G_L=\Gal(\bar{K}/L)$ for $L/K$ an algebraic field extension.
+\onslide<1->{
+
+\begin{theorem}[Serre's open image theorem]
+Let $E/K$ be an elliptic curve without complex multiplication. Then the image of $\rho_E$ in $\GL_2(\hat{\mZ})$ is open.
+\end{theorem}
+
+}
+\onslide<2->{
+This has the following equivalent formulations:
+\begin{itemize}
+	\item<3-> For all but finitely many primes $\ell$, $\rho_{E,\ell^\infty}$ is surjective.
+	\item<4-> For all but finitely many primes $\ell$, $\rho_{E,\ell}$ is surjective.
+	\item<5-> There exists $m\in \mN$, such that
+	$$\{A\in \GL_2(\hat{\mZ})\mid r_m(A)=I\}\subseteq \rho_E(G_K)$$
+	\item<6-> There exists $m\in \mN$, such that 
+	$$\rho_E(G_K)=r_m^{-1}(\rho_{E,m}(G_K))$$
+\end{itemize}
+}
+
+\end{frame}
+
+
+\begin{frame}{Surjectivity of adelic Galois representations attached to elliptic cruves}
+We can prove the following statements:
+\begin{theorem}
+Let $E/\mQ$ be an elliptic curve. Then $\rho_{E}$ is not surjective.
+\end{theorem}
+And the more general version:
+ \begin{theorem}[Greicius 2010]
+ Let $E/K$ be an elliptic curve over a number field $K$. Let $\Delta\in K^\times$ be the discriminant of any Weierstrass model of $E/K$. Then $\rho_E$ is surjective if and only if
+\begin{enumerate}
+ 	\item the $\ell$-adic Galois representation $\rho_{\ell^\infty}: G_K\to \GL_2(\mZ_\ell)$ is surjective for all $\ell$,
+ 	\item $K\cap \mQ(\zeta_{\infty})=\mQ$ and
+ 	\item $\sqrt{\Delta}\not\in K(\zeta_\infty)$
+
+ 	\end{enumerate}
+ \end{theorem}
+\end{frame}
+
+
+\begin{frame}{Determining if adelic Galois representations attached to elliptic curves are surjective}
+We will be pursuing the following steps to find an elliptic curve with surjective adelic Galois representation:
+\begin{enumerate}
+	\item<2-> Determining if $K\cap \mQ(\zeta_{\infty})=\mQ$ and if $\sqrt{\Delta_E}\not\in K(\zeta_\infty)$.
+	\item<3-> Reducing the set of primes, that could be \textit{exceptional}, to a finite set.
+	\item<4-> Determining whether the $\ell$-adic Galois representations for each prime in the finite set is surjective.
+\end{enumerate}
+\onslide<5->{We will deal with the first two steps ad hoc. Reflecting the difficulty of the second step, we have the following unsolved problem:\nl }
+\onslide<6->{
+\textbf{Uniformity conjecture (Serre)}: \textit{For every number field $K$, there exists some prime $p$, such that for every elliptic curve $E/K$ and prime $\ell>p$, $\rho_{E,\ell^\infty}$ is surjective.\nl}
+\onslide<5->{
+For $K=\mQ$, $p=37$ is conjectured to be such a number.}}
+\end{frame}
+
+\begin{frame}{Surjectivity of $\ell$-adic Galois representations attached to elliptic curves}
+Once again, let $K$ be a number field. \nl
+\onslide<1->{We can reduce the final step to a manageable problem by the following theorem:
+}
+\onslide<2->{\begin{theorem}
+Assume $\ell\geq 5$ is a prime, $E/K$ an elliptic curve and $\det:\rho_{E,\ell^\infty}(G_K)\to\mZ_\ell^\times$ is surjective. Then $\rho_{E,\ell}$ is surjective if and only if $\rho_{E,\ell^\infty}$ is surjective.\\
+Further, $\rho_{E,8}$ surjective if and only if $\rho_{E,2^\infty}$ is surjective and $\rho_{E,9}$ is surjective if and only if $\rho_{E,3^\infty}$ is surjective.
+\end{theorem}
+}
+\onslide<3->{Since the subgroups of $\GL_2(\mF_p)$ are classified stemming back to a book by Dickson from 1901, we may actually derive a sufficient condition for primes $p\geq 5$:
+}
+
+\end{frame}
+\begin{frame}
+\begin{theorem}
+Let $\ell\geq 5$ and suppose $H\leq \GL_2(\mF_\ell)$ contains
+\begin{enumerate}
+	\item $s$ such that $\Tr(s)^2-4\det s$ is a non-zero square in $\mF_\ell$ and so that $\Tr(s)\neq 0$
+	\item $s'$ such that $\Tr(s')^2-4\det s'$ is not a square in $\mF_\ell$ and so that $\Tr(s')\neq 0$
+	\item $s''$ such that $u=\Tr(s'')^2/\det(s'')\neq 0,1,2,4$ and such that $u^2-3u+1\neq 0$
+\end{enumerate}
+Then $H$ contains $\SL_2(\mF_\ell)$. If further $\det: H\to \mF_\ell^\times$ is surjective, $H=\GL_2(\mF_\ell)$.
+\end{theorem}
+Choose a model of $E$ with coefficients in $\mathcal{O}_K$. 
+\begin{theorem}
+Let $\mathfrak{p}\nmid \ell$ be a prime ideal in $\mathcal{O}_K$ with $\Delta_E\not\equiv 0\pmod{\mathfrak{p}}$.  Let $t_\mathfrak{p}$ be the trace of the Frobenius map of $\tilde{E}_\mathfrak{p}$ (the reduction of $E$ modulo $\mathfrak{p}$) and $q_\mathfrak{p}$ the determinant. There exists $g\in G_K$ such that
+$t_\mathfrak{p}\equiv \Tr\rho_{E,\ell}(g)\pmod{\ell},\quad  q_\mathfrak{p}\equiv \det\rho_{E,\ell}(g)\pmod{\ell}$
+\end{theorem}
+\end{frame}
+\begin{frame}{An example}
+We will now consider an elliptic curve with surjective adelic Galois representation.\onslide<2->{So let $\alpha$ be the real root of $x^3+x+1$, let $K=\mQ(\alpha)$ and let $E/K$ be the elliptic curve defined by $y^2+2xy+\alpha y=x^3 -x^2$.}
+\onslide<3->{\begin{enumerate}
+	\item A check shows that $K\cap \mQ(\zeta_\infty)=\mQ$ and $\sqrt{\Delta_E}\not\in K(\zeta_\infty)$.
+	\item<4-> It is possible to prove that for any prime $\ell$ unramified in $K$, and prime ideal $\mathfrak{p}$ for which $\Delta_E\not \equiv 0\pmod{\mathfrak{p}}$ (and further $\ell\nmid v_\mathfrak{p}(j_E)$ if $\ell=2,3,5$) , then $\ell\mid 	\#\tilde{E}_\mathfrak{p}(\mathcal{O}_K/\mathfrak{p})$ if $\rho_{E,\ell}(G_K)\neq \GL_2(\mF_\ell)$. Using primes (2) and $(\alpha^2+\alpha+2)$, we get $\ell\mid 9,10$ if $\ell\neq 2,3,31$ and $\rho_{E,\ell}(G_K)\neq \GL_2(\mF_\ell)$.
+	\item<5-> In the case $\ell=31$, we can find elements with traces and determinants satisfying the conditions listed needed to prove $\rho_{E,31}=\GL_2(\mF_31)$ as outlined in the previous slide. This can be done by using the method involving Frobenius maps at the primes $(7)$ and $(\alpha-2)$.}\\
+	\onslide<6->{Similar but more technical arguments can be used to deal with the cases $\ell=2,3$.}
+	
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Questions}
+
+\end{frame}
+\begin{frame}{Questions}
+
+\end{frame}
+\begin{frame}{Questions}
+
+\end{frame}
+
+
+
+\end{document}

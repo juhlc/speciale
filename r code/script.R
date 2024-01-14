@@ -68,6 +68,12 @@ simLog2 <- function(xtoy, ytox, rx, ry, length, X0){
 
 ## Simulation and test of rEDM package
 {
+library(rEDM)
+library(nonlinearTseries)
+CalculateEmbeddingDim(plot_data$roll_anchovies[2:94], max.embedding.dim = 10)
+?Calcu
+S <- Simplex(dataFrame= plot_data,lib= "2 94", pred= "2 94", columns= "roll_anchovies", target= "roll_anchovies", E= 2)
+EmbedDimension(dataFrame = plot_data, lib = "2 94", pred = "2 94", columns = "roll_temp")
 M <- matrix(c(1,0,0,1,1,0,1,0,1),ncol=3,byrow=T)
 X <- simOU(dim=3, rho=0.05, driftMat = M,
            time = 100, length = 1e5, X0 = rep(0,3))
@@ -84,12 +90,55 @@ par(mar = c(4, 4, 1, 1), mgp = c(2.5, 1, 0))  # set margins for plotting
 plot(simplex_output$E, simplex_output$rho, type = "l", xlab = "Embedding Dimension (E)", 
      ylab = "Forecast Skill (rho)")
 
-var1_xmap <- ccm(df, E=1, lib_column = "Var1",
-                 target_column = "Var2", lib_sizes = seq(10, 140, by = 10), 
+sub <- roll2[6:97]
+var1_xmap <- ccm(plot_data[2:94,], E=4, tau=-2, lib_column = "roll_anchovies",
+                 target_column = "roll_temp", lib_sizes = seq(10, 100, by = 10), 
                  num_samples = 100, random_libs = TRUE, replace = TRUE, silent = TRUE)
-var2_xmap <- ccm(df, E=1, lib_column = "Var2",
-                 target_column = "Var1", lib_sizes = seq(10, 140, by = 10), 
+var2_xmap <- ccm(plot_data[2:94,], E=4, tau=-2,  lib_column = "roll_sardines",
+                 target_column = "roll_temp", lib_sizes = seq(10, 100, by = 10), 
                  num_samples = 100, random_libs = TRUE, replace = TRUE, silent = TRUE)
+var3_xmap <- ccm(plot_data[2:94,], E=4, tau=-2, lib_column = "roll_anchovies",
+                 target_column = "roll_sardines", lib_sizes = seq(10, 100, by = 10), 
+                 num_samples = 100, random_libs = TRUE, replace = TRUE, silent = TRUE)
+
+df <- as.data.frame(plot_data[2:94,])
+CCM(df, E=4, Tp=0, columns="roll_temp", target="roll_sardines", libSizes = "10 94 3", sample=300)
+
+p4 <- ggplot(data=var1_xmap, aes(x=LibSize)) +
+  theme(
+    text = element_text(family = "IBM Plex Sans Condensed", size = 10),
+    axis.title = element_text(),
+    plot.subtitle = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.title.y.right = element_markdown(),
+    panel.background = element_rect(fill = "#FFFFFF", color = NA),
+    plot.background = element_rect(fill = "#FFFFFF", color = NA),
+    legend.position = "none") +
+  geom_line(aes(y=`roll_anchovies:roll_temp`), color="#ed713a") +
+  geom_line(aes(y=var2_xmap$`roll_sardines:roll_temp`),color = "#3fc1c9") +
+  labs(
+    title="Cross Mapping Skill",
+    subtitle="Cross Mapping skill of <span style = 'color: #ed713a;'>anchovy</span> and of 
+      <span style = 'color: #3fc1c9;'>sardine</span> on <span style = 'color: #77AB43;'>sea surface temperature</span>", 
+    caption="Source: Calif. Dept. of Wildlife and Game",
+    x="Library Size",
+    y="Prediction skill"
+  )
+p1
+p2
+p3
+p4
+
+sardine_anchovy_sst
+
+
+ggsave(
+  "p4.png",
+  p4,
+  width = 6.5,
+  height = 4.5
+)
+
 
 plot(var1_xmap$LibSize, var1_xmap$`Var1:Var2`, type = "l", col = "red", 
      xlab = "Library Size", ylab = "Cross Map Skill (rho)", ylim = c(0,0.6))
@@ -97,6 +146,57 @@ lines(var1_xmap$LibSize, var1_xmap$`Var2:Var1`, col = "blue")
 legend(x = "topleft", legend = c("var1 xmap", "var2 xmap"), 
        col = c("red","blue"), lwd = 1, bty = "n", 
        inset = 0.02, cex = 0.8)
+p <- estimateEmbeddingDim(plot_data$roll_sardines[2:94], max.embedding.dim = 10)
+estimateEmbeddingDim(plot_data$roll_anchovies[2:94], max.embedding.dim = 10, main="Embedding dimension for anchovy")
+p <- recordPlot()
+ggplotify::as.ggplot(p)
+temp <- EmbedDimension(dataFrame = plot_data, lib = "2 94", pred = "2 94", columns = "roll_temp", Tp=2)
+anc <- EmbedDimension(dataFrame = plot_data, lib = "2 94", pred = "2 94", columns = "roll_anchovies", Tp=2)
+sar <- EmbedDimension(dataFrame = plot_data, lib = "2 94", pred = "2 94", columns = "roll_sardines", Tp=2)
+
+
+
+
+df <- data.frame(
+  E = temp$E,
+  temp = temp$rho,
+  anc = anc$rho,
+  sar = sar$rho
+)
+
+emb <- ggplot(data=df, aes(x=E)) +
+  theme(
+    text = element_text(family = "IBM Plex Sans Condensed", size = 10),
+    axis.title = element_text(),
+    plot.subtitle = element_markdown(),
+    axis.title.y = element_markdown(),
+    axis.title.y.right = element_markdown(),
+    panel.background = element_rect(fill = "#FFFFFF", color = NA),
+    plot.background = element_rect(fill = "#FFFFFF", color = NA),
+    legend.position = "none") +
+  geom_line(aes(y=sar), color = "#3fc1c9") +
+  geom_line(aes(y=anc),color="#ed713a") +
+  geom_line(aes(y=temp), color="#77AB43") +
+  scale_x_continuous(breaks =1:10)+
+  labs(
+    title="Delay Embedding",
+    subtitle="Data: 3-year averages of landings of 
+      <span style = 'color: #3fc1c9;'>sardine</span> and
+      <span style = 'color: #ed713a;'>anchovy</span> and of <span style = 'color: #77AB43;'>sea surface temperature</span> 
+    <br>from 1928-2022 in the California Current System.",
+    caption="Source: Calif. Dept. of Wildlife and Game",
+    x="Embedding Dimension",
+    y="Prediction skill"
+  )
+
+emb
+
+ggsave(
+  "delayemb.png",
+  emb,
+  width = 6.5,
+  height = 4.5
+)
 }
 
 
@@ -147,14 +247,6 @@ df2$anchovies <- as.numeric(ifelse(df$anchovies == "Confidential", 0, df$anchovi
 df2$sardines <- as.numeric(ifelse(df$sardines == "Confidential", 0, df$sardines))
 quickplot(df2$year[1:1131]+df2$month[1:1131]/12, df2$sardines, geom="line") + geom_line(aes(y=df2$anchovies), color="blue")
 df <- as_tibble(df)
-
-#Simone
-library(forecast)
-model<-auto.arima(df2$anchovies)
-
-model2<-arima(df2$anchovies, order = c(2,1,5), seasonal = list(order=c(2,1,2), period=12), include.mean = F)
-
-
 
 ## Missing values imputed by 0 - hopefully only producing a small bias
 anchovies_by_year <- summarise(df,.by=year, result=sum(na.omit(as.numeric(anchovies))))
@@ -345,6 +437,28 @@ p <- ggplot(data=plot_data, aes(x=year)) +
 
 p
 
+# Define custom font
+custom_font_family <- "IBM Plex Sans Condensed"
+
+# Create a 3D plot
+fig <- plot_ly(data = plot_data, type = 'scatter3d', mode = 'lines') %>%
+  add_trace(x = ~roll_sardines, y = ~roll_anchovies, z = ~roll_temp, 
+            line = list(color = '#1f77b4')) %>%
+  layout(scene = list(
+    xaxis = list(title = 'Roll Sardines', titlefont = list(family = custom_font_family)),
+    yaxis = list(title = 'Roll Anchovies', titlefont = list(family = custom_font_family)),
+    zaxis = list(title = 'Roll Temp', titlefont = list(family = custom_font_family)),
+    aspectmode = "cube"
+  ),
+  font = list(family = custom_font_family, size = 10),
+  plot_bgcolor = '#FFFFFF',
+  paper_bgcolor = '#FFFFFF'
+  )
+
+# Render the plot
+fig
+
+
 ggsave(
   "sardine.png",
   p,
@@ -390,7 +504,7 @@ diff_plot_data <- data.frame(
 {
 colfunc <- colorRampPalette(c("#7FD8BE","#FCAB64"))
 
-lag <- 11
+lag <- 10
 roll2 <- na.omit(rollmean(roll_temp_year3, k=lag, align="right"))
 ava_years_alt <- data.frame(xstart = 2021-1:length(roll2), xend = 2022-1:length(roll2)+0.1)
 filter_alt <- diff_plot_data$year < max(ava_years_alt$xend) & diff_plot_data$year > min(ava_years_alt$xstart) 
@@ -417,7 +531,7 @@ q <- ggplot(data=diff_plot_data[filter_alt,], aes(x=year)) +
   ) +
   scale_x_continuous(
     "Year",
-    sec.axis = sec_axis( ~.,name="Average of the sea surface temperature the previous 10 years from <span style = 'color: #7FD8BE;'>cold (16.11 °C)</span> to <span style = 'color: #FCAB64;'>warm (18.09 °C)</span>",
+    sec.axis = sec_axis( ~.,name="Average of the sea surface temperature the previous 10 years from <span style = 'color: #7FD8BE;'>cold (16°C)</span> to <span style = 'color: #FCAB64;'>warm (18°C)</span>",
                          breaks= NULL
     )
   ) +
@@ -429,7 +543,7 @@ q <- ggplot(data=diff_plot_data[filter_alt,], aes(x=year)) +
   geom_rect(data=ava_years_alt, aes(x=NULL,ymin=5, ymax=5.8, xmin=xstart,
            xmax=xend), alpha =1, fill=fill) +
   labs(
-    title="Sardine and Anchovy Landings",
+    title="Development of Sardine and Anchovy Landings",
     subtitle="Relative difference in landings of 
       <span style = 'color: #3fc1c9;'>sardine</span> and
       <span style = 'color: #ed713a;'>anchovy</span> from year to year compared with 10-year <br> sea surface temperature trends from 1928-2008 in the California Current System.",
@@ -544,11 +658,11 @@ print(result_anchovies_sardines)
 
 
 library("vars")
-data_ts <- ts(na.omit(diff_plot_data[,c(1,2,3,5)]))
-var_model <- VAR(data_ts, lag.max = 1, type = "const")
-granger_result <- causality(var_model, cause = "roll_sardines")
+data_ts <- ts(na.omit(diff_plot_da[,c(1,2,3,5)]))
+var_model <- VAR(data_ts[,2:4], lag.max = 1, type = "const")
+granger_result <- causality(var_model, cause = "roll_temp_undiff")
 print(granger_result)
-#### ChatGPT Style Guide
+####  Style Guide 2
 {
 # Sample data
 data <- data.frame(
@@ -589,6 +703,3 @@ p <- ggplot(data, aes(x = Category, y = Value)) +
 # Display the plot
 print(p)
 }
-
-summary(VAR(cbind(diff_plot_data$anchovies, diff_plot_data$sardines, diff(roll2)[2:95]),p=1, type="none"))
-summary(restrict(VAR(cbind(diff_plot_data$anchovies, diff_plot_data$sardines, diff(roll2)[3:96]),p=1, type="none"), method="manual", resmat = t(matrix(c(0,0,1,0,0,1,0,0,1), ncol=3))))

@@ -190,14 +190,13 @@ In summary, the thesis aims to clarify how causality can be modeled and understo
 \mainmatter
 
 \chapter{Introduction}
-Causality is a cornerstone of understanding the mechanics of systemic changes in various scientific domains, and at its core, causal inference addresses the intricate dance between correlation and causation. While correlation hints at a mutual relationship between two variables, causation pushes us into the territory of assertion — \textit{does one variable truly influence the other?} Traditional statistics employ randomization as a helpful tool. Imagine a medical scenario where a researcher can control who receives a treatment: If the researcher can ensure that it is perfectly random who receives the treatment and patients receiving the treatment consistently show improvement compared to those who do not, we can easily attribute that difference to the treatment. However, when variables are merely observed without that level of control, establishing causation becomes more complex. Causal statistics thus requires another level of statistical modeling because we want to reason about what happens when intervening in the process.\\\\
-This thesis delves into the vibrant world of causal relationships in dynamical systems. Granger causality, a seminal and widely used concept in causal analysis of time series, yields one approach to causal inference in time-dependent data. It is based on the thoughts of \cite{Granger}, and it posits that if the past of a variable $C$ contains unique information about another variable $E$, the variable $C$ is said to \emph{Granger-cause} the variable $E$. This approach to causal inference is based on prediction, and at its core, it operates on the principle that cause precedes effect, which means that knowledge of the cause can enhance the predictability of the effect. However, while Granger causality offers a framework for assessing causality in probabilistic settings, it encounters challenges in deterministic systems. First, predictability no longer has the same meaning since it is not a signal clouded by noise but a feature of all variables. Dynamical systems, by nature, have variables that are interconnected and governed by underlying structures. This interconnectedness means that information about one variable can often be extracted from another due to the system's inherent dynamics rather than any direct causal link.\\\\
-A case in point is the result from \cite{Takens}, which suggests that observing a single variable from a dynamical system might be sufficient to capture the entire system's dynamics. This interconnectedness can lead Granger causality to to identify causal links where none exist mistakenly. Enter now the deterministic systems' viewpoint: Instead of relying on simple prediction improvement as a marker of causality, we focus on the inherent information within variables. If variable 
-$C$ causes variable $E$, then $E$ should encapsulate information about the dynamics of $C$. However, $C$ would not necessarily contain comprehensive information about $E$, as it would not include information about the dynamics of $E$ not imposed by $C$. This perspective flips Granger causality on its head: while Granger causality might predict the effect 
-$C$ using the cause $E$, a deterministic viewpoint effectively suggests the opposite. \\\\
-This subtle yet profound distinction reshapes our understanding of causality in dynamical systems. As we proceed, we will delve deeper into the theoretical underpinnings of this perspective, unpacking its implications and potential applications. In particular, this insight leads to the \emph{Convergent Cross Mapping} approach introduced by \cite{Sugihara}, which serves as both the motivational starting point and the culmination of the theoretical work based on Takens' theorem in this thesis. A detailed discussion of this approach is presented in Chapter \ref{chapTaken}.\\\\
-However, while the deterministic paradigm offers a fascinating lens through which to understand causality, there is an inherent limitation. Real-world systems, especially in fields like economics, biology, and climate science, are rife with unpredictable fluctuations. These fluctuations cannot always be attributed solely to the endogenous dynamics of the system. No matter how meticulously one captures the deterministic dynamics, there will always be elements of seeming randomness and external influences that a purely deterministic model would struggle to account for. We return thus to stochastic processes. By reintroducing a stochastic element into our models, we can more faithfully represent the unpredictability and variability inherent in real-world systems. Stochasticity provides a framework to account for the  \enquote{noise} that is not explained by the deterministic components of a system. Moreover, it is a nod to the humility of our modeling efforts – recognizing that there are always aspects of complex systems that are beyond our current understanding or inherently random. 
-In the subsequent chapters, we will delve deeper into the fusion of deterministic dynamics with stochastic processes using a mixture of simulation-based methods and theoretical considerations, seeking a harmonious balance that brings us closer to understanding the multifaceted nature of causality in dynamical systems.
+Causality is a cornerstone in understanding changes in various scientific domains, and at its core, causal inference addresses the intricate dance between correlation and causation. While correlation hints at a mutual relationship between two variables, causation pushes us into the territory of assertion — \textit{does one variable truly influence the other?} Traditional statistics employ randomization as a helpful tool. Imagine a medical scenario where a researcher can control who receives a treatment: If the researcher can ensure that it is perfectly random who receives the treatment and patients receiving the treatment consistently show improvement compared to those who do not, we can easily attribute that difference to the treatment. However, when variables are merely observed without that level of control, establishing causation becomes more complex. Causal statistics thus requires another level of statistical modeling because we want to reason about what happens when intervening in the process.\\\\
+This thesis delves into the vibrant world of causal relationships in dynamical systems. Granger causality, a seminal and widely used concept in causal analysis of time series, yields one approach to causal inference in time-dependent data. It is based on the thoughts of \cite{Granger}, and it posits that if the past of a variable $C$ contains unique information about another variable $E$, the variable $C$ is said to \emph{Granger-cause} the variable $E$. This approach to causal inference is based on prediction, and at its core, it operates on the principle that cause precedes effect, which means that knowledge of the cause can enhance the predictability of the effect. However, while Granger causality offers a framework for assessing causality in probabilistic settings, it encounters challenges in deterministic systems. First, predictability no longer has the same meaning since predictability can come from the deterministic nature of the system instead of a causal mechanism. Dynamical systems, by nature, have variables that are interconnected and governed by underlying structures, in a way that means information about one variable can often be extracted from another due to the system's inherent dynamics rather than any direct causal link.\\\\
+A case in point is the result from \cite{Takens}, which suggests that observing a single variable from a dynamical system might be sufficient to capture the entire system's dynamics. This interconnectedness can lead Granger causality to identify causal links where none exist mistakenly. Enter now the deterministic systems' viewpoint: Instead of relying on simple prediction improvement as a marker of causality, we focus on the inherent information within variables. If variable 
+$C$ causes variable $E$, then $E$ should encapsulate information about the dynamics of $C$. However, $C$ would not necessarily contain comprehensive information about $E$, as it would not include information about the dynamics of $E$ not imposed by $C$. This perspective flips Granger causality on its head: while Granger causality might enable prediction of the effect 
+$E$ using the cause $C$, a deterministic viewpoint effectively suggests the opposite. \\\\
+This subtle yet profound distinction reshapes our understanding of causality in dynamical systems. As we proceed, we will delve dep into the theoretical underpinnings of this perspective, unpacking its implications and potential applications in full theoretical detail. In particular, this insight leads to the \emph{Convergent Cross Mapping} approach introduced by \cite{Sugihara}, which serves as both the motivational starting point and the culmination of the theoretical work based on Takens' theorem in this thesis. A discussion of this approach is presented in Chapter \ref{chapTaken}.\\\\
+A central aspect of this thesis will be developing a framework for formulating causal models in dynamical systems, ensuring consistency with causal modeling in stochastic settings. To achieve this, we will first focus on the foundations of causal models in stochastic settings and build upon that later when moving to the dynamical systems setting. Through this process, we will employ comparisons and contrasts with stochastic models to guide and motivate our definitions and theoretical derivations. Additionally, the thesis will provide an introduction to the characteristics of dynamical systems, aiming for intuition on modeling choices and making explicit the components and features that enter the models. Furthermore, this work will explore the Convergent Cross Mapping (CCM) method as an application of our theoretical insights. By doing so, we aim to integrate CCM within a cohesive framework of causal analysis, bridging the gap between theory and application. This approach will involve clarifying crucial assumptions and theoretical details in the context of dynamical systems and Convergent Cross Mapping.
 \newpage
 \section{An Example}
 To illustrate the challenge of causal inference in complex dynamical systems, we will use a real-world example concerning interactions between anchovies, sardines, and sea surface temperature in the California Current ecosystem. This example serves as a backdrop for the more theoretical nature of the rest of this thesis. In keeping with the analysis of \cite{Sugihara}, we aim to use the same data for our analysis, but we do extend it by including data from the period 2012-2022 as well. The data consists of the following variables:
@@ -229,7 +228,8 @@ The log returns look fairly stationary over time, and one approach could be to a
 $$X_t=A_1 X_{t-1}+A_2 X_{t-2}+\cdots + A_p X_{t-p}+u_t$$
 where $A_1,\ldots, A_p\in \mR^{3\times 3}$ are coefficient matrices and $u_t$ is a noise term. The coefficient matrices can be estimated with OLS (the maximum likelihood estimator when assuming that $u_t$ is normally distributed and mean-zero), and we can get standard confidence intervals based on an assumption of asymptotic normality. We see that the matrices model the influence of past values of all variables on the present values of the variable in question. For now, we will cautiously endow this influence with a causal interpretation, although the nuances of this interpretation are yet to be made explicit. At the very least, we will take it as an indication of a possible causal link.\\\\ 
 We have to choose the parameter $p$, specifying the number of lags in the model. This choice can be made by choosing the model according to a minimal information criterion like AIC. Fitting a VAR(1) model with first-differenced temperature data to the data yields an estimate of $-2.6$ of the coefficient from temperature to anchovies and an estimate of $17.9$ of the coefficient from temperature to sardines. The remaining coefficients for sardine and anchovy are all estimated to be $0.0$. No coefficient is significant at a 95\% level, but this is expected due to the small sample size. However, this does indicate that temperature might positively influence the sardine population and negatively influence the anchovy population. We are looking at averages of temperature over a 10-year period; any window of averaging in the range from 5 to 10 years does not change the sign and size of the estimates significantly, but when looking at the yearly averages of temperature alone, we no longer get estimates that do not round to 0. This shows that the indication is not just a happy accident, although we lack the power to say anything definitively.\\\\ 
-However, these results do not exploit some of the properties of the dynamical systems we observed and discussed above, and the present approach requires some data manipulation to use the standard econometric methods. Notice, for instance, that a VAR($p$)-model under standard assumptions entails a stationary time series. Therefore, we must look for transformations of our time series yielding stationarity or at least something reasonably modeled with a stationary time series. In this example, we solve this by a standard transformation, but it is a model assumption that needs addressing. We will use these assumptions as an inspiration for the work that we will now undertake.
+However, these results do not exploit some of the properties of the dynamical systems we observed and discussed above, and the present approach requires some data manipulation to use the standard econometric methods. Notice, for instance, that a VAR($p$)-model under standard assumptions entails a stationary time series. Therefore, we must look for transformations of our time series yielding stationarity or at least something reasonably modeled with a stationary time series. In this example, we solve this by a standard transformation, but it is a model assumption that needs addressing. We will use these assumptions as an inspiration for the work that we will now undertake.\\\\
+We have encountered some features of the data we use that are not readily modeled by Granger causality, at least not before appropriately transforming data. That we get meaningful results from that approach is encouraging, but we would like to explore how to model these features directly. Moreover, we could fear that some system artifacts are just hidden better now and still causing problems. We want to describe models with apparent deterministic features and methods that can resolve these situations. Furthermore, we want to provide rigorous details and get the components to the forefront to understand why things work and compare them to a more robust stochastic framework.
 
 
 \chapter{Stochastic Causal Models}
@@ -1231,35 +1231,32 @@ Finally, to determine the causal ordering of our variables in the model, that is
 \end{enumerate}
 As discussed, these properties can be very hard to check in practice. It is much easier to check for signs of (TT1) and (TT2) and use them as signs that maybe (TC1)-(TC3) are at least partially fulfilled. We remark again that (TC1) corresponds to faithfulness in graphical models. Hopefully, it can be assumed (TC2) is quite well-behaved under filtrations, but taken together with (TC3), it is important to consider whether this kind of behavior is reasonable before applying methods based on this theory.
 \chapter{Convergent Cross Mapping in Practice}\label{chapTaken}
-In this short chapter, we will consider the Convergent Cross Mapping (CCM) approach of \cite{Sugihara}, and try to connect it to the theoretical work we have undertaken so far. This chapter is very different in nature, because we will not develop any new theory, and only briefly consider the practical complications. We give an analysis of the data from the introductory example. We will now try to approach the problem of causal inference in our dynamical systems setting. In its most simple form, we imagine that we have made observations from two time series in the window $1,\ldots,T$:
+In this short chapter, we will consider the Convergent Cross Mapping (CCM) approach of \cite{Sugihara} and try to connect it to the theoretical work we have undertaken so far. This chapter is very different because we will not develop any new theory, only briefly considering the practical complications. We will also formulate us in manifolds a lot of the time, but as we saw in the previous chapter, the attractor versions also deal with manifolds as quite an integral part of the statements. We will now approach the problem of causal inference in our dynamical systems setting. In its most simple form, we imagine that we have made observations from two-time series in the window $1,\ldots, T$:
 \begin{align*}
 X&=(X(1),\ldots, X(T)),\\
 Y&=(Y(1),\ldots, Y(T)).
 \end{align*}
-For a fixed embedding dimension $E_X$, we can now form the lagged coordinate vectors of $x$:
+For a fixed embedding dimension $E_X$, we can now form the lagged coordinate vectors of $x$ for a delay size $\tau$, that we will often set $\tau=1$:
 $$x(t)=(X(t), X(t-\tau),X(t-2\tau),\ldots, X(t-(E_X-1)\tau))$$
-for $t=1+(E-1)\tau$ to $t=T$. We denote by
+for $t=1+(E_X-1)\tau$ to $t=T$. We denote by
 $$M_X\coloneqq\{x(t)\mid t\in \{1+(E_X-1)\tau,\ldots,T\}\}$$
-the \emph{shadow manifold of $X$}, which is the state space reconstruction of Takens' theorem. In the same way we can form the lagged coordinate vectors of $y$:
+the \emph{shadow manifold of $X$}, which is the state space reconstruction of Takens' theorem. In the same way, we can form the lagged coordinate vectors of $y$:
 $$y(t)=(Y(t),Y(t-\tau),U(t-2\tau),\ldots,Y(t-(E_Y-1)\tau))$$
-and a corresponding shadow manfold of $Y$:
+And a corresponding shadow manifold of $Y$:
 $$M_Y\coloneqq\{y(t)\mid t\in \{1+(E_Y-1)\tau,\ldots,T\}\}$$
- This approach raises a few question: How do we choose $E$, how do we convert the theoretical results into something we can actually test, and how do we address the assumptions described at the end of the last chapter?\\[5pt]
-In this chapter, we will give an answer on these questions one by one, and we will use them on the introductory example of this thesis. 
- alternatives and extensions as an application of the state space reconstruction methods of the previous chapter. We consider this chapter to be more of a practical nature, and aim to showcase the idea behind the implementational details. Notably, we discuss the methods suggested by \cite{Ye2015} and \cite{Leng2020}, which address problems not resolved by CCM, respectively, that of distinguishing bidirectional causality and unidirectional causality in systems with some degree of synchronicity and identifying the causal chain in a system knowing the causal directions between causally related variables. We will also cover some related methods that are more rooted in machine learning but still use state space reconstruction for causal inference, albeit with a less explicit theoretical foundation. We will then revisit and analyze the California Current example using the developed theory. However, it is crucial to remember that the theory of this chapter applies only to purely deterministic systems, and real-world examples often have a mix of deterministic and stochastic structures. In subsequent sections, we will address this limitation by considering a setup to replace systems of differential equations with systems of stochastic differential equations and analyze the effect of measurement noise or stochastic influences on the effectiveness of our methodology.
-Meanwhile, we can exploit this idea of information being encoded in effect variables to great effect: This allows us to reformulate causality from the point of view of deterministic systems. The principle itself is fairly simple, but we do require some technical assumptions to make the theory work, which is not in any way empirically motivated nor entirely interpretable but fare under what we usually consider regularity assumptions - a sweep-it-under-the-rug-interpretation would be that we just assume the data to be reasonably well-behaved. 
-\url{https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13150} 
+ This approach raises a few questions: How do we choose $E$, convert the theoretical results into something we can test, and address the assumptions described at the end of the last chapter?\\[5pt]
+In this chapter, we will answer these questions one by one and use the techniques in the introductory example of this thesis. However, it is crucial to remember that the theory of the previous chapter applies only to purely deterministic systems, and real-world examples often have a mix of deterministic and stochastic structures. It is outside the scope of this thesis to tackle this problem. Before that, we return to the California Current example with the following time-series of the introduction:
 \begin{center}
 	\begin{figure}[!ht]
 		\includegraphics[width=\textwidth]{{"../r code/sardine"}.png}
 		\caption{}
 	\end{figure}
 \end{center}
-
+We discussed that they exhibited traits of non-linear deterministic systems, but now we shall analyze them further.
 
 \section{Embedding Dimension}
-We start by estimating the embedding size. In principle, we could take a really high embedding size, because Takens' theorem also holds when choosing more delays, but in practice this means that we need a lot more data to have any hope of actually tracing a meaningful picture of the state space, and therefore we are interested in finding a minimal embedding dimension, that actually works. On the other hand, Takens' theorem does not hold if we go too low-dimensional, so we have to balance that trade-off. We give the following heuristic for the choice of embedding size: If the embedding dimension is too small, then we risk \enquote{collapsing} the state space, and thus different states can appear to be the same in the attempted state space reconstruction. This means that if we use the state space for forecasting, a low dimension should result in poor performance. If we go too high-dimensional we might not have enough data near any state for forecasting to work, so forecasting skill based on the state space reconstruction can be used as a heuristic to choose the embedding dimension.\\[5pt]
-In practice, we follow the idea: Fix a value of $E$. We want to forecast the value $X(t^*+\tau)$ from the value $X(t^*)$ for some choice of time stamp $t^*$.
+We start by estimating the embedding size. In principle, we could take a high embedding size because Takens' theorem also holds when choosing more delays. However, in practice, we need more data to trace a meaningful picture of the state space. Therefore, we are interested in finding a minimal embedding dimension that works. On the other hand, Takens' theorem does not hold if we go too low-dimensional, so we have to balance that trade-off. We give the following heuristic for the choice of embedding size: If the embedding dimension is too small, then we risk \enquote{collapsing} the state space, and thus, different states can appear to be the same in the attempted state space reconstruction. This means a low dimension should result in poor performance if we use the state space for forecasting. If we go too high-dimensional, we might not have enough data near any state for forecasting to work, so forecasting skill based on the state space reconstruction can be used as a heuristic to choose the embedding dimension.\\[5pt]
+In practice, we follow the idea: Fix a value of $E$. We want to forecast the value $X(t^*+\tau)$ from the value $X(t^*)$ for some timestamp $t^*$.
 \begin{enumerate}[label=(\roman*)]
 	\item First we take $t_1,\ldots,t_{E+1}$ to be the $E+1$ numbers in succession (closest to farthest) for which $\norm{x(t^*)-x(t_{i})}$ is minimized (randomized order in case of a tie).
 	\item We then compute the score of each chosen element
@@ -1268,25 +1265,47 @@ In practice, we follow the idea: Fix a value of $E$. We want to forecast the val
 	$$w_i=\frac{u_i}{\sum_{j=1}^{E+1} u_j}$$
 	\item We then compute the estimate
 	$$\hat{X}(t^*+\tau)|M_X=\sum_{i=1}^{E+1} w_i X(t_i+\tau)$$
-	\item We compute the prediction skill as the empiral correlation between $\hat{X}(t^*+\tau)|M_X$ and $X(t^*+\tau)$.
+	\item We compute the prediction skill as the empirical correlation between $\hat{X}(t^*+\tau)|M_X$ and $X(t^*+\tau)$.
 \end{enumerate}
-We can either choose to use leave-one-out cross-validation or to separate the data into a training and testing set.\\
-We choose here a leave-one-out approach and forecasts two periods into the future:
+We can either choose to use leave-one-out cross-validation or to separate the data into a training and testing set. Here, we choose a leave-one-out approach and forecast two periods into the future. We would like to see that the prediction skill improves until a point and then stagnates or even declines. If the system does not showcase this behavior, there might be problems with the fit, but as pointed out earlier, we want to model chaotic attractors. Therefore, some instability is to be expected in these cases when dealing with limited data. We observe the following:
 \begin{center}
 	\begin{figure}[!ht]
 		\includegraphics[width=\textwidth]{{"../r code/delayemb"}.png}
 		\caption{}
 	\end{figure}
 \end{center}
-For anchovy, an embedding dimension of $3$ seems fine, for temperature $4$ seems fine, and for sardine it is less clear what is appropriate. In this case, 4 would be appropriate for all 3 cases.\\
-More sophisticated methods do exist, we sketch another one here:
+For anchovy, an embedding dimension of three seems fine, for temperature four seems fine, and for sardine, it is less clear what is appropriate. In this case, four is probably appropriate for all three cases. More sophisticated methods exist; we sketch such a method of \cite{cao} here. We introduce the following notation: Let $x_E(t)$ be the delay embedding for embedding dimension $E$ and let $n(t, E)$ be such that $x_{E}(n(t,E))$ is the closet neighbor of $x_E(t)$.
 \begin{enumerate}[label=(\roman*)]
-	\item 
+	\item  For each $i=1,2,\ldots,T-E\tau$, we compute
+	$$a(t,E)=\frac{\norm{x_{E+1}(t)-x_{E+1}(n(t,E))}}{\norm{x_{E}(t)-x_{E+1}(n(t,E)}}$$
+	\item Compute
+	$$f(E)=\frac{1}{T-E\tau}\sum_{i=t}^{T-E\tau}a(t,E),$$
+	and compute then
+	$$f1(E)=\frac{f(E+1)}{f(E)}$$
+	\item Furthermore, we compute
+	$$f^*(E)=\frac{1}{T-E\tau}\sum_{t=1}^{T-E\tau}\norm{x_{t+E\tau}-x_{n(t,E)+E\tau}}$$
+	and compute then
+	$$f2(E)=\frac{f^*(E+1)}{f^*(E)}$$
 \end{enumerate}
-
-\section{Causal Inference}
-
-We then move to the prediction of $Y(t)$ for $t\geqslant 1+(E-1)\tau$:
+The reasoning behind this is that once we reach a dimension sufficient for an embedding, then the shadow manifolds for all dimension sizes bigger should all be homeomorphic. Therefore, neighbors in a lower-dimensional embedding should still be neighbors in a higher dimension. In practice, one often observes that $f_1$ increases to the minimum dimension and then stagnates in an attractor setting. As for $f2$, it also measures whether the data is deterministic - if it is, then the curve cannot be constant. We get the following results:\\\\
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{"../r code/sardines"}.png} % first image
+    \end{minipage}\hfill
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{{"../r code/anchovy"}.png} % second image
+    \end{minipage}
+\end{figure}
+\begin{figure}[H]
+ \includegraphics[width=0.5\textwidth]{{"../r code/temp"}.png} 
+ \caption{}
+\end{figure}
+We see that the $f2$ curves (called $E2$ on the graphs) are pretty flat. However, they do deviate from a constant 1, so it is reasonable to expect some deterministic structure. Moreover, we see that a dimension size of 4 across the board is not too unreasonable. However, it is inconclusive - the \enquote{accurate} dimension could be much higher; maybe 8 is also reasonable. The green interval is for $f1$ (called $E1$ on the graphs). We proceed with $E=4$ and remark that if we were modeling with a DCM, we could potentially have recovered more \enquote{variables} than we have observed.
+\section{Implementation}
+We move swiftly on to the CCM method, which is essentially just repeating what we already have done. Determining the \emph{cross mapping skill from $X$ to $Y$} boils down to the prediction of $Y(t)$ for $t\geqslant 1+(E-1)\tau$, and the same manner as with the dimension size:
 \begin{enumerate}[label=(\roman*)]
 	\item First we take $t_1,\ldots,t_{E+1}$ to be the $E+1$ numbers in succession (closest to farthest) for which $\norm{x(t)-x(t_{i})}$ is minimized (randomized order in case of a tie).
 	\item We then compute the score of each chosen element
@@ -1295,59 +1314,16 @@ We then move to the prediction of $Y(t)$ for $t\geqslant 1+(E-1)\tau$:
 	$$w_i=\frac{u_i}{\sum_{j=1}^{E+1} u_j}$$
 	\item We then compute the estimate
 	$$\hat{Y}(t)|M_X=\sum_{i=1}^{E+1} w_i Y(t_i)$$
+	\item We then measure the cross-map skill as the correlation between the estimates of $Y$ and the actual values.
 \end{enumerate}
-We then measure the cross-map skill as the correlation between the estimates of $Y$ and the actual values.\\[5pt]
-The reasoning here is that if $X$ contains the dynamics of $Y$, the value at time point $t$ must be revealed by the position on the manifold. This can be estimated by the $k$-nearest neighbors when the attractor is sufficiently filled in - and this has the added advantage of dealing with observational noise. This is also what is suggested by \cite{Casdagli}. As the time-series length increases, we should observe convergence towards the true value. There are two heuristics to consider: the choice of embedding dimension and time lag. For the embedding dimension, we can use a similar heuristic. Instead of predicting $Y(t)$, we can try to predict $X(t+1)$ in the same manner and look at the prediction skill as a function of the embedding in dimension. 
-
-\section{Testing Non-linearity}
-
-Now to use the theory that we have developed, we need to address the assumptions of the end of last chapter. The assumptions pertaining to the SCM approach is not something we usually verify from a concrete set of observations - not in the stochastic setting either. As described in the end of the last chapter, the rest of assumptions can be very hard to deal with in practice. What we can do is to consider the non-linearity of the observations as a way to test whether it is appropriate to fit it with a dynamical systems approach.
-We sketch the S-map approach, also called the sequentially locally weighted global linear map approach, of \cite{SMap} here and very much inspired by the presentation of \cite{EDM}. The algorithm procedes as follows from an initial fixed time $t^*$:
-\begin{enumerate}[label=(\roman*)]
-	\item 
-\end{enumerate}
-
-
-
-
-\section{dfd}
-\url{https://pure.au.dk/portal/files/136561486/Causal_inference_from_noisy_time_series_data_AM17.pdf}
-
-
-
-\section{Extensions}
-\url{https://arxiv.org/pdf/nlin/0405016.pdf}\\[5pt]
-\url{file:///C:/Users/rasmu/Downloads/s41598-021-87316-6.pdf}\\[5pt]
-\url{https://static-content.springer.com/esm/art%3A10.1038%2Fs41598-021-87316-6/MediaObjects/41598_2021_87316_MOESM1_ESM.pdf}
-
-\section{Bridge to Stochastic Setting}
-If we want to talk about the behavior of a single trajectory in the state space, we have to introduce some ergodic theory. The anchor is the following definition:
-\begin{mydefinition}{Invariant and Ergodic Measures}
-If $f:X\to X$ is a homeomorphism, $\mu$ is an \emph{invariant $f$-measure} if for all $A\subset X$ $\mu(f(A))=\mu(A)$.\\[5pt]
-An invariant measure $\mu$ is called \emph{ergodic with respect to $f$}, if it is true for all $f$-invariant sets $A\subset X$ that either $\mu(A)=0$ or $\mu(X\setminus A)=0$.\\[5pt]
-We define the \emph{support} of a Borel measure $\mu$ as:
-$$\supp \mu=\{x\in X\mid \mu(U)>0 \text{ for } x\in U, U \text{ open }\}$$
-\end{mydefinition}
-There are two key results of this theory that we record here:
-\begin{thm}[Krylov-Bogolubov Theorem]
-Any continuous map $f$ on a metrizable compact space has an ergodic invariant Borel probability measure.
-\end{thm}
-\begin{thm}[Birkhoff Ergodic Theorem]
-Let $T:(X,\mu)\to (X,\mu)$ be a measure preserving transformation, and let $\varphi\in L^1(T,\mu)$. Then for $\mu$-almost $x\in X$ the following time-average exists:
-$$\lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}\varphi(T^k(x))$$
-and we denote it $\varphi_T(x)$. In particular, if $A\subset X$ is measurable, with $\mu(A)<\infty$, and $1_A$ is the indicator function of $A$, then
-$$\lim_{n\to\infty}\frac{1}{n}\sum_{k=0}^{n-1}1_A(T^k(x))=\mu(A)$$
-\end{thm}
-For proofs, we refer to \cite{Katok}. It thus follows that for any flow on a manifold, then on the support of an ergodic invariant Borel probability measure, all orbits of $f$ are dense in this space. If we thus assume our objects to be reasonably well-behaved on the support of an ergodic invariant Borel probability measure, then we would, in principle, use a single observation when having sufficient amounts of data. In particular, if a flow arises from a gradient field, that is, the vector field $F$ is the gradient of the scalar function $\varphi: \mathcal{U}\subset \mR^n\to \mR$, then the corresponding measure $\mu$ of a time $t$-map has support on the entirety of $\mathcal{U}$. In general, the torus is the only compact surface free of fixed points of a $C^2$ flow - and, thereby, the only compact manifold where every orbit is dense. This illustrates the need to move to attractor sets. (Theorem 14.3.1 \cite{Katok}). On the other hand, under some fairly general assumptions, it is possible to prove the existence of a global attractor.
-
-Gibbs measure.
-Consider the following generalization of the Ornstein-Uhlenbeck process:
-$$du(t)=-Au(t)\ dt+F(u(t))\ dt+B u(t)\ dW_t,\quad t\geqslant 0$$
-with the following assumption on $F:H\to H$. We can then do a stable manifold theorem for this setting as well.
-\cite{StableManifoldStoc} 
-
-
-
+The reasoning here is that if $X$ contains the dynamics of $Y$, the value of $Y$ at time point $t$ must be revealed by the position or state on the manifold. Since we have a reconstruction of the manifold, This can be estimated by a weighted average of the $k$-nearest neighbors when the attractor is sufficiently filled in - and this has the added advantage of dealing with observational noise. This is also suggested by \cite{Casdagli} to deal with noise in state space reconstructions. Ideally, we should observe convergence towards 1 of the cross-mapping skill as the time-series length increases, but in practice, we cannot be free of noise; therefore, convergence at all is to be taken as a positive sign.\\\\
+We see that the CCM approach outlined here can be interpreted as an implementation of Theorem \ref{id1} or Theorem \ref{id2}, in that a surjection $M_y\to M_x$ essentially implies that you can use $y$ to identify $x$, and hence by the results, we have that there exists a partially directed path from $x$ to $y$ if we assume that all the technical assumptions fall into place.
+The principle itself is pretty simple, but we do require some technical assumptions to make the theory work, and they are pretty heavy-handed - one could endow them a sweep-it-under-the-rug-interpretation, and say that we assume the data to be reasonably well-behaved, even though that the attractors we studied last chapter hardly qualifies. Now let us see how the Cross Mapping goes in our example:
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{{"../r code/p1"}.png} 
+\end{figure}
+We see that this confirms our findings in the intro, namely that there seems to be a causal influence from SST to sardine and anchovy in this case - this was not supported by \cite{Sugihara}, but the causal direction does go the same way. In the opposite direction, do we not find any support for a causal direction.\\\\
+To use the theory we have developed, we need to address the assumptions at the end of the last chapter. The assumptions about the SCM approach are something other than what we usually verify from a concrete set of observations - not in the stochastic setting either. As described at the end of the last chapter, the rest of the assumptions can take much work to deal with in practice. We can consider the non-linearity of the observations as a way to test whether it is appropriate to fit it with a dynamical systems approach. It is suggested by \cite{SMap} to use the S-map approach, also called the sequentially locally weighted global linear map approach, with more details in the work of \cite{EDM}. We already covered a way to test for deterministic behavior and many more. We do not go into depth with these methods, but we mention their existence. Moreover, we also refer to \cite{Ye2015} and \cite{Leng2020}, which address problems not resolved by CCM, respectively, that of distinguishing bidirectional causality and unidirectional causality in systems with some degree of synchronicity and identifying the causal chain in a system knowing the causal directions between causally related variables. However, neither of these is directly covered by the methods we developed in this thesis.
 
 
 \bibliographystyle{apalike2}
